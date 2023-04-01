@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<AssemblyName>SquidEyes.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>SquidEyes.$(MSBuildProjectName)</RootNamespace>
+		<Title>SquidEyes Fundamentals</Title>
+		<Authors>Louis S. Berman</Authors>
+		<Company>SquidEyes, LLC.</Company>
+		<Description>A set of helper classes and extension methods</Description>
+		<Copyright>Copyright 2023 by SquidEyes, LLC.</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="libphonenumber-csharp" Version="8.13.8" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+		<PackageReference Include="MinVer" Version="4.3.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Vogen" Version="3.0.13" />
+	</ItemGroup>
+
+</Project>
