@@ -3,7 +3,6 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -26,69 +25,133 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
         }
 
         static void ThrowIfNotExpected(
-            ref Utf8JsonReader reader, JsonTokenType expected) 
+            ref Utf8JsonReader reader, JsonTokenType expected)
         {
             if (reader.TokenType != expected)
                 throw new JsonException();
         }
 
-        static Arg GetArg(ref Utf8JsonReader reader)
+        void ParseAndUpsert(ref Utf8JsonReader reader)
         {
+            ThrowIfNotExpected(ref reader, JsonTokenType.PropertyName);
+
+            var key = ConfigKey.From(reader.GetString()!);
+
             ReadAndCheck(ref reader, JsonTokenType.StartObject);
 
-            ArgKind? kind = null;
+            ReadAndCheck(ref reader, JsonTokenType.PropertyName);
+
+            if (reader.GetString() != "Kind")
+                throw new JsonException();
+
+            reader.Read();
+
+            var kind = reader.GetString()!.ToEnumValue<ArgKind>();
+
             Type type = null!;
-            object value = null!;
 
-            void SetProperty(ref Utf8JsonReader reader)
-            {
-                var name = reader.GetString();
-
-                switch (name)
-                {
-                    case "Kind":
-                        reader.Read();
-                        kind = reader.GetString()!.ToEnumValue<ArgKind>();
-                        break;
-                    case "Type":
-                        reader.Read();
-                        type = Type.GetType(reader.GetString()!)!;
-                        break;
-                    case "Value":
-                        reader.Read();
-                        break;
-                }
-            }
-
-            while (reader.TokenType != JsonTokenType.EndObject)
+            if (kind == ArgKind.Enum)
             {
                 reader.Read();
 
-                switch(reader.TokenType)
-                {
-                    case JsonTokenType.PropertyName:
-                        SetProperty(ref reader);
-                        break;
-                }
+                if (reader.GetString() != "Type")
+                    throw new JsonException();
+
+                reader.Read();
+
+                var typeText = reader.GetString()!;
+
+                type = Type.GetType(typeText)!;
             }
 
-            ThrowIfNotExpected(ref reader, JsonTokenType.EndObject);
+            ReadAndCheck(ref reader, JsonTokenType.PropertyName);
 
-            return null;
+            if (reader.GetString() != "Value")
+                throw new JsonException();
+
+            reader.Read();
+
+            switch (kind)
+            {
+                case ArgKind.AccountId:
+                    argSet.Upsert(key, AccountId.From(reader.GetString()!));
+                    break;
+                case ArgKind.Boolean:
+                    argSet.Upsert(key, reader.GetBoolean());
+                    break;
+                case ArgKind.ClientId:
+                    argSet.Upsert(key, ClientId.From(reader.GetString()!));
+                    break;
+                case ArgKind.DateOnly:
+                    argSet.Upsert(key, DateOnly.Parse(reader.GetString()!));
+                    break;
+                case ArgKind.DateTime:
+                    argSet.Upsert(key, DateTime.Parse(reader.GetString()!));
+                    break;
+                case ArgKind.Double:
+                    argSet.Upsert(key, reader.GetDouble());
+                    break;
+                case ArgKind.Email:
+                    argSet.Upsert(key, Email.From(reader.GetString()!));
+                    break;
+                case ArgKind.Enum:
+                    argSet.UpsertEnum(
+                        key, Enum.Parse(type, reader.GetString()!));
+                    break;
+                case ArgKind.Float:
+                    argSet.Upsert(key, reader.GetSingle());
+                    break;
+                case ArgKind.Guid:
+                    argSet.Upsert(key, Guid.Parse(reader.GetString()!));
+                    break;
+                case ArgKind.Int32:
+                    argSet.Upsert(key, reader.GetInt32());
+                    break;
+                case ArgKind.Int64:
+                    argSet.Upsert(key, reader.GetInt64());
+                    break;
+                case ArgKind.Offset:
+                    argSet.Upsert(key, Offset.From(reader.GetString()!));
+                    break;
+                case ArgKind.Phone:
+                    argSet.Upsert(key, Phone.From(reader.GetString()!));
+                    break;
+                case ArgKind.ShortId:
+                    argSet.Upsert(key, ShortId.From(reader.GetString()!));
+                    break;
+                case ArgKind.String:
+                    argSet.Upsert(key, reader.GetString()!);
+                    break;
+                case ArgKind.TimeOnly:
+                    argSet.Upsert(key, TimeOnly.Parse(reader.GetString()!));
+                    break;
+                case ArgKind.TimeSpan:
+                    argSet.Upsert(key, TimeSpan.Parse(reader.GetString()!));
+                    break;
+                case ArgKind.Token:
+                    argSet.Upsert(key, Token.From(reader.GetString()!));
+                    break;
+                default:
+                    throw new JsonException();
+            };
+
+            reader.Read();
+
+            ThrowIfNotExpected(ref reader, JsonTokenType.EndObject);
         }
 
         ThrowIfNotExpected(ref reader, JsonTokenType.StartObject);
 
         while (reader.Read())
         {
-            ThrowIfNotExpected(ref reader, JsonTokenType.PropertyName);
+            if (reader.TokenType == JsonTokenType.EndObject)
+                break;
 
-            var name = reader.GetString();
-
-            var arg = GetArg(ref reader);
+            ParseAndUpsert(ref reader);
         }
 
-        ReadAndCheck(ref reader, JsonTokenType.EndObject);
+        if (reader.TokenType != JsonTokenType.EndObject)
+            throw new JsonException();
 
         return argSet;
     }

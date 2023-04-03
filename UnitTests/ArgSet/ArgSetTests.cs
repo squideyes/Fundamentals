@@ -9,7 +9,7 @@ namespace SquidEyes.UnitTests;
 public class ArgSetTests
 {
     [Fact]
-    public void ArgSet_Roundtrips()
+    public void ArgSet_Serializer_Serializes()
     {
         var actual = JsonSerializer.Serialize(
             GetArgSet(), GetJsonSerializerOptions());
@@ -100,7 +100,7 @@ public class ArgSetTests
     }
 
     [Fact]
-    public void X()
+    public void ArgSet_Serializer_Deserializes()
     {
         var source = GetArgSet();
 
@@ -109,6 +109,31 @@ public class ArgSetTests
         var json = JsonSerializer.Serialize(source, options);
 
         var target = JsonSerializer.Deserialize<ArgSet>(json, options);
+
+        target!.Count.Should().Be(source!.Count);
+
+        void Validate<T>(ConfigKey key, Func<ArgSet, ConfigKey, T> getValue) =>
+            getValue(target, key).Should().Be(getValue(source, key));
+
+        Validate(From("AccountId"), (a, k) => a.GetAccountId(k));
+        Validate(From("Boolean"), (a, k) => a.GetBoolean(k));
+        Validate(From("ClientId"), (a, k) => a.GetClientId(k));
+        Validate(From("DateOnly"), (a, k) => a.GetDateOnly(k));
+        Validate(From("DateTime"), (a, k) => a.GetDateTime(k));
+        Validate(From("Double"), (a, k) => a.GetDouble(k));
+        Validate(From("Email"), (a, k) => a.GetEmail(k));
+        Validate(From("Enum"), (a, k) => a.GetEnum<ArgKind>(k));
+        Validate(From("Guid"), (a, k) => a.GetGuid(k));
+        Validate(From("Float"), (a, k) => a.GetFloat(k));
+        Validate(From("Int32"), (a, k) => a.GetInt32(k));
+        Validate(From("Int64"), (a, k) => a.GetInt64(k));
+        Validate(From("Offset"), (a, k) => a.GetOffset(k));
+        Validate(From("Phone"), (a, k) => a.GetPhone(k));
+        Validate(From("ShortId"), (a, k) => a.GetShortId(k));
+        Validate(From("String"), (a, k) => a.GetString(k));
+        Validate(From("TimeOnly"), (a, k) => a.GetTimeOnly(k));
+        Validate(From("TimeSpan"), (a, k) => a.GetTimeSpan(k));
+        Validate(From("Token"), (a, k) => a.GetToken(k));
     }
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
@@ -132,7 +157,7 @@ public class ArgSetTests
         argSet.Upsert(From("Boolean"), true);
         argSet.Upsert(From("ClientId"), ClientId.From("ABCDEFGH"));
         argSet.Upsert(From("DateOnly"), DateOnly.MaxValue);
-        argSet.Upsert(From("DateTime"), DateTime.MaxValue);
+        argSet.Upsert(From("DateTime"), new DateTime(2023, 1, 2, 3, 4, 5, 6));
         argSet.Upsert(From("Double"), double.MaxValue);
         argSet.Upsert(From("Email"), Email.From("louis@squideyes.com"));
         argSet.Upsert(From("Enum"), ArgKind.TimeSpan);
@@ -144,8 +169,8 @@ public class ArgSetTests
         argSet.Upsert(From("Phone"), Phone.From("+1 (215) 316-8538"));
         argSet.Upsert(From("ShortId"), ShortId.From("lvzto7gS74GDKJt2xBNfGx"));
         argSet.Upsert(From("String"), "Hello darkness my old friend");
-        argSet.Upsert(From("TimeOnly"), TimeOnly.MaxValue);
-        argSet.Upsert(From("TimeSpan"), TimeSpan.MaxValue);
+        argSet.Upsert(From("TimeOnly"), new TimeOnly(1, 2, 3, 4));
+        argSet.Upsert(From("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
         argSet.Upsert(From("Token"), Token.From("SomeToken"));
 
         return argSet;

@@ -17,8 +17,8 @@ public class Arg
     }
 
     public ArgKind Kind { get; }
-    public object Value { get; }
     public Type? Type { get; }
+    public object Value { get; }
 
     public T Get<T>() => (T)Value;
 
