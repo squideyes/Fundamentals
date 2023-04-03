@@ -3,13 +3,18 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using System.Collections;
+
 namespace SquidEyes.Fundamentals;
 
-public class ArgSet
+public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
 {
     private readonly Dictionary<ConfigKey, Arg> args = new();
 
     public bool IsEmpty => args.Count == 0;
+
+    public void Upsert(ConfigKey key, AccountId value) =>
+        SimpleUpsert(key, value);
 
     public void Upsert(ConfigKey key, bool value) =>
         SimpleUpsert(key, value);
@@ -20,9 +25,9 @@ public class ArgSet
     public void Upsert(ConfigKey key, DateOnly value) =>
         SimpleUpsert(key, value);
 
-    public void Upsert(ConfigKey key, DateTime value) => 
+    public void Upsert(ConfigKey key, DateTime value) =>
         SimpleUpsert(key, value);
-    
+
     public void Upsert(ConfigKey key, double value) =>
         SimpleUpsert(key, value);
 
@@ -47,12 +52,15 @@ public class ArgSet
     public void Upsert(ConfigKey key, long value) =>
         SimpleUpsert(key, value);
 
+    public void Upsert(ConfigKey key, Offset value) =>
+        SimpleUpsert(key, value);
+
     public void Upsert(ConfigKey key, Phone value) =>
         SimpleUpsert(key, value);
 
     public void Upsert(ConfigKey key, ShortId value) =>
         SimpleUpsert(key, value);
-    
+
     public void Upsert(ConfigKey key, string value) =>
         SimpleUpsert(key, value);
 
@@ -78,4 +86,9 @@ public class ArgSet
 
         return (T)Convert.ChangeType(args[key], typeof(T));
     }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public IEnumerator<KeyValuePair<ConfigKey, Arg>> GetEnumerator() => 
+        args.GetEnumerator();
 }

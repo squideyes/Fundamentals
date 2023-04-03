@@ -12,26 +12,16 @@ internal static partial class MiscExtenders
         if (string.IsNullOrWhiteSpace(value))
             return false;
 
+        if (!char.IsAsciiLetterUpper(value[0]))
+            return false;
+
         if (value.Length == 1)
-            return char.IsAsciiLetterUpper(value[0]);
+            return true;
 
         if (value.Length > 16)
             return false;
 
-        if (!char.IsAsciiLetterUpper(value[0]))
-            return false;
-
-        static bool IsTokenChar(char c)
-        {
-            return c switch
-            {
-                '1' or 'I' or 'i' => false,
-                '0' or 'O' or 'i' => false,
-                _ => char.IsAsciiLetterOrDigit(c)
-            };
-        };
-
-        return value.Skip(1).All(IsTokenChar);
+        return value.Skip(1).All(char.IsAsciiLetterOrDigit);
     }
 
     public static bool IsConfigKeyValue(this string value)

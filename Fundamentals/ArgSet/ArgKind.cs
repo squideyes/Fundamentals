@@ -10,8 +10,6 @@ public enum ArgKind
     AccountId = 1,
     Boolean,
     ClientId,
-    ConfigKey,
-    Custom,
     DateOnly,
     DateTime,
     Double,

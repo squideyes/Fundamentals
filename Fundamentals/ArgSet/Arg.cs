@@ -5,25 +5,22 @@
 
 namespace SquidEyes.Fundamentals;
 
-internal class Arg
+public class Arg
 {
     public Arg(object value)
     {
         Kind = GetArgKind(value);
         Value = value;
 
-        switch (Kind)
-        {
-            case ArgKind.Custom:
-            case ArgKind.Enum:
-                Type = value.GetType();
-                break;
-        }
+        if (Kind == ArgKind.Enum)
+            Type = value.GetType();
     }
 
     public ArgKind Kind { get; }
     public object Value { get; }
     public Type? Type { get; }
+
+    public T Get<T>() => (T)Value;
 
     public static ArgKind GetArgKind(object value)
     {
@@ -32,9 +29,9 @@ internal class Arg
 
         return value switch
         {
+            AccountId => ArgKind.AccountId,
             bool _ => ArgKind.Boolean,
             ClientId _ => ArgKind.ClientId,
-            ConfigKey _ => ArgKind.ConfigKey,
             DateTime _ => ArgKind.DateTime,
             DateOnly _ => ArgKind.DateOnly,
             double _ => ArgKind.Double,
@@ -43,6 +40,7 @@ internal class Arg
             Guid _ => ArgKind.Guid,
             int _ => ArgKind.Int32,
             long _ => ArgKind.Int64,
+            Offset _ => ArgKind.Offset,
             Phone _ => ArgKind.Phone,
             ShortId _ => ArgKind.ShortId,
             string _ => ArgKind.String,
