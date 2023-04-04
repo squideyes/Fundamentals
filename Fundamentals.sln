@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F54EBA1A-B
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Fundamentals.sln.headertext = Fundamentals.sln.headertext
 		LICENSE.md = LICENSE.md
+		.github\workflows\publish.yml = .github\workflows\publish.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
