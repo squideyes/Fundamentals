@@ -24,6 +24,19 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
                 throw new JsonException();
         }
 
+        static void ReadAndCheckProperty(
+            ref Utf8JsonReader reader, string propertyName)
+        {
+            var wasRead = reader.Read();
+
+            if (!wasRead || reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException();
+
+            if (reader.GetString() != propertyName)
+                throw new Exception();
+        }
+
+
         static void ThrowIfNotExpected(
             ref Utf8JsonReader reader, JsonTokenType expected)
         {
@@ -39,10 +52,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
 
             ReadAndCheck(ref reader, JsonTokenType.StartObject);
 
-            ReadAndCheck(ref reader, JsonTokenType.PropertyName);
-
-            if (reader.GetString() != "Kind")
-                throw new JsonException();
+            ReadAndCheckProperty(ref reader, "Kind");
 
             reader.Read();
 
@@ -64,10 +74,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
                 type = Type.GetType(typeText)!;
             }
 
-            ReadAndCheck(ref reader, JsonTokenType.PropertyName);
-
-            if (reader.GetString() != "Value")
-                throw new JsonException();
+            ReadAndCheckProperty(ref reader, "Value");
 
             reader.Read();
 
