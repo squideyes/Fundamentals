@@ -68,6 +68,9 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
     public void Upsert(ConfigKey key, Phone value) =>
         SimpleUpsert(key, value);
 
+    public void Upsert(ConfigKey key, Ratchet value) =>
+        SimpleUpsert(key, value);
+
     public void Upsert(ConfigKey key, ShortId value) =>
         SimpleUpsert(key, value);
 
@@ -123,6 +126,8 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
     public Offset GetOffset(ConfigKey key) => (Offset)args[key].Value;
 
     public Phone GetPhone(ConfigKey key) => (Phone)args[key].Value;
+
+    public Ratchet GetRatchet(ConfigKey key) => (Ratchet)args[key].Value;
 
     public ShortId GetShortId(ConfigKey key) => (ShortId)args[key].Value;
 

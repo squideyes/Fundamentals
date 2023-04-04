@@ -116,6 +116,9 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
                 case ArgKind.Phone:
                     argSet.Upsert(key, Phone.From(reader.GetString()!));
                     break;
+                case ArgKind.Ratchet:
+                    argSet.Upsert(key, Ratchet.From(reader.GetString()!));
+                    break;
                 case ArgKind.ShortId:
                     argSet.Upsert(key, ShortId.From(reader.GetString()!));
                     break;

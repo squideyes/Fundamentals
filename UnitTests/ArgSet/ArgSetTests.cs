@@ -39,7 +39,7 @@ public class ArgSetTests
               },
               "DateTime": {
                 "Kind": "DateTime",
-                "Value": "12/31/9999 23:59:59.999"
+                "Value": "01/02/2023 03:04:05.006"
               },
               "Double": {
                 "Kind": "Double",
@@ -78,6 +78,10 @@ public class ArgSetTests
                 "Kind": "Phone",
                 "Value": "+12153168538"
               },
+              "Ratchet": {
+                "Kind": "Ratchet",
+                "Value": "Loss=1|Gain=3.5"
+              },
               "ShortId": {
                 "Kind": "ShortId",
                 "Value": "lvzto7gS74GDKJt2xBNfGx"
@@ -88,11 +92,11 @@ public class ArgSetTests
               },
               "TimeOnly": {
                 "Kind": "TimeOnly",
-                "Value": "23:59:59.999"
+                "Value": "01:02:03.004"
               },
               "TimeSpan": {
                 "Kind": "TimeSpan",
-                "Value": "10675199.02:48:05.477"
+                "Value": "1.02:03:04.005"
               },
               "Token": {
                 "Kind": "Token",
@@ -134,6 +138,7 @@ public class ArgSetTests
         Validate(From("Int64"), (a, k) => a.GetInt64(k));
         Validate(From("Offset"), (a, k) => a.GetOffset(k));
         Validate(From("Phone"), (a, k) => a.GetPhone(k));
+        Validate(From("Ratchet"), (a, k) => a.GetRatchet(k));
         Validate(From("ShortId"), (a, k) => a.GetShortId(k));
         Validate(From("String"), (a, k) => a.GetString(k));
         Validate(From("TimeOnly"), (a, k) => a.GetTimeOnly(k));
@@ -172,6 +177,7 @@ public class ArgSetTests
         argSet.Upsert(From("Int64"), long.MaxValue);
         argSet.Upsert(From("Offset"), Offset.From("Gain=3.5"));
         argSet.Upsert(From("Phone"), Phone.From("+1 (215) 316-8538"));
+        argSet.Upsert(From("Ratchet"), Ratchet.From("Loss=1|Gain=3.5"));
         argSet.Upsert(From("ShortId"), ShortId.From("lvzto7gS74GDKJt2xBNfGx"));
         argSet.Upsert(From("String"), "Hello darkness my old friend");
         argSet.Upsert(From("TimeOnly"), new TimeOnly(1, 2, 3, 4));

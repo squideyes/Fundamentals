@@ -21,6 +21,7 @@ public enum ArgKind
     Int64,
     Offset,
     Phone,
+    Ratchet,
     ShortId,
     String,
     TimeOnly,

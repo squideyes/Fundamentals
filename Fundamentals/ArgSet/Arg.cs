@@ -42,6 +42,7 @@ public class Arg
             long _ => ArgKind.Int64,
             Offset _ => ArgKind.Offset,
             Phone _ => ArgKind.Phone,
+            Ratchet _ => ArgKind.Ratchet,
             ShortId _ => ArgKind.ShortId,
             string _ => ArgKind.String,
             TimeOnly _ => ArgKind.TimeOnly,
