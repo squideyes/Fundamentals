@@ -18,6 +18,10 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <EnablePackageValidation>true</EnablePackageValidation>
     </PropertyGroup>
 
