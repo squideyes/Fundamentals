@@ -86,6 +86,13 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
     public void Upsert(ConfigKey key, Token value) =>
         SimpleUpsert(key, value);
 
+    public void Upsert(ConfigKey key, Uri value)
+    {
+        value.IsAbsoluteUri.Must().Be(true);
+
+        SimpleUpsert(key, value);
+    }
+
     private void SimpleUpsert<T>(ConfigKey key, T value)
     {
         key.MayNot().BeDefault();
@@ -138,6 +145,8 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
     public TimeSpan GetTimeSpan(ConfigKey key) => (TimeSpan)args[key].Value;
 
     public Token GetToken(ConfigKey key) => (Token)args[key].Value;
+
+    public Uri GetUri(ConfigKey key) => (Uri)args[key].Value;
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

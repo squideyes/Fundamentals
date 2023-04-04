@@ -101,6 +101,10 @@ public class ArgSetTests
               "Token": {
                 "Kind": "Token",
                 "Value": "SomeToken"
+              },
+              "Uri": {
+                "Kind": "Uri",
+                "Value": "http://google.com/"
               }
             }
             """;
@@ -144,6 +148,7 @@ public class ArgSetTests
         Validate(From("TimeOnly"), (a, k) => a.GetTimeOnly(k));
         Validate(From("TimeSpan"), (a, k) => a.GetTimeSpan(k));
         Validate(From("Token"), (a, k) => a.GetToken(k));
+        Validate(From("Uri"), (a, k) => a.GetUri(k));
     }
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
@@ -183,6 +188,7 @@ public class ArgSetTests
         argSet.Upsert(From("TimeOnly"), new TimeOnly(1, 2, 3, 4));
         argSet.Upsert(From("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
         argSet.Upsert(From("Token"), Token.From("SomeToken"));
+        argSet.Upsert(From("Uri"), new Uri("http://google.com"));
 
         return argSet;
     }

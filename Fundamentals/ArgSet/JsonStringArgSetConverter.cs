@@ -141,6 +141,9 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
                 case ArgKind.Token:
                     argSet.Upsert(key, Token.From(reader.GetString()!));
                     break;
+                case ArgKind.Uri:
+                    argSet.Upsert(key, new Uri(reader.GetString()!));
+                    break;
                 default:
                     throw new JsonException();
             };
