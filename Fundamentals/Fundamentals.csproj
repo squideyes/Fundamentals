@@ -24,6 +24,7 @@
     <PropertyGroup>
         <PackageIcon>Icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/squideyes/Fundamentals</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/squideyes/Fundamentals</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
