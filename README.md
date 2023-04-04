@@ -10,9 +10,9 @@ If you want to see what it's all about, please check out SquidEyes.UnitTests. As
 |Class|Description|
 |---|---|
 |FastArrayReader|A bit like a BinaryReader, but at least 10x faster; for arrays, not streams|
-|HttpHelper|Fetches strings and JSON objects via HTTP(S) endpoints, with easy URL construction like Flurl.Http, but in a lighter weight object that supports an injectable HttpClientHandler|
+|HttpHelper|Fetches strings and JSON objects via HTTP(S) endpoints, with easy URL construction like Flurl.Http, but in a lighter-weight object that supports an injectable HttpClientHandler|
 |CsvEnumerator|A fast, lightweight, super-easy-to-use CSV parser / enumerator that allows CSV files to be read with minimal memory collection pressure|
-|ArgSet|A heterogeneous argument collection that supports more that a dozen data types|
+|ArgSet|A heterogeneous argument collection that supports twenty data types|
 |SlidingBuffer|A fixed-size generic buffer that supports forward and reverse iteration and indexing|
 
 #

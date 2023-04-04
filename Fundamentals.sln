@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F54EBA1A-B
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Fundamentals.sln.headertext = Fundamentals.sln.headertext
 		LICENSE.md = LICENSE.md
+		,github\workflows\publish.yml = ,github\workflows\publish.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -18,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fundamentals", "Fundamental
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0F2ADB8D-663C-45DC-BF02-1E09E4FE1918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{3A3AEAAD-B9F1-4535-BF49-E31E1A0D36F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{3A3AEAAD-B9F1-4535-BF49-E31E1A0D36F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
