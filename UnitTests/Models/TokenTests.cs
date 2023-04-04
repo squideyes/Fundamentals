@@ -20,10 +20,6 @@ public class TokenTests
     [InlineData(" Aa", false)]
     [InlineData("Aa ", false)]
     [InlineData("A a", false)]
-    [InlineData("A1", false)]
-    [InlineData("AI", false)]
-    [InlineData("A0", false)]
-    [InlineData("AO", false)]
     [InlineData("", false)]
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>

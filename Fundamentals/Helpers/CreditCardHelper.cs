@@ -22,7 +22,24 @@ public static partial class CreditCardHelper
     public static bool IsMMYY(this string value) =>
         value is not null && mmyyValidator.IsMatch(value);
 
-    public static bool IsValid(string value)
+    public static bool IsCVV(this string value, CreditCardBrand brand)
+    {
+        if (!int.TryParse(value, out int number))
+            return false;
+
+        if (number < 0)
+            return false;
+
+        switch (brand)
+        {
+            case CreditCardBrand.Amex:
+                return number <= 9999;
+            default:
+                return number <= 999;
+        }
+    }
+
+    public static bool IsNumber(string value)
     {
         if (string.IsNullOrEmpty(value))
             return false;
@@ -51,8 +68,8 @@ public static partial class CreditCardHelper
 
     public static CreditCardBrand GetBrand(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            return CreditCardBrand.Unknown;
+        if (!IsNumber(value))
+            throw new ArgumentOutOfRangeException(nameof(value));
 
         var cardNumber = value.Where(char.IsDigit).ToArray();
 
@@ -68,9 +85,15 @@ public static partial class CreditCardHelper
             return CreditCardBrand.Unknown;
     }
 
-    public static string WithSpaces(string value)
+    public static string Format(string value, bool withSpaces = true)
     {
+        if (!IsNumber(value))
+            throw new ArgumentOutOfRangeException(nameof(value));
+
         var digitsOnly = DigitsOnly(value);
+
+        if (!withSpaces)
+            return digitsOnly;
 
         string Format(params int[] lengths)
         {

@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using System.Runtime.CompilerServices;
 using Vogen;
 
 namespace SquidEyes.Fundamentals;
@@ -17,14 +18,8 @@ public readonly partial struct Ratchet
     public static Ratchet From(Offset when, Offset where) =>
         From($"{when}|{where}");
 
-    public static Validation Validate(string value)
-    {
-        if (IsValue(value))
-            return Validation.Ok;
-
-        return Validation.Invalid(
-            $"\"{value}\" is an invalid \"Ratchet\" value!");
-    }
+    public static Validation Validate(string value) =>
+        VogenHelper.GetValidation<Offset>(value, IsValue);
 
     public static bool IsValue(string value)
     {

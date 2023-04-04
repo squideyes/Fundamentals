@@ -25,7 +25,7 @@ public class CreditCardHelperTests
         static void Validate(string[] cardNumbers)
         {
             foreach (var cardNumber in cardNumbers)
-                CreditCardHelper.IsValid(cardNumber).Should().BeTrue();
+                CreditCardHelper.IsNumber(cardNumber).Should().BeTrue();
         }
 
         var validCards = JsonSerializer.Deserialize<ValidCards>(
@@ -57,5 +57,5 @@ public class CreditCardHelperTests
     [InlineData("")]
     [InlineData(null)]
     public void From_InvalidInput_ReturnsFalse(string cardNumber) =>
-        CreditCardHelper.IsValid(cardNumber).Should().BeFalse();
+        CreditCardHelper.IsNumber(cardNumber).Should().BeFalse();
 }

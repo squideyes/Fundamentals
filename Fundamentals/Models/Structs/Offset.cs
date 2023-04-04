@@ -17,14 +17,8 @@ public readonly partial struct Offset
     public static Offset From(Vector vector, double delta) =>
         From($"{vector}={delta}");
 
-    public static Validation Validate(string value)
-    {
-        if (IsValue(value))
-            return Validation.Ok;
-
-        return Validation.Invalid(
-            $"\"{value}\" is an invalid \"Offset\" value!");
-    }
+    public static Validation Validate(string value)=>
+        VogenHelper.GetValidation<Offset>(value, IsValue);
 
     public static bool IsValue(string value)
     {

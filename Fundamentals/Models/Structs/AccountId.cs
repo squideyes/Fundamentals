@@ -19,14 +19,8 @@ public readonly partial struct AccountId
     public static AccountId From(ClientId clientId, char code, int ordinal) =>
         From($"{clientId}({code}{ordinal:000})");
 
-    public static Validation Validate(string value)
-    {
-        if (IsValue(value))
-            return Validation.Ok;
-
-        return Validation.Invalid(
-            $"\"{value}\" is an invalid \"AccountId\" value!");
-    }
+    public static Validation Validate(string value)=>
+        VogenHelper.GetValidation<AccountId>(value, IsValue);
 
     public static bool IsValue(string value)
     {
