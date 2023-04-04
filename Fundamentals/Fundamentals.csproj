@@ -27,12 +27,13 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <PackageIcon>Icon.png</PackageIcon>
+        <PackageIcon>Icon.jpg</PackageIcon>
         <RepositoryUrl>https://github.com/squideyes/Fundamentals</RepositoryUrl>
         <PackageProjectUrl>https://github.com/squideyes/Fundamentals</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="Icon.jpg" Pack="true" PackagePath=""/>
         <None Include="..\README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
