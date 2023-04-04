@@ -31,18 +31,9 @@ internal static partial class MiscExtenders
 
         var fields = value.Split(':');
 
-        if (!fields.Length.Between(1, 4))
+        if (!fields.Length.IsBetween(1, 4))
             return false;
 
         return !fields.Any(v => !v.IsTokenValue());
-    }
-
-    public static string ToString<T>(
-        this T value, Func<T, string> getString = null!)
-    {
-        if (getString is null)
-            return value!.ToString()!;
-        else
-            return getString(value!);
     }
 }

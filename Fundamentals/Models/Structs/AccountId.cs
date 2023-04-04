@@ -41,6 +41,6 @@ public readonly partial struct AccountId
         if (!int.TryParse(value[10..^1], out int number))
             return false;
 
-        return number.Between(1, 999);
+        return number.IsBetween(1, 999);
     }
 }
