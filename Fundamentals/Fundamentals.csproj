@@ -13,7 +13,9 @@
 		<Description>A set of helper classes and extension methods</Description>
 		<Copyright>Copyright 2023 by SquidEyes, LLC.</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	</PropertyGroup>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>dotnet;arguments;guard-clauses;validation;arrays;helpers;value-objects;primative-obsession</PackageTags>
+    </PropertyGroup>
 
     <PropertyGroup>
         <EnablePackageValidation>true</EnablePackageValidation>
@@ -21,10 +23,7 @@
 
     <PropertyGroup>
         <PackageIcon>Icon.png</PackageIcon>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/squideyes/Fundamentals</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
