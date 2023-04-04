@@ -14,7 +14,7 @@
 		<Copyright>Copyright 2023 by SquidEyes, LLC.</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>dotnet;arguments;guard-clauses;validation;arrays;helpers;value-objects;primative-obsession</PackageTags>
+        <PackageTags>dotnet;value-objects;argument-collection;arguments;guard-clauses;validation;arrays;helpers;extenders;primative-obsession</PackageTags>
     </PropertyGroup>
 
     <PropertyGroup>

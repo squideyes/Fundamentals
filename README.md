@@ -19,7 +19,3 @@ If you want to see what it's all about, please check out SquidEyes.UnitTests. As
 Contributions are always welcome (see [CONTRIBUTING.md](https://github.com/squideyes/Basics/blob/master/CONTRIBUTING.md) for details)
 
 **Supper-Duper Extra-Important Caveat**:  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-
-
-
-
