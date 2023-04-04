@@ -5,7 +5,6 @@
 
 using FluentAssertions;
 using SquidEyes.Fundamentals;
-using System.Text.Json;
 
 namespace SquidEyes.UnitTests;
 
