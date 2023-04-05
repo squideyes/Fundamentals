@@ -48,7 +48,7 @@ public class CreditCardHelperTests
     [InlineData("6011 6874 8256 4166")]
     [InlineData("6011 8148 3690 5651")]
     public void From_ValidInput_Constructs(string cardNumber) =>
-        CreditCardHelper.IsNumber(cardNumber).Should().BeTrue();
+        CreditCardValidator.IsNumber(cardNumber).Should().BeTrue();
 
     [Theory]
     [InlineData("4922986976940144")]
@@ -70,5 +70,5 @@ public class CreditCardHelperTests
     [InlineData("")]
     [InlineData(null)]
     public void From_InvalidInput_ReturnsFalse(string cardNumber) =>
-        CreditCardHelper.IsNumber(cardNumber).Should().BeFalse();
+        CreditCardValidator.IsNumber(cardNumber).Should().BeFalse();
 }

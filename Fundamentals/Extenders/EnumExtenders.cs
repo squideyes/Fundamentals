@@ -12,15 +12,6 @@ public static class EnumExtenders
     public static T ToEnumValue<T>(this string value) =>
         (T)Enum.Parse(typeof(T), value, true);
 
-    public static bool IsEnumValue<T>(this T value)
-        where T : struct, Enum
-    {
-        return Enum.IsDefined(value);
-    }
-
-    public static bool HasFlags(this Enum value) => value.GetType()
-        .GetCustomAttributes(typeof(FlagsAttribute), false).Any();
-
     public static bool IsFlagsValue(this Enum value)
     {
         switch (Type.GetTypeCode(

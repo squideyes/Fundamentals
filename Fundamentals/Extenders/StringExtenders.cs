@@ -10,57 +10,8 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class StringExtenders
 {
-    private static readonly Dictionary<string, Regex> regexes = new();
-
-    public static bool IsEmptyOrWhitespace(this string? value)
-    {
-        if (value == null)
-            return false;
-
-        if (value.Length == 0)
-            return true;
-
-        return value.Any(char.IsWhiteSpace);
-    }
-
-    public static bool IsMatch(
-        this string value, string pattern, RegexOptions options)
-    {
-        if (regexes.TryGetValue(pattern!, out Regex regex))
-            return regex.IsMatch(value);
-
-        if (!pattern.IsRegexPattern())
-            throw new ArgumentOutOfRangeException(nameof(pattern));
-
-        options |= RegexOptions.Compiled;
-        options |= RegexOptions.NonBacktracking;
-
-        regex = new Regex(pattern, options);
-
-        regexes.Add(pattern, regex);
-
-        return regex.IsMatch(value);
-    }
-
-    public static bool IsRegexPattern(this string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return false;
-
-        var regex = new Regex(value, RegexOptions.None,
-            TimeSpan.FromMilliseconds(100));
-
-        try
-        {
-            regex.IsMatch("");
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+    public static string ToPlusAndDigits(this string value) => 
+        "+" + string.Join("", value.Skip(1).Where(char.IsDigit));
 
     public static double ToDoubleOrNaN(this string value) =>
         string.IsNullOrWhiteSpace(value) ? double.NaN : double.Parse(value);
@@ -124,73 +75,10 @@ public static partial class StringExtenders
         return lines;
     }
 
-    public static bool IsGuid(this string value) =>
-        Guid.TryParse(value, out _);
-
-    public static bool IsNonEmptyAndTrimmed(this string value)
-    {
-        return !string.IsNullOrWhiteSpace(value)
-            && !char.IsWhiteSpace(value[0])
-            && !char.IsWhiteSpace(value[^1]);
-    }
-
     public static string WithTrailingSlash(this string value)
     {
         return value.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
             value : value + Path.DirectorySeparatorChar;
-    }
-
-    public static bool EnsurePathExists(this string value, bool valueIsPath)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentOutOfRangeException(nameof(value));
-
-            var path = value;
-
-            if (!valueIsPath)
-                path = Path.GetDirectoryName(path)!;
-
-            path = Path.GetFullPath(path.WithTrailingSlash());
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    public static bool IsFolderName(this string value, bool mustBeRooted = true)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return false;
-
-        try
-        {
-            _ = new DirectoryInfo(value);
-
-            if (!mustBeRooted)
-                return true;
-            else
-                return Path.IsPathRooted(value);
-        }
-        catch (ArgumentException)
-        {
-            return false;
-        }
-        catch (PathTooLongException)
-        {
-            return false;
-        }
-        catch (NotSupportedException)
-        {
-            return false;
-        }
     }
 
     public static Stream ToStream(this string value)
@@ -221,23 +109,6 @@ public static partial class StringExtenders
         stream.Position = 0;
 
         return stream;
-    }
-
-    public static bool IsFileName(this string value, bool mustBeRooted = true)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return false;
-
-            var dummy = new FileInfo(value);
-
-            return !mustBeRooted || Path.IsPathRooted(value);
-        }
-        catch
-        {
-            return false;
-        }
     }
 
     public static List<string> Wrap(this string text, int margin)

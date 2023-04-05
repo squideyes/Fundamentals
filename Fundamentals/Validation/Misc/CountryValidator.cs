@@ -5,11 +5,11 @@
 
 namespace SquidEyes.Fundamentals;
 
-public static class IDictionaryExtenders
+public static class CountryValidator
 {
-    public static bool IsNotEmpty<K, V>(this IDictionary<K, V> value)
-    {
-        return value is not null && value.Any() && !value
-            .Any(v => v.Key.IsDefault() || v.Value.IsDefault());
-    }
+    private static readonly HashSet<string> countryCodes = new(
+        ISO3166.Country.List.Select(c => c.TwoLetterCode));
+
+    public static bool IsCountryCode(string value) =>
+        value is not null && countryCodes.Contains(value);
 }

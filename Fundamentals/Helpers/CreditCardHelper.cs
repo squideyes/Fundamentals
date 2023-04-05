@@ -10,76 +10,28 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class CreditCardHelper
 {
-    private static readonly Regex mmyyValidator = GetMMYYValidator();
-    private static readonly Regex amexValidator = GetAmexValidator();
-    private static readonly Regex discoverValidator = GetDiscoverValidator();
-    private static readonly Regex mastercardValidator = GetMastercardValidator();
-    private static readonly Regex visaValidator = GetVisaValidator();
+    private static readonly Regex isAmex = GetIsAmex();
+    private static readonly Regex isDiscover = GetIsDiscover();
+    private static readonly Regex isMastercard = GetIsMastercard();
+    private static readonly Regex isVisa = GetIsVisa();
 
     public static string DigitsOnly(string value) =>
         new(value.Where(char.IsDigit).ToArray());
 
-    public static bool IsMMYY(this string value) =>
-        value is not null && mmyyValidator.IsMatch(value);
-
-    public static bool IsCVV(this string value, CreditCardBrand brand)
-    {
-        if (!int.TryParse(value, out int number))
-            return false;
-
-        if (number < 0)
-            return false;
-
-        switch (brand)
-        {
-            case CreditCardBrand.Amex:
-                return number <= 9999;
-            default:
-                return number <= 999;
-        }
-    }
-
-    public static bool IsNumber(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return false;
-
-        var digitsOnly = DigitsOnly(value);
-
-        int checkSum = 0;
-
-        for (var i = digitsOnly.Length - 1; i >= 0; i -= 2)
-            checkSum += digitsOnly[i] - '0';
-
-        for (var i = digitsOnly.Length - 2; i >= 0; i -= 2)
-        {
-            int number = (digitsOnly[i] - '0') * 2;
-
-            while (number > 0)
-            {
-                checkSum += number % 10;
-
-                number /= 10;
-            }
-        }
-
-        return (checkSum % 10) == 0;
-    }
-
     public static CreditCardBrand GetBrand(string value)
     {
-        if (!IsNumber(value))
+        if (!CreditCardValidator.IsNumber(value))
             throw new ArgumentOutOfRangeException(nameof(value));
 
         var cardNumber = value.Where(char.IsDigit).ToArray();
 
-        if (amexValidator.IsMatch(cardNumber))
+        if (isAmex.IsMatch(cardNumber))
             return CreditCardBrand.Amex;
-        else if (discoverValidator.IsMatch(cardNumber))
+        else if (isDiscover.IsMatch(cardNumber))
             return CreditCardBrand.Discover;
-        else if (mastercardValidator.IsMatch(cardNumber))
+        else if (isMastercard.IsMatch(cardNumber))
             return CreditCardBrand.MasterCard;
-        else if (visaValidator.IsMatch(cardNumber))
+        else if (isVisa.IsMatch(cardNumber))
             return CreditCardBrand.Visa;
         else
             return CreditCardBrand.Unknown;
@@ -87,7 +39,7 @@ public static partial class CreditCardHelper
 
     public static string Format(string value, bool withSpaces = true)
     {
-        if (!IsNumber(value))
+        if (!CreditCardValidator.IsNumber(value))
             throw new ArgumentOutOfRangeException(nameof(value));
 
         var digitsOnly = DigitsOnly(value);
@@ -122,18 +74,15 @@ public static partial class CreditCardHelper
         };
     }
 
-    [GeneratedRegex("^(0[1-9]|1[012])(2[3-9]|3[0-9])$")]
-    private static partial Regex GetMMYYValidator();
-
     [GeneratedRegex("^3[47][0-9]{13}$")]
-    private static partial Regex GetAmexValidator();
+    private static partial Regex GetIsAmex();
 
     [GeneratedRegex("^6(?:011|5[0-9]{2})[0-9]{12}$")]
-    private static partial Regex GetDiscoverValidator();
+    private static partial Regex GetIsDiscover();
 
     [GeneratedRegex("^5[1-5][0-9]{14}$")]
-    private static partial Regex GetMastercardValidator();
+    private static partial Regex GetIsMastercard();
 
     [GeneratedRegex("^4[0-9]{12}(?:[0-9]{3})?$")]
-    private static partial Regex GetVisaValidator();
+    private static partial Regex GetIsVisa();
 }

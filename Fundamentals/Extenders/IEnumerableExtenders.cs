@@ -13,9 +13,6 @@ public static class IEnumerableExtenders
             action(item);
     }
 
-    public static bool IsUnique<T>(this IEnumerable<T> values) =>
-        values.All(new HashSet<T>().Add);
-
     public static bool HasItems<T>(
         this IEnumerable<T> items, bool nonDefault = true)
     {

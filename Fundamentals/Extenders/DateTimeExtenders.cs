@@ -74,18 +74,6 @@ public static class DateTimeExtenders
         return TimeZoneInfo.ConvertTimeToUtc(value, tzi);
     }
 
-    public static bool IsDate(this DateTime value) =>
-        value.TimeOfDay == TimeSpan.Zero;
-
-    public static bool IsWeekday(this DateTime value)
-    {
-        return value.DayOfWeek switch
-        {
-            DayOfWeek.Saturday or DayOfWeek.Sunday => false,
-            _ => true,
-        };
-    }
-
     public static bool OnInterval(this DateTime value, int seconds)
     {
         seconds.Must().BePositive();
