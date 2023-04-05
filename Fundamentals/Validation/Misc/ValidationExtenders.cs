@@ -1,4 +1,9 @@
-﻿using System.Text.RegularExpressions;
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
+
+using System.Text.RegularExpressions;
 using static System.DayOfWeek;
 
 namespace SquidEyes.Fundamentals;
