@@ -17,4 +17,13 @@ public static class StringBuilderExtenders
 
         sb.Append(value);
     }
+
+    public static void AppendDelimited(
+        this StringBuilder sb, object value, string delimiter = ",")
+    {
+        if (sb.Length != 0)
+            sb.Append(delimiter);
+
+        sb.Append(value);
+    }
 }
