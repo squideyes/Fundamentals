@@ -18,7 +18,7 @@ public class ValueSet
         this.values = values;
     }
 
-    public List<T> GetValues<T>()
+    public List<T> Get<T>()
     {
         typeof(T).Must().Be(v => v == type);
 
@@ -41,7 +41,7 @@ public class ValueSet
     }
 
     public static ValueSet From(params int[] values) =>
-        From(values);
+        From((IEnumerable<int>)values);
 
     public static ValueSet From(IEnumerable<int> values)
     {
@@ -51,7 +51,7 @@ public class ValueSet
         return new(typeof(int), values.Cast<object>().ToList());
     }
 
-    public static ValueSet From(int min, int max, int step)
+    public static ValueSet Generate(int min, int max, int step)
     {
         ValidateMinMaxStep(min, max, step);
 
@@ -64,7 +64,7 @@ public class ValueSet
     }
 
     public static ValueSet From(params double[] values) =>
-        From(values);
+        From((IEnumerable<double>)values);
 
     public static ValueSet From(IEnumerable<double> values)
     {
@@ -74,7 +74,7 @@ public class ValueSet
         return new(typeof(double), values.Cast<object>().ToList());
     }
 
-    public static ValueSet From(
+    public static ValueSet Generate(
         double min, double max, double step, int? digits = null)
     {
         ValidateMinMaxStep(min, max, step);

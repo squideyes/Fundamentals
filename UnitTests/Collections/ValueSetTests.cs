@@ -1,14 +1,17 @@
-﻿using SquidEyes.Fundamentals;
+﻿using FluentAssertions;
+using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
 
 public class ValueSetTests
 {
     [Fact]
-    public void X()
+    public void Get_ValidInput_ReturnsExpected()
     {
-        var ints = ValueSet.From(1, 2, 3);
-        var doubles = ValueSet.From(1.0, 2.0, 3.0);
-        var floats = ValueSet.From(1.0f, 2.0f, 3.0f);
+        static void Test<T>(ValueSet values, params T[] expected) =>
+            values.Get<T>().Should().BeEquivalentTo(expected.ToList());
+
+        Test(ValueSet.From(1, 2, 3), 1, 2, 3);
+        Test(ValueSet.From(1.0, 2.0, 3.0), 1.0, 2.0, 3.0);
     }
 }
