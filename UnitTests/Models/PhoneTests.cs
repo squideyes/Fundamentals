@@ -43,4 +43,17 @@ public class PhoneTests
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>
         Phone.IsValue(value).Should().Be(expected);
+
+    [Theory]
+    [InlineData(PhoneFormat.EasyRead, "+442079476330", "+44 020 7947 6330")]
+    [InlineData(PhoneFormat.EasyRead, "+12153165555", "+1 (215) 316-5555")]
+    public void Formatted_ValidInput_ReturnsExpected(
+        PhoneFormat format, string raw, string expected)
+    {
+        var phone = Phone.From(raw);
+
+        var actual = phone.Formatted(format);
+
+        actual.Should().Be(expected);
+    }
 }
