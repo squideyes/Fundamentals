@@ -58,6 +58,12 @@ public static partial class ValidationExtenders
     public static bool IsDate(this DateTime value) =>
         value.TimeOfDay == TimeSpan.Zero;
 
+    public static bool IsWeekday(this DateTime date) =>
+        date.DayOfWeek.IsWeekday();
+
+    public static bool IsWeekend(this DateTime date) =>
+        date.DayOfWeek.IsWeekend();
+
     public static bool IsWeekday(this DateOnly date) =>
         date.DayOfWeek.IsWeekday();
 
