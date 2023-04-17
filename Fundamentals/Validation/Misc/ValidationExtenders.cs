@@ -55,24 +55,20 @@ public static partial class ValidationExtenders
 
     private static bool IsTrimmed(this string value) =>
         !char.IsWhiteSpace(value[0]) && !char.IsWhiteSpace(value[^1]);
-
-    public static bool IsWeekDay(this DateOnly date) =>
-        date.DayOfWeek >= Monday && date.DayOfWeek <= Friday;
-
-    public static bool IsWeekend(this DateOnly date) =>
-        date.DayOfWeek == Saturday || date.DayOfWeek == Sunday;
-
     public static bool IsDate(this DateTime value) =>
         value.TimeOfDay == TimeSpan.Zero;
 
-    public static bool IsWeekday(this DateTime value)
-    {
-        return value.DayOfWeek switch
-        {
-            Saturday or Sunday => false,
-            _ => true,
-        };
-    }
+    public static bool IsWeekday(this DateOnly date) =>
+        date.DayOfWeek.IsWeekday();
+
+    public static bool IsWeekend(this DateOnly date) =>
+        date.DayOfWeek.IsWeekend();
+
+    public static bool IsWeekday(this DayOfWeek value) =>
+        value >= Monday && value <= Friday;
+
+    public static bool IsWeekend(this DayOfWeek value) =>
+        value == Saturday || value == Sunday;
 
     public static bool IsDefault<T>(this T value) =>
         Equals(value, default(T));

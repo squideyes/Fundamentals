@@ -18,28 +18,33 @@ public class Address
             RuleFor(x => x.Country)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .Length(2)
                 .Must(CountryValidator.IsCountryCode)
                 .WithMessage("'Country' must be an ISO 3166 country code.");
 
             RuleFor(x => x.Address1)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .MaximumLength(50)
                 .Must(v => v!.IsNonEmptyAndTrimmed())
                 .WithMessage("'Address1' must be non-empty and trimmed.");
 
             RuleFor(x => x.Address2)
-                .Must(v => v!.IsEmptyOrTrimmed())
-                .WithMessage("'Address2' must be empty or trimmed.");
+                .Must(v => v!.IsNonEmptyAndTrimmed())
+                .WithMessage("'Address2' must be non-empty and trimmed.")
+                .When(v => v is not null);
 
             RuleFor(x => x.Locality)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .MaximumLength(25)
                 .Must(v => v!.IsNonEmptyAndTrimmed())
                 .WithMessage("'Locality' must be non-empty and trimmed.");
 
             RuleFor(x => x.Region)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .MaximumLength(25)
                 .Must(v => v!.IsNonEmptyAndTrimmed())
                 .WithMessage("'Region' must be non-empty and trimmed.");
 
