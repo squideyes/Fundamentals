@@ -16,6 +16,6 @@ If you want to see what it's all about, please check out SquidEyes.UnitTests. As
 |SlidingBuffer|A fixed-size generic buffer that supports forward and reverse iteration and indexing|
 
 #
-Contributions are always welcome (see [CONTRIBUTING.md](https://github.com/squideyes/Basics/blob/master/CONTRIBUTING.md) for details)
+Contributions are always welcome (see [CONTRIBUTING.md](https://github.com/squideyes/Fundamentals/blob/master/CONTRIBUTING.md) for details)
 
 **Supper-Duper Extra-Important Caveat**:  THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
