@@ -42,7 +42,7 @@ public static class GenericExtenders
             @do(value);
     }
 
-    public static R Get<T, R>(this T value, Func<T, R> func) => func(value);
+    public static R Convert<T, R>(this T value, Func<T, R> getValue) => getValue(value);
 
-    public static void Act<T>(this T value, Action<T> action) => action(value);
+    public static void Do<T>(this T value, Action<T> action) => action(value);
 }

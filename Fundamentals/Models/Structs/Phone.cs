@@ -19,7 +19,7 @@ public readonly partial struct Phone
         VogenHelper.GetValidation<Phone>(value, IsValue);
 
     public static bool IsValue(string value) =>
-        Safe.TryGetValue(() => pnu.IsValidNumber(pnu.Parse(value, "US")));
+        Safe.GetValueOrDefault(() => pnu.IsValidNumber(pnu.Parse(value, "US")));
 
     public static string Normalize(string value) =>
         pnu.Format(pnu.Parse(value, "US"), E164);

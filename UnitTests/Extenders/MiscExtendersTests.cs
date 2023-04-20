@@ -12,11 +12,11 @@ public class MiscExtendersTests
 {
     [Fact]
     public void AsFuncWorksAsExpected() =>
-        "XXX".Get(s => s).Should().Be("XXX");
+        "XXX".Convert(s => s).Should().Be("XXX");
 
     [Fact]
     public void AsActionWorksAsExpected() =>
-        "XXX".Act(s => s.Should().Be("XXX"));
+        "XXX".Do(s => s.Should().Be("XXX"));
 
     [Theory]
     [InlineData(true, 1, 1)]

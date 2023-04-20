@@ -3,46 +3,37 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Text.Json;
-
 namespace SquidEyes.Fundamentals;
 
 public static class Safe
 {
-    public static bool TryGetValue(Func<bool> func)
+    public static bool Do(Action action)
     {
         try
         {
-            return func();
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    public static bool TryGetValue<T>(Func<T> func, out T value)
-    {
-        try
-        {
-            value = func();
+            action();
 
             return true;
         }
         catch
         {
-            value = default!;
-
             return false;
         }
     }
 
-    public static bool TryParseJson<T>(
-        string json, JsonSerializerOptions options, out T? value)
+    public static T GetValueOrDefault<T>(Func<T> getValue, T @default = default!)
+    {
+        if (TryGetValue(() => getValue(), out T value))
+            return value;
+        else
+            return @default;
+    }
+
+    public static bool TryGetValue<T>(Func<T> getValue, out T value)
     {
         try
         {
-            value = JsonSerializer.Deserialize<T>(json, options);
+            value = getValue();
 
             return true;
         }

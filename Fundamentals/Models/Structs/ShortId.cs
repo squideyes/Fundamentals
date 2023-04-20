@@ -23,6 +23,5 @@ public readonly partial struct ShortId
     public static bool IsValue(string value) =>
         value?.Length == SIZE && value.All(hashSet.Contains);
 
-    public static ShortId Next() =>
-        new(IdHelper.GetRandomId(charSet, SIZE));
+    public static ShortId Next() => From(IdHelper.GetRandomId(charSet, SIZE));
 }
