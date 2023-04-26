@@ -12,7 +12,7 @@ public class ErrorCaught : LogItemBase
     private readonly Error error;
 
     public ErrorCaught(Exception error, bool? withFileInfo = null)
-        : base(LogLevel.Error, nameof(ErrorCaught))
+        : base(LogLevel.Error, Identifier.From(nameof(ErrorCaught)))
     {
         ArgumentNullException.ThrowIfNull(error, nameof(error));
 

@@ -17,7 +17,7 @@ public static partial class ValidationExtenders
 
     private static readonly Dictionary<string, Regex> regexes = new();
 
-    public static bool IsTokenValue(this string value)
+    public static bool IsIdentifierValue(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
@@ -28,7 +28,7 @@ public static partial class ValidationExtenders
         if (value.Length == 1)
             return true;
 
-        if (value.Length > 16)
+        if (value.Length > 24)
             return false;
 
         return value.Skip(1).All(char.IsAsciiLetterOrDigit);
@@ -44,7 +44,7 @@ public static partial class ValidationExtenders
         if (!fields.Length.IsBetween(1, 4))
             return false;
 
-        return !fields.Any(v => !v.IsTokenValue());
+        return !fields.Any(v => !v.IsIdentifierValue());
     }
 
     public static bool IsEmptyOrTrimmed(this string value) =>
@@ -55,6 +55,7 @@ public static partial class ValidationExtenders
 
     private static bool IsTrimmed(this string value) =>
         !char.IsWhiteSpace(value[0]) && !char.IsWhiteSpace(value[^1]);
+
     public static bool IsDate(this DateTime value) =>
         value.TimeOfDay == TimeSpan.Zero;
 

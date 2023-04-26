@@ -22,12 +22,12 @@ public class MiscEvent : LogItemBase
     }
 
     public MiscEvent(Identifier eventKind, IV idValues, LogLevel logLevel = Info)
-        : base(logLevel, nameof(MiscEvent))
+        : base(logLevel, Identifier.From(nameof(MiscEvent)))
     {
-        if (eventKind == default)
+        if (eventKind.IsDefault())
             throw new ArgumentOutOfRangeException(nameof(eventKind));
 
-        if (idValues.Keys.Any(iv => iv == default))
+        if (idValues.Keys.Any(iv => iv.IsDefault()))
             throw new ArgumentException(nameof(idValues));
 
         ArgumentNullException.ThrowIfNull(nameof(idValues));
@@ -44,7 +44,7 @@ public class MiscEvent : LogItemBase
             ("EventKind", eventKind.ToString()) };
 
         foreach (var key in idValues.Keys)
-            tuples.Add((key, idValues[key]));
+            tuples.Add((key.ToString(), idValues[key]));
 
         return tuples;
     }
@@ -54,7 +54,7 @@ public class MiscEvent : LogItemBase
         var idValues = new IV();
 
         if (!string.IsNullOrWhiteSpace(message))
-            idValues.Add("Message", message);
+            idValues.Add(Identifier.From("Message"), message);
 
         return idValues;
     }

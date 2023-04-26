@@ -3,7 +3,6 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Runtime.CompilerServices;
 using Vogen;
 
 namespace SquidEyes.Fundamentals;

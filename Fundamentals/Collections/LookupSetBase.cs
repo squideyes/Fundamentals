@@ -7,9 +7,9 @@ namespace SquidEyes.Fundamentals;
 
 public abstract class LookupSetBase<T>
 {
-    private readonly Dictionary<Token, T> dict = new();
+    private readonly Dictionary<Identifier, T> dict = new();
 
-    public void Add(Token name, T value)
+    public void Add(Identifier name, T value)
     {
         name.MayNot().BeDefault();
 
@@ -18,9 +18,9 @@ public abstract class LookupSetBase<T>
         dict.Add(name, value);
     }
 
-    public T this[Token name] => dict[name];
+    public T this[Identifier name] => dict[name];
 
-    public bool TryGetValue(Token name, out T value) =>
+    public bool TryGetValue(Identifier name, out T value) =>
         dict.TryGetValue(name, out value!);
 
     protected abstract void ValidateValue(T value);

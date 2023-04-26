@@ -187,7 +187,7 @@ public class ArgSetTests
         argSet.Upsert(From("String"), "Hello darkness my old friend");
         argSet.Upsert(From("TimeOnly"), new TimeOnly(1, 2, 3, 4));
         argSet.Upsert(From("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
-        argSet.Upsert(From("Token"), Token.From("SomeToken"));
+        argSet.Upsert(From("Token"), Identifier.From("SomeToken"));
         argSet.Upsert(From("Uri"), new Uri("http://google.com"));
 
         return argSet;
