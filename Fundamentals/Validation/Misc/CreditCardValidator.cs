@@ -11,10 +11,10 @@ public static partial class CreditCardValidator
 {
     private static readonly Regex mmyyValidator = GetMMYYValidator();
 
-    public static bool IsMMYY(this string value) =>
+    public static bool IsMMYY(string value) =>
         value is not null && mmyyValidator.IsMatch(value);
 
-    public static bool IsCVV(this string value, CreditCardBrand brand)
+    public static bool IsCVV(string value, CreditCardBrand brand)
     {
         if (!int.TryParse(value, out int number))
             return false;

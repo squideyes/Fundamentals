@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using static System.DayOfWeek;
 
@@ -179,6 +180,23 @@ public static partial class ValidationExtenders
             return true;
         }
         catch
+        {
+            return false;
+        }
+    }
+
+    public static bool IsJson(this string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return false;
+
+        try
+        {
+            using var jsonDoc = JsonDocument.Parse(json);
+            
+            return true;
+        }
+        catch (JsonException)
         {
             return false;
         }
