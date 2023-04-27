@@ -10,13 +10,15 @@ namespace SquidEyes.Fundamentals;
 [ValueObject<string>]
 public readonly partial struct Email
 {
+    public const int MaxLength = 50;
+
     private static readonly EmailValidator validator = new();
 
     public static Validation Validate(string value) =>
         VogenHelper.GetValidation<Email>(value, IsValue);
 
     public static bool IsValue(string value) =>
-        value is not null && validator.IsValid(value);
+        value is not null && validator.IsValid(value, MaxLength);
 
     private static string NormalizeInput(string value) => 
         value.ToLower();

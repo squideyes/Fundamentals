@@ -7,13 +7,11 @@ using static System.StringSplitOptions;
 
 namespace SquidEyes.Fundamentals;
 
-public class EmailValidator
+internal class EmailValidator
 {
     // DATA
     // "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/master/disposable_email_blocklist.conf";
     // "https://data.iana.org/TLD/tlds-alpha-by-domain.txt";
-
-    public const int MaxLength = 50;
 
     private readonly HashSet<string> blockedDomains;
     private readonly HashSet<string> topLevelDomains;
@@ -24,9 +22,9 @@ public class EmailValidator
         topLevelDomains = Parse(Domains.TopLevel, "#");
     }
 
-    public bool IsValid(string value)
+    public bool IsValid(string value, int maxLength)
     {
-        if (!IsEmailAddress(value))
+        if (!IsEmailAddress(value, maxLength))
             return false;
 
         var domain = value.Split('@')[1];
@@ -45,12 +43,12 @@ public class EmailValidator
         return new HashSet<string>(lines);
     }
 
-    private bool IsEmailAddress(string value)
+    private bool IsEmailAddress(string value, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
 
-        if (value.Length > MaxLength)
+        if (value.Length > maxLength)
             return false;
 
         var fields = value.Split('@');
