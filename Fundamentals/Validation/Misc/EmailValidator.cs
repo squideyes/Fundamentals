@@ -13,6 +13,8 @@ public class EmailValidator
     // "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/master/disposable_email_blocklist.conf";
     // "https://data.iana.org/TLD/tlds-alpha-by-domain.txt";
 
+    public const int MaxLength = 50;
+
     private readonly HashSet<string> blockedDomains;
     private readonly HashSet<string> topLevelDomains;
 
@@ -46,6 +48,9 @@ public class EmailValidator
     private bool IsEmailAddress(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        if (value.Length > MaxLength)
             return false;
 
         var fields = value.Split('@');

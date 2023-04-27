@@ -12,21 +12,31 @@ namespace SquidEyes.Fundamentals;
 [ValueObject<string>]
 public readonly partial struct Phone
 {
+    public const int MaxLength = 20;
+
     private static readonly PhoneNumberUtil pnu =
         PhoneNumberUtil.GetInstance();
 
     public static Validation Validate(string value) =>
         VogenHelper.GetValidation<Phone>(value, IsValue);
 
-    public static bool IsValue(string value) =>
-        Safe.GetValueOrDefault(() => pnu.IsValidNumber(pnu.Parse(value, "US")));
+    public static bool IsValue(string value)
+    {
+        if (!value.IsNonEmptyAndTrimmed())
+            return false;
+
+        if (value.Length > MaxLength)
+            return false;
+
+        return Safe.GetValueOrDefault(
+            () => pnu.IsValidNumber(pnu.Parse(value, "US")));
+    }
 
     public static string Normalize(string value) =>
         pnu.Format(pnu.Parse(value, "US"), E164);
 
     public string Formatted(PhoneFormat format)
     {
-
         var phone = pnu.Parse(Value, "US");
 
         string GetEasyRead() =>
