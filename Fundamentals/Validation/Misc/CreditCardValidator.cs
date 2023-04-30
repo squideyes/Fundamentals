@@ -22,13 +22,10 @@ public static partial class CreditCardValidator
         if (number < 0)
             return false;
 
-        switch (brand)
-        {
-            case CreditCardBrand.Amex:
-                return number <= 9999;
-            default:
-                return number <= 999;
-        }
+        if (brand == CreditCardBrand.Amex)
+            return number <= 9999;
+        else
+            return number <= 999;
     }
 
     public static bool IsNumber(string value)

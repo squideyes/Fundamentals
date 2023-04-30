@@ -26,6 +26,6 @@ public enum ArgKind
     String,
     TimeOnly,
     TimeSpan,
-    Token,
+    Tag,
     Uri
 }

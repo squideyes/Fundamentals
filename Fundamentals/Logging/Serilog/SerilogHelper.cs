@@ -29,7 +29,7 @@ public static class SerilogHelper
 
         config.Destructure.ByTransforming<Enum>(v => v.ToString());
 
-        config.Destructure.ByTransforming<Identifier>(v => v.ToString());
+        config.Destructure.ByTransforming<Tag>(v => v.ToString());
 
         if (enrichWith != null)
         {

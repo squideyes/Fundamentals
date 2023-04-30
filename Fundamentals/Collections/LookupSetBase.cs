@@ -7,21 +7,21 @@ namespace SquidEyes.Fundamentals;
 
 public abstract class LookupSetBase<T>
 {
-    private readonly Dictionary<Identifier, T> dict = new();
+    private readonly Dictionary<Tag, T> dict = new();
 
-    public void Add(Identifier name, T value)
+    public void Add(Tag tag, T value)
     {
-        name.MayNot().BeDefault();
+        tag.MayNot().BeDefault();
 
         ValidateValue(value);
 
-        dict.Add(name, value);
+        dict.Add(tag, value);
     }
 
-    public T this[Identifier name] => dict[name];
+    public T this[Tag tag] => dict[tag];
 
-    public bool TryGetValue(Identifier name, out T value) =>
-        dict.TryGetValue(name, out value!);
+    public bool TryGetValue(Tag tag, out T value) =>
+        dict.TryGetValue(tag, out value!);
 
     protected abstract void ValidateValue(T value);
 }

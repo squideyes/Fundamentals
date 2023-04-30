@@ -91,11 +91,11 @@ public partial class SemVer : IEquatable<SemVer>
     public static bool TryParse(string value, out SemVer semVer) =>
         Safe.TryGetValue(() => Parse(value), out semVer);
 
-    public static bool operator ==(SemVer lhs, SemVer rhs) =>
-        lhs.Equals(rhs);
+    public static bool operator ==(SemVer left, SemVer right) =>
+        left.Equals(right);
 
-    public static bool operator !=(SemVer lhs, SemVer rhs) =>
-        !(lhs == rhs);
+    public static bool operator !=(SemVer left, SemVer right) =>
+        !(left == right);
 
     [GeneratedRegex("^(?!-)(?!.*--)[a-z0-9-]{1,24}(?<!-)$")]
     private static partial Regex GetValidator();

@@ -98,9 +98,9 @@ public class ArgSetTests
                 "Kind": "TimeSpan",
                 "Value": "1.02:03:04.005"
               },
-              "Token": {
-                "Kind": "Token",
-                "Value": "SomeToken"
+              "Tag": {
+                "Kind": "Tag",
+                "Value": "SomeTag"
               },
               "Uri": {
                 "Kind": "Uri",
@@ -147,7 +147,7 @@ public class ArgSetTests
         Validate(From("String"), (a, k) => a.GetString(k));
         Validate(From("TimeOnly"), (a, k) => a.GetTimeOnly(k));
         Validate(From("TimeSpan"), (a, k) => a.GetTimeSpan(k));
-        Validate(From("Token"), (a, k) => a.GetToken(k));
+        Validate(From("Tag"), (a, k) => a.GetTag(k));
         Validate(From("Uri"), (a, k) => a.GetUri(k));
     }
 
@@ -187,7 +187,7 @@ public class ArgSetTests
         argSet.Upsert(From("String"), "Hello darkness my old friend");
         argSet.Upsert(From("TimeOnly"), new TimeOnly(1, 2, 3, 4));
         argSet.Upsert(From("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
-        argSet.Upsert(From("Token"), Identifier.From("SomeToken"));
+        argSet.Upsert(From("Tag"), Tag.From("SomeTag"));
         argSet.Upsert(From("Uri"), new Uri("http://google.com"));
 
         return argSet;

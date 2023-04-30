@@ -9,14 +9,14 @@ public abstract class LogItemBase
 {
     private static int ordinal = -1;
 
-    public LogItemBase(LogLevel logLevel, Identifier activity)
+    public LogItemBase(LogLevel logLevel, Tag activity)
     {
         LogLevel = logLevel;
         Activity = activity;
         Ordinal = Interlocked.Increment(ref ordinal);
     }
 
-    public Identifier Activity { get; }
+    public Tag Activity { get; }
     public LogLevel LogLevel { get; }
     public int Ordinal { get; }
 

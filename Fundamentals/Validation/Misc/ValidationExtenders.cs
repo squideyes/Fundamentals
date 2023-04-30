@@ -18,7 +18,7 @@ public static partial class ValidationExtenders
 
     private static readonly Dictionary<string, Regex> regexes = new();
 
-    public static bool IsIdentifierValue(this string value)
+    public static bool IsTagValue(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
@@ -45,7 +45,7 @@ public static partial class ValidationExtenders
         if (!fields.Length.IsBetween(1, 4))
             return false;
 
-        return !fields.Any(v => !v.IsIdentifierValue());
+        return !fields.Any(v => !v.IsTagValue());
     }
 
     public static bool IsEmptyOrTrimmed(this string value) =>

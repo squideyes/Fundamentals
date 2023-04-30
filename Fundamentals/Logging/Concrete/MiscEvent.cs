@@ -7,22 +7,22 @@ using static SquidEyes.Fundamentals.LogLevel;
 
 namespace SquidEyes.Fundamentals;
 
-using IV = Dictionary<Identifier, object>;
+using IV = Dictionary<Tag, object>;
 
 public class MiscEvent : LogItemBase
 {
-    public Dictionary<Identifier, string> idValues = new();
+    public Dictionary<Tag, string> idValues = new();
 
-    public readonly Identifier eventKind;
+    public readonly Tag eventKind;
 
-    public MiscEvent(Identifier eventKind,
+    public MiscEvent(Tag eventKind,
         string message = null!, LogLevel logLevel = Info)
         : this(eventKind, GetIV(message), logLevel)
     {
     }
 
-    public MiscEvent(Identifier eventKind, IV idValues, LogLevel logLevel = Info)
-        : base(logLevel, Identifier.From(nameof(MiscEvent)))
+    public MiscEvent(Tag eventKind, IV idValues, LogLevel logLevel = Info)
+        : base(logLevel, Tag.From(nameof(MiscEvent)))
     {
         if (eventKind.IsDefault())
             throw new ArgumentOutOfRangeException(nameof(eventKind));
@@ -54,7 +54,7 @@ public class MiscEvent : LogItemBase
         var idValues = new IV();
 
         if (!string.IsNullOrWhiteSpace(message))
-            idValues.Add(Identifier.From("Message"), message);
+            idValues.Add(Tag.From("Message"), message);
 
         return idValues;
     }

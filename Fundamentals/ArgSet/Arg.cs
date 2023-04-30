@@ -47,7 +47,7 @@ public class Arg
             string _ => ArgKind.String,
             TimeOnly _ => ArgKind.TimeOnly,
             TimeSpan _ => ArgKind.TimeSpan,
-            Identifier _ => ArgKind.Token,
+            Tag _ => ArgKind.Tag,
             Uri _ => ArgKind.Uri,
             _ => throw new ArgumentOutOfRangeException(nameof(value))
         };

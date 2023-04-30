@@ -83,7 +83,7 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
     public void Upsert(ConfigKey key, TimeSpan value) =>
         SimpleUpsert(key, value);
 
-    public void Upsert(ConfigKey key, Identifier value) =>
+    public void Upsert(ConfigKey key, Tag value) =>
         SimpleUpsert(key, value);
 
     public void Upsert(ConfigKey key, Uri value)
@@ -144,7 +144,7 @@ public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
 
     public TimeSpan GetTimeSpan(ConfigKey key) => (TimeSpan)args[key].Value;
 
-    public Identifier GetToken(ConfigKey key) => (Identifier)args[key].Value;
+    public Tag GetTag(ConfigKey key) => (Tag)args[key].Value;
 
     public Uri GetUri(ConfigKey key) => (Uri)args[key].Value;
 

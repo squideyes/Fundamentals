@@ -8,11 +8,10 @@ using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
 
-public class IdentifierTests
+public class TagTests
 {
     [Fact]
-    public void From_ValidInput_Constructs() =>
-        _ = Identifier.From("AAAAAAAA");
+    public void From_ValidInput_Constructs() => _ = Tag.From("AAAAAAAA");
 
     [Theory]
     [InlineData("A", true)]
@@ -23,5 +22,5 @@ public class IdentifierTests
     [InlineData("", false)]
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>
-        Identifier.IsValue(value).Should().Be(expected);
+        Tag.IsValue(value).Should().Be(expected);
 }

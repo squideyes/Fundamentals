@@ -7,12 +7,12 @@ namespace SquidEyes.Fundamentals;
 
 internal class OperatorHelper
 {
-    public static bool CompareTo<T>(T lhs, T rhs, Func<T, T, bool> getResult)
+    public static bool CompareTo<T>(T left, T right, Func<T, T, bool> getResult)
         where T: IComparable<T>
     {
-        if (lhs is null)
-            return rhs is null;
+        if (left is null)
+            return right is null;
 
-        return getResult(lhs, rhs);
+        return getResult(left, right);
     }
 }

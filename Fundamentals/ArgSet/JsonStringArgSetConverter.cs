@@ -138,8 +138,8 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
                 case ArgKind.TimeSpan:
                     argSet.Upsert(key, TimeSpan.Parse(reader.GetString()!));
                     break;
-                case ArgKind.Token:
-                    argSet.Upsert(key, Identifier.From(reader.GetString()!));
+                case ArgKind.Tag:
+                    argSet.Upsert(key, Tag.From(reader.GetString()!));
                     break;
                 case ArgKind.Uri:
                     argSet.Upsert(key, new Uri(reader.GetString()!));

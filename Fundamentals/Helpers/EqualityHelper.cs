@@ -7,30 +7,30 @@ namespace SquidEyes.Fundamentals;
 
 public static class EqualityHelper
 {
-    public static bool IsEqualTo<T>(T lhs, T rhs)
+    public static bool IsEqualTo<T>(T left, T right)
         where T : IEquatable<T>
     {
         if (!typeof(T).IsValueType)
         {
-            if (lhs is null)
-                return rhs is null;
+            if (left is null)
+                return right is null;
         }
 
-        return lhs.Equals(rhs);
+        return left.Equals(right);
     }
 
-    public static bool IsClassEqualTo<T>(T lhs, T rhs)
+    public static bool IsClassEqualTo<T>(T left, T right)
         where T : class, IEquatable<T>
     {
-        if (lhs is null)
-            return rhs is null;
+        if (left is null)
+            return right is null;
 
-        return lhs.Equals(rhs);
+        return left.Equals(right);
     }
 
-    public static bool IsStructEqualTo<T>(T lhs, T rhs)
+    public static bool IsStructEqualTo<T>(T left, T right)
         where T : struct, IEquatable<T>
     {
-        return lhs.Equals(rhs);
+        return left.Equals(right);
     }
 }
