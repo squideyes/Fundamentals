@@ -1,4 +1,4 @@
-﻿namespace SquidEyes.Fundamentals.Models;
+﻿namespace SquidEyes.Fundamentals;
 
 public readonly struct TagValue<T> : IEquatable<TagValue<T>>, IComparable<TagValue<T>>
     where T : IEquatable<T>, IComparable<T>

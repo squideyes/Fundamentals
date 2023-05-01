@@ -18,7 +18,7 @@ public class IConfigurationExtendersTests
             .AddInMemoryCollection(new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Number", 100.ToString())
-            })
+            }!)
             .Build();
 
         config.GetAs<int>(ConfigKey.From("Number")).Should().Be(100);

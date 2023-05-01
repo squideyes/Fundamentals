@@ -18,23 +18,6 @@ public static partial class ValidationExtenders
 
     private static readonly Dictionary<string, Regex> regexes = new();
 
-    public static bool IsTagValue(this string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return false;
-
-        if (!char.IsAsciiLetterUpper(value[0]))
-            return false;
-
-        if (value.Length == 1)
-            return true;
-
-        if (value.Length > 24)
-            return false;
-
-        return value.Skip(1).All(char.IsAsciiLetterOrDigit);
-    }
-
     public static bool IsConfigKeyValue(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -45,7 +28,7 @@ public static partial class ValidationExtenders
         if (!fields.Length.IsBetween(1, 4))
             return false;
 
-        return !fields.Any(v => !v.IsTagValue());
+        return fields.All(Tag.IsValue);
     }
 
     public static bool IsEmptyOrTrimmed(this string value) =>
