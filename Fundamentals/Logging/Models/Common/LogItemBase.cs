@@ -9,16 +9,23 @@ public abstract class LogItemBase
 {
     private static int ordinal = -1;
 
-    public LogItemBase(LogLevel logLevel, Tag activity)
+    public LogItemBase(Severity severity, Tag? activity = null)
     {
-        LogLevel = logLevel;
-        Activity = activity;
         Ordinal = Interlocked.Increment(ref ordinal);
+
+        Severity = severity.Must().BeEnumValue();
+
+        Activity = !activity.HasValue ? Tag.From(GetType().Name) 
+            : activity.Value.MayNot().BeDefault();
     }
 
-    public Tag Activity { get; }
-    public LogLevel LogLevel { get; }
     public int Ordinal { get; }
+    public Severity Severity { get; }
+    public Tag Activity { get; }
 
-    internal abstract List<(string, object)> GetIdValues();
+    public abstract (Tag, object)[] GetTagValues();
+
+    public virtual void Validate()
+    {
+    }
 }

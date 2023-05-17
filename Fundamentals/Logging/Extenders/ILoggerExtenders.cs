@@ -13,10 +13,14 @@ public static class ILoggerExtenders
     public static void Log<T>(this ILogger logger, T logItem)
         where T : LogItemBase
     {
-        ArgumentNullException.ThrowIfNull(logger, nameof(logger));
-        ArgumentNullException.ThrowIfNull(logItem, nameof(logItem));
+        logger!.MayNot().BeNull();
+
+        logItem.MayNot().BeNull();
+
+        logItem.Validate();
 
         var sb = new StringBuilder();
+
         var datas = new List<object>();
 
         void Append(string key, object value)
@@ -25,16 +29,22 @@ public static class ILoggerExtenders
                 sb.Append(',');
 
             sb!.Append($"{{@{key}}}");
+
             datas!.Add(value!);
         }
 
         Append("Ordinal", logItem.Ordinal);
+
         Append("Activity", logItem.Activity);
 
-        foreach (var (key, value) in logItem.GetIdValues())
-            Append(key, value);
+        foreach (var (tag, value) in logItem.GetTagValues())
+        {
+            tag.MayNot().BeDefault();
 
-        logger.Write(logItem.LogLevel.ToLogEventLevel(),
+            Append(tag.ToString(), value);
+        }
+
+        logger.Write(logItem.Severity.ToLogEventLevel(), 
             sb.ToString(), datas.ToArray());
     }
 }
