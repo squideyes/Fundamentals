@@ -12,21 +12,11 @@
 		<Company>SquidEyes, LLC.</Company>
 		<Description>A set of helper classes and extension methods</Description>
 		<Copyright>Copyright 2023 by SquidEyes, LLC.</Copyright>
+        <PackageId>SquidEyes.Fundamentals</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>dotnet;value-objects;argument-collection;arguments;guard-clauses;validation;arrays;helpers;extenders;primative-obsession</PackageTags>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <MinVerTagPrefix>v</MinVerTagPrefix>
-        <MinVerMinimumMajorMinor>1.1</MinVerMinimumMajorMinor>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <EnablePackageValidation>true</EnablePackageValidation>
-    </PropertyGroup>
-
-    <PropertyGroup>
+        <RepositoryType>git</RepositoryType>
         <PackageIcon>Icon.jpg</PackageIcon>
         <RepositoryUrl>https://github.com/squideyes/Fundamentals</RepositoryUrl>
         <PackageProjectUrl>https://github.com/squideyes/Fundamentals</PackageProjectUrl>
@@ -38,22 +28,14 @@
     </ItemGroup>
 
     <ItemGroup>
-		<PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="FluentValidation" Version="11.5.2" />
 		<PackageReference Include="ISO3166" Version="1.0.4" />
-		<PackageReference Include="libphonenumber-csharp" Version="8.13.10" />
+		<PackageReference Include="libphonenumber-csharp" Version="8.13.11" />
 		<PackageReference Include="Loyc.Math" Version="30.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-		<PackageReference Include="MinVer" Version="4.3.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
-		<PackageReference Include="Vogen" Version="3.0.15" />
+		<PackageReference Include="Vogen" Version="3.0.16" />
 	</ItemGroup>
 
 </Project>

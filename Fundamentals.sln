@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F54EBA1A-B
 		CONTRIBUTING.md = CONTRIBUTING.md
 		DEPLOYNOTES.md = DEPLOYNOTES.md
 		Fundamentals.sln.headertext = Fundamentals.sln.headertext
-		global.json = global.json
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
