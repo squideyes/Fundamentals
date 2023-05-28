@@ -34,6 +34,9 @@ public static partial class ValidationExtenders
     public static bool IsEmptyOrTrimmed(this string value) =>
         value is not null && (value == "" || value.IsTrimmed());
 
+    public static bool IsNullOrTrimmed(this string value) =>
+        value is null && (value!.Length> 0 && value!.IsTrimmed());
+
     public static bool IsNonEmptyAndTrimmed(this string value) =>
         !string.IsNullOrEmpty(value) && value.IsTrimmed();
 

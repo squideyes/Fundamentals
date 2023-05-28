@@ -10,8 +10,5 @@ To to publish **SquidEyes.Fundamentals** to NuGet via a GitHub action, do the fo
 * <a href="https://stackoverflow.com/questions/71379079/visual-studio-2022-git-push-tags#:~:text=You%20should%20go%20to%20team,push%20all%20tags%20to%20origin." target="_blank">Push all tags to origin</a>
 * **<a href="https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/working-with-your-remote-repository-on-github-or-github-enterprise/creating-an-issue-or-pull-request" target="_blank">Issue a pull-request</a>**
 
-
-
-
-For more info on the NuGet publishing process (via the "publish.yml" GitHub action) see: 
-<a href="https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm" target="_blank">https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm</a>|
+For more info on the NuGet publishing process see: 
+<a href="https://acraven.medium.com/a-nuget-package-workflow-using-github-actions-7da8c6557863" target="_blank">A NuGet package workflow using GitHub Actions</a>|
