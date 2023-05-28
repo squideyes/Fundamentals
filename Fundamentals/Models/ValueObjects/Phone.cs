@@ -22,7 +22,7 @@ public readonly partial struct Phone
 
     public static bool IsValue(string value)
     {
-        if (!value.IsNonEmptyAndTrimmed())
+        if (!value.IsTrimmed())
             return false;
 
         if (value.Length > MaxLength)

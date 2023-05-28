@@ -32,16 +32,29 @@ public static partial class ValidationExtenders
     }
 
     public static bool IsEmptyOrTrimmed(this string value) =>
-        value is not null && (value == "" || value.IsTrimmed());
+        value is not null && (value == "" || value.IsNonEmptyAndTrimmed());
 
     public static bool IsNullOrTrimmed(this string value) =>
-        value is null && (value!.Length> 0 && value!.IsTrimmed());
+        value is null || value!.IsNonEmptyAndTrimmed();
 
-    public static bool IsNonEmptyAndTrimmed(this string value) =>
-        !string.IsNullOrEmpty(value) && value.IsTrimmed();
+    public static bool IsTrimmed(this string value, bool mayBeEmpty = false)
+    {
+        if (value is null)
+            return false;
 
-    private static bool IsTrimmed(this string value) =>
-        !char.IsWhiteSpace(value[0]) && !char.IsWhiteSpace(value[^1]);
+        if (value == "")
+            return mayBeEmpty;
+
+        return value.IsNonEmptyAndTrimmed();
+    }
+
+    private static bool IsNonEmptyAndTrimmed(this string value)
+    {
+        return value is not null
+            && value.Length >= 1
+            && !char.IsWhiteSpace(value[0])
+            && !char.IsWhiteSpace(value[^1]);
+    }
 
     public static bool IsDate(this DateTime value) =>
         value.TimeOfDay == TimeSpan.Zero;
@@ -179,7 +192,7 @@ public static partial class ValidationExtenders
         try
         {
             using var jsonDoc = JsonDocument.Parse(json);
-            
+
             return true;
         }
         catch (JsonException)
