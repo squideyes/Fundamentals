@@ -33,7 +33,8 @@ public class ConfigKeyTests
     [InlineData("A :B:C:D", false)]
     [InlineData("A: B:C:D", false)]
     [InlineData("a:b:c:d", false)]
-    [InlineData("A:B:C:D:E", false)]
+    [InlineData("A:B:C:D:E", true)]
+    [InlineData("A:B:C:D:E:F", false)]
     [InlineData("", false)]
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>
