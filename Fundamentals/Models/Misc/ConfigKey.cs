@@ -10,6 +10,8 @@ namespace SquidEyes.Fundamentals;
 [ValueObject<string>]
 public readonly partial struct ConfigKey
 {
+    public const int MaxTags = 5;
+
     public static ConfigKey From(Tag[] tags) =>
         From(string.Join(":", tags.Select(t => t.ToString())));
 

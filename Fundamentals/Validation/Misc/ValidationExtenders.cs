@@ -25,7 +25,7 @@ public static partial class ValidationExtenders
 
         var fields = value.Split(':');
 
-        if (!fields.Length.IsBetween(1, 4))
+        if (!fields.Length.IsBetween(1, ConfigKey.MaxTags))
             return false;
 
         return fields.All(Tag.IsValue);
