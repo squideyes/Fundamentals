@@ -9,7 +9,7 @@ namespace SquidEyes.Fundamentals;
 
 public static class IConfigurationExtenders
 {
-    public static T GetAs<T>(this IConfiguration config, ConfigKey key)
+    public static T GetAs<T>(this IConfiguration config, MultiTag key)
         where T : IConvertible
     {
         config.MayNot().BeNull();

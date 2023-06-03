@@ -21,7 +21,7 @@ public class IConfigurationExtendersTests
             }!)
             .Build();
 
-        config.GetAs<int>(ConfigKey.From("Number")).Should().Be(100);
-        config.GetAs<string>(ConfigKey.From("Number")).Should().Be("100");
+        config.GetAs<int>(MultiTag.From("Number")).Should().Be(100);
+        config.GetAs<string>(MultiTag.From("Number")).Should().Be("100");
     }
 }

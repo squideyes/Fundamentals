@@ -8,7 +8,7 @@ using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
 
-public class ConfigKeyTests
+public class MultiTagTests
 {
     [Theory]
     [InlineData("A")]
@@ -16,7 +16,7 @@ public class ConfigKeyTests
     [InlineData("A:B:C")]
     [InlineData("A:B:C:D")]
     public void From_ValidInput_Constructs(string value) =>
-        _ = ConfigKey.From(value);
+        _ = MultiTag.From(value);
 
     [Theory]
     [InlineData("Aa", true)]
@@ -38,5 +38,5 @@ public class ConfigKeyTests
     [InlineData("", false)]
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>
-        ConfigKey.IsValue(value).Should().Be(expected);
+        MultiTag.IsValue(value).Should().Be(expected);
 }

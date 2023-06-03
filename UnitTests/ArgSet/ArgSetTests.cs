@@ -7,7 +7,7 @@ using FluentAssertions;
 using SquidEyes.Fundamentals;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using static SquidEyes.Fundamentals.ConfigKey;
+using static SquidEyes.Fundamentals.MultiTag;
 
 namespace SquidEyes.UnitTests;
 
@@ -125,8 +125,8 @@ public class ArgSetTests
 
         target!.Count.Should().Be(source!.Count);
 
-        void Validate<T>(ConfigKey key, Func<ArgSet, ConfigKey, T> getValue) =>
-            getValue(target, key).Should().Be(getValue(source, key));
+        void Validate<T>(MultiTag multiTag, Func<ArgSet, MultiTag, T> getValue) =>
+            getValue(target, multiTag).Should().Be(getValue(source, multiTag));
 
         Validate(From("AccountId"), (a, k) => a.GetAccountId(k));
         Validate(From("Boolean"), (a, k) => a.GetBoolean(k));

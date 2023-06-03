@@ -48,7 +48,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
         {
             ThrowIfNotExpected(ref reader, JsonTokenType.PropertyName);
 
-            var key = ConfigKey.From(reader.GetString()!);
+            var key = MultiTag.From(reader.GetString()!);
 
             ReadAndCheck(ref reader, JsonTokenType.StartObject);
 

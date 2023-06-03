@@ -18,14 +18,14 @@ public static partial class ValidationExtenders
 
     private static readonly Dictionary<string, Regex> regexes = new();
 
-    public static bool IsConfigKeyValue(this string value)
+    public static bool IsMultiTagValue(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
 
         var fields = value.Split(':');
 
-        if (!fields.Length.IsBetween(1, ConfigKey.MaxTags))
+        if (!fields.Length.IsBetween(1, MultiTag.MaxTags))
             return false;
 
         return fields.All(Tag.IsValue);

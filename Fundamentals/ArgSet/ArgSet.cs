@@ -7,149 +7,149 @@ using System.Collections;
 
 namespace SquidEyes.Fundamentals;
 
-public class ArgSet : IEnumerable<KeyValuePair<ConfigKey, Arg>>
+public class ArgSet : IEnumerable<KeyValuePair<MultiTag, Arg>>
 {
-    private readonly Dictionary<ConfigKey, Arg> args = new();
+    private readonly Dictionary<MultiTag, Arg> args = new();
 
     public int Count => args.Count;
 
     public bool IsEmpty => Count == 0;
 
-    public void Upsert(ConfigKey key, AccountId value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, AccountId value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, bool value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, bool value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, ClientId value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, ClientId value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, DateOnly value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, DateOnly value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, DateTime value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, DateTime value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, double value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, double value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Email value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Email value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert<T>(ConfigKey key, T value)
+    public void Upsert<T>(MultiTag multiTag, T value)
         where T : Enum
     {
-        SimpleUpsert(key, value);
+        SimpleUpsert(multiTag, value);
     }
 
-    internal void UpsertEnum(ConfigKey key, object value)
+    internal void UpsertEnum(MultiTag multiTag, object value)
     {
         if (!value.GetType().IsEnum)
             throw new ArgumentOutOfRangeException(nameof(value));
 
-        SimpleUpsert(key, value);
+        SimpleUpsert(multiTag, value);
     }
 
-    public void Upsert(ConfigKey key, float value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, float value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Guid value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Guid value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, int value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, int value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, long value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, long value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Offset value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Offset value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Phone value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Phone value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Ratchet value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Ratchet value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, ShortId value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, ShortId value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, string value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, string value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, TimeOnly value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, TimeOnly value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, TimeSpan value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, TimeSpan value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Tag value) =>
-        SimpleUpsert(key, value);
+    public void Upsert(MultiTag multiTag, Tag value) =>
+        SimpleUpsert(multiTag, value);
 
-    public void Upsert(ConfigKey key, Uri value)
+    public void Upsert(MultiTag multiTag, Uri value)
     {
         value.IsAbsoluteUri.Must().Be(true);
 
-        SimpleUpsert(key, value);
+        SimpleUpsert(multiTag, value);
     }
 
-    private void SimpleUpsert<T>(ConfigKey key, T value)
+    private void SimpleUpsert<T>(MultiTag multiTag, T value)
     {
-        key.MayNot().BeDefault();
+        multiTag.MayNot().BeDefault();
 
-        args[key] = new Arg(value!);
+        args[multiTag] = new Arg(value!);
     }
 
-    public AccountId GetAccountId(ConfigKey key) => (AccountId)args[key].Value;
+    public AccountId GetAccountId(MultiTag multiTag) => (AccountId)args[multiTag].Value;
 
-    public bool GetBoolean(ConfigKey key) => (bool)args[key].Value;
+    public bool GetBoolean(MultiTag multiTag) => (bool)args[multiTag].Value;
 
-    public ClientId GetClientId(ConfigKey key) => (ClientId)args[key].Value;
+    public ClientId GetClientId(MultiTag multiTag) => (ClientId)args[multiTag].Value;
 
-    public DateOnly GetDateOnly(ConfigKey key) => (DateOnly)args[key].Value;
+    public DateOnly GetDateOnly(MultiTag multiTag) => (DateOnly)args[multiTag].Value;
 
-    public DateTime GetDateTime(ConfigKey key) => (DateTime)args[key].Value;
+    public DateTime GetDateTime(MultiTag multiTag) => (DateTime)args[multiTag].Value;
 
-    public double GetDouble(ConfigKey key) => (double)args[key].Value;
+    public double GetDouble(MultiTag multiTag) => (double)args[multiTag].Value;
 
-    public Email GetEmail(ConfigKey key) => (Email)args[key].Value;
+    public Email GetEmail(MultiTag multiTag) => (Email)args[multiTag].Value;
 
-    public T GetEnum<T>(ConfigKey key)
+    public T GetEnum<T>(MultiTag multiTag)
     {
         if (!typeof(T).IsEnum)
             throw new ArgumentOutOfRangeException(nameof(T));
 
-        return (T)args[key].Value;
+        return (T)args[multiTag].Value;
     }
 
-    public Guid GetGuid(ConfigKey key) => (Guid)args[key].Value;
+    public Guid GetGuid(MultiTag multiTag) => (Guid)args[multiTag].Value;
 
-    public float GetFloat(ConfigKey key) => (float)args[key].Value;
+    public float GetFloat(MultiTag multiTag) => (float)args[multiTag].Value;
 
-    public int GetInt32(ConfigKey key) => (int)args[key].Value;
+    public int GetInt32(MultiTag multiTag) => (int)args[multiTag].Value;
 
-    public long GetInt64(ConfigKey key) => (long)args[key].Value;
+    public long GetInt64(MultiTag multiTag) => (long)args[multiTag].Value;
 
-    public Offset GetOffset(ConfigKey key) => (Offset)args[key].Value;
+    public Offset GetOffset(MultiTag multiTag) => (Offset)args[multiTag].Value;
 
-    public Phone GetPhone(ConfigKey key) => (Phone)args[key].Value;
+    public Phone GetPhone(MultiTag multiTag) => (Phone)args[multiTag].Value;
 
-    public Ratchet GetRatchet(ConfigKey key) => (Ratchet)args[key].Value;
+    public Ratchet GetRatchet(MultiTag multiTag) => (Ratchet)args[multiTag].Value;
 
-    public ShortId GetShortId(ConfigKey key) => (ShortId)args[key].Value;
+    public ShortId GetShortId(MultiTag multiTag) => (ShortId)args[multiTag].Value;
 
-    public string GetString(ConfigKey key) => (string)args[key].Value;
+    public string GetString(MultiTag multiTag) => (string)args[multiTag].Value;
 
-    public TimeOnly GetTimeOnly(ConfigKey key) => (TimeOnly)args[key].Value;
+    public TimeOnly GetTimeOnly(MultiTag multiTag) => (TimeOnly)args[multiTag].Value;
 
-    public TimeSpan GetTimeSpan(ConfigKey key) => (TimeSpan)args[key].Value;
+    public TimeSpan GetTimeSpan(MultiTag multiTag) => (TimeSpan)args[multiTag].Value;
 
-    public Tag GetTag(ConfigKey key) => (Tag)args[key].Value;
+    public Tag GetTag(MultiTag multiTag) => (Tag)args[multiTag].Value;
 
-    public Uri GetUri(ConfigKey key) => (Uri)args[key].Value;
+    public Uri GetUri(MultiTag multiTag) => (Uri)args[multiTag].Value;
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerator<KeyValuePair<ConfigKey, Arg>> GetEnumerator() =>
+    public IEnumerator<KeyValuePair<MultiTag, Arg>> GetEnumerator() =>
         args.GetEnumerator();
 }
