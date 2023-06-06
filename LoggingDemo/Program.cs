@@ -3,9 +3,20 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using FluentValidation.Results;
+using LoggingDemo;
 using Serilog;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
+
+// "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging
+var host = Host.CreateDefaultBuilder()
+    .ConfigureServices((context, services) =>
+    {
+        services.AddHostedService<Worker>();
+    })
+    .UseSerilog()
+    .Build();
 
 // Typically read in from KeyVault or another secret store
 var seqApiUri = new Uri("http://host.docker.internal:5341");
@@ -25,7 +36,7 @@ Log.Logger = SerilogHelper.GetStandardLogger(
 
 // Log "LogonSuccess" (a custom log-item)
 Log.Logger.Log(new LogonSucess(Brokerage.CanonTrading,
-    new[] { Endpoint.MarketData, Endpoint.HistoryPlant }));
+    new[] { Gateway.Chicago, Gateway.UsWest }));
 
 // Log "MiscLogItem" with a simple "Message" Context
 Log.Logger.Log(new MiscLogItem(Severity.Warn,
@@ -46,24 +57,11 @@ Log.Logger.Log(new MiscLogItem(
         { Tag.From("Session"), new DateOnly(2023, 1, 1) }
     }));
 
-try
-{
-    try
-    {
-        throw new ArgumentException(
-            "An \"Inner\" exception was caught!");
-    }
-    catch (Exception inner)
-    {
-        throw new Exception(
-            "An \"Outer\" exception was caught!", inner);
-    }
-}
-catch (Exception outer)
-{
-    // Log "ErrorCaught" (a standard log-item)
-    Log.Logger.Log(new ErrorCaught(outer, true));
-}
+// Log individual FluentValidation ValidationFailures
+Log.Logger.Log(new ValidationFailed(Tag.From("StartupValidation"), 
+    new ValidationFailure("Id", "'{Id}' must be a valid Id.")));
+
+host.Run();
 
 // Always close and flush before terminating your app
 Log.CloseAndFlush();

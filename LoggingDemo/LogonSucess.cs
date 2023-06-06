@@ -7,7 +7,7 @@ namespace SquidEyes.Fundamentals.LoggingDemo;
 
 public class LogonSucess : LogItemBase
 {
-    public LogonSucess(Brokerage brokerage, Endpoint[] endpoints)
+    public LogonSucess(Brokerage brokerage, Gateway[] endpoints)
         : base(Severity.Info)
     {
         Brokerage = brokerage.Must().BeEnumValue();
@@ -17,7 +17,7 @@ public class LogonSucess : LogItemBase
     }
 
     public Brokerage Brokerage { get; }
-    public Endpoint[] Endpoints { get; }
+    public Gateway[] Endpoints { get; }
 
     public string? Gateway { get; init; }
 

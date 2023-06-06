@@ -9,12 +9,12 @@ If you want to see what it's all about, please check out SquidEyes.UnitTests. As
 
 |Class|Description|
 |---|---|
-|FastArrayReader|A bit like a BinaryReader, but at least 10x faster; for arrays, not streams|
-|HttpHelper|Fetches strings and JSON objects via HTTP(S) endpoints, with easy URL construction like Flurl.Http, but in a lighter-weight object that supports an injectable HttpClientHandler|
-|CsvEnumerator|A fast, lightweight, super-easy-to-use CSV parser / enumerator that allows CSV files to be read with minimal memory collection pressure|
-|ArgSet|A heterogeneous argument collection that supports twenty data types|
-|SerilogHelper|Helps to build and configure a "basic" logger, with Seq and Console sinks|
-|SlidingBuffer|A fixed-size generic buffer that supports forward and reverse iteration and indexing|
+|FastArrayReader|A bit like a BinaryReader, but at least 10x faster; for arrays, not streams.|
+|HttpHelper|Fetches strings and JSON objects via HTTP(S) endpoints, with easy URL construction like Flurl.Http, but in a lighter-weight object that supports an injectable HttpClientHandler.|
+|CsvEnumerator|A fast, lightweight, super-easy-to-use CSV parser / enumerator that allows CSV files to be read with minimal memory collection pressure.|
+|ArgSet|A heterogeneous argument collection that supports twenty data types.|
+|SerilogHelper|Helps to build and configure a "standard" Serilog logger, with Seq and Console sinks.  See the **LoggingDemo** project for a comprehensive set of usage examples.|
+|SlidingBuffer|A fixed-size generic buffer that supports forward and reverse iteration and indexing.|
 
 #
 Contributions are always welcome (see [CONTRIBUTING.md](https://github.com/squideyes/Fundamentals/blob/master/CONTRIBUTING.md) for details)

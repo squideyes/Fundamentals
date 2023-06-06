@@ -5,10 +5,9 @@
 
 namespace SquidEyes.Fundamentals.LoggingDemo;
 
-public enum Endpoint
+public enum Gateway
 {
-    MarketData = 1,
-    TradingSystem,
-    PnlSystem,
-    HistoryPlant
+    Chicago  = 1,
+    UsEast,
+    UsWest
 }

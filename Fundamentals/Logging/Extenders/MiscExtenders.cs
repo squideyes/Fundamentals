@@ -3,9 +3,8 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using Microsoft.Extensions.Logging;
 using Serilog.Events;
-using System.Diagnostics;
-using System.Text;
 
 namespace SquidEyes.Fundamentals;
 
@@ -19,6 +18,19 @@ internal static class MiscExtenders
             Severity.Info => LogEventLevel.Information,
             Severity.Warn => LogEventLevel.Warning,
             Severity.Error => LogEventLevel.Error,
+            _ => throw new LogSmartException(
+                "A defined \"severity\" must be supplied.")
+        };
+    }
+
+    public static LogLevel ToLogLevel(this Severity logLevel)
+    {
+        return logLevel switch
+        {
+            Severity.Debug => LogLevel.Debug,
+            Severity.Info => LogLevel.Information,
+            Severity.Warn => LogLevel.Warning,
+            Severity.Error => LogLevel.Error,
             _ => throw new LogSmartException(
                 "A defined \"severity\" must be supplied.")
         };
