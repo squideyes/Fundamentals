@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace SquidEyes.Fundamentals;
 
-public class Context : IEnumerable<KeyValuePair<Tag, object>>
+public class TagValueSet : IEnumerable<KeyValuePair<Tag, object>>
 {
     private readonly Dictionary<Tag, object> dict = new();
 
@@ -16,9 +16,9 @@ public class Context : IEnumerable<KeyValuePair<Tag, object>>
     public void Add(Tag tag, object value) =>
         dict.Add(tag.MayNot().BeDefault(), value);
 
-    public static Context From(string format, params object[] args)
+    public static TagValueSet From(string format, params object[] args)
     {
-        return new Context()
+        return new TagValueSet()
         {
             { Tag.From("Message"), string.Format(format, args) }
         };

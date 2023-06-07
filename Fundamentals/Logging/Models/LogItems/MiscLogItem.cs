@@ -7,19 +7,19 @@ namespace SquidEyes.Fundamentals;
 
 public class MiscLogItem : LogItemBase
 {
-    private readonly Context? context;
+    private readonly TagValueSet? tagValues;
 
-    public MiscLogItem(Severity severity, Tag activity, Context context = null!)
+    public MiscLogItem(Severity severity, Tag activity, TagValueSet tagValues = null!)
         : base(severity, activity)
     {
-        this.context = context.Must().Be(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
     }
 
     public override (Tag, object)[] GetTagValues()
     {
-        if (context == null)
+        if (tagValues == null)
             return Array.Empty<(Tag, object)>();
         else
-            return context!.Select(kv => (kv.Key, kv.Value)).ToArray();
+            return tagValues!.Select(kv => (kv.Key, kv.Value)).ToArray();
     }
 }

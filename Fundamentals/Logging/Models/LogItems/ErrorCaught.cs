@@ -10,10 +10,10 @@ namespace SquidEyes.Fundamentals;
 public class ErrorCaught : LogItemBase
 {
     private readonly Error error;
-    private readonly Context context;
+    private readonly TagValueSet tagValues;
 
     public ErrorCaught(Exception error, 
-        bool? withFileInfo = null, Context context = null!)
+        bool? withFileInfo = null, TagValueSet tagValues = null!)
         : base(Severity.Error)
     {
         error.MayNot().BeNull();
@@ -21,7 +21,7 @@ public class ErrorCaught : LogItemBase
         if (!withFileInfo.HasValue)
             withFileInfo = Debugger.IsAttached;
 
-        this.context = context.Must().Be(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
 
         this.error = new Error(error, withFileInfo.Value);
     }
@@ -36,8 +36,8 @@ public class ErrorCaught : LogItemBase
 
         tagValues.Add((Tag.From("Details"), error));
 
-        if (context != null)
-            tagValues.AddRange(context!.Select(kv => (kv.Key, kv.Value)));
+        if (this.tagValues != null)
+            tagValues.AddRange(this.tagValues!.Select(kv => (kv.Key, kv.Value)));
 
         return tagValues.ToArray();
     }

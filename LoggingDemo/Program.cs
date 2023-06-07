@@ -40,7 +40,7 @@ Log.Logger.Log(new LogonSucess(Brokerage.CanonTrading,
 
 // Log "MiscLogItem" with a simple "Message" Context
 Log.Logger.Log(new MiscLogItem(Severity.Warn,
-    Tag.From("MiscWarning"), Context.From("Up != Down")));
+    Tag.From("MiscWarning"), TagValueSet.From("Up != Down")));
 
 // Free-form messages can be intermingled with LogItems
 Log.Logger.Debug("Who let the dogs out?");
@@ -48,7 +48,7 @@ Log.Logger.Debug("Who let the dogs out?");
 // Log "MiscLogItem" with a multiple tag-value Context
 Log.Logger.Log(new MiscLogItem(
     Severity.Debug, Tag.From("GotSettings"),
-    new Context()
+    new TagValueSet()
     {
         { Tag.From("Border"), 2 },
         { Tag.From("Background"), ConsoleColor.Yellow },
