@@ -18,6 +18,10 @@ public class MultiTagTests
     public void From_ValidInput_Constructs(string value) =>
         _ = MultiTag.From(value);
 
+    [Fact]
+    public void From_ValidInput_ReturnsCount() =>
+        MultiTag.From("A:B").Count.Should().Be(2);
+
     [Theory]
     [InlineData("Aa", true)]
     [InlineData("Aa:Bb", true)]
@@ -33,8 +37,8 @@ public class MultiTagTests
     [InlineData("A :B:C:D", false)]
     [InlineData("A: B:C:D", false)]
     [InlineData("a:b:c:d", false)]
-    [InlineData("A:B:C:D:E", true)]
-    [InlineData("A:B:C:D:E:F", false)]
+    [InlineData("A:B:C:D:E:F:G:H:I:J", true)]
+    [InlineData("A:B:C:D:E:F:G:H:I:J:K", false)]
     [InlineData("", false)]
     [InlineData(null, false)]
     public void IsValue_ValidInput_ReturnsExpected(string value, bool expected) =>

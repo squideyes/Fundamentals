@@ -10,7 +10,9 @@ namespace SquidEyes.Fundamentals;
 [ValueObject<string>]
 public readonly partial struct MultiTag
 {
-    public const int MaxTags = 5;
+    public const int MaxTags = 10;
+
+    public int Count => Value.Count(c => c == ':') + 1;
 
     public static MultiTag From(Tag[] tags) =>
         From(string.Join(":", tags.Select(t => t.ToString())));
