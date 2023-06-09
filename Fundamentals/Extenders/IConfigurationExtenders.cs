@@ -15,7 +15,25 @@ public static class IConfigurationExtenders
         config.MayNot().BeNull();
         key.MayNot().BeDefault();
 
-        return (T)Convert.ChangeType(
-            config[key.ToString()]!, typeof(T));
+        return (T)Convert.ChangeType(config[key.ToString()]!, typeof(T));
+    }
+
+    public static T? GetValueOrDefault<T>(this IConfiguration config,
+       MultiTag key, Func<string, bool> isValid, Func<string, T> getValue)
+    {
+        config.MayNot().BeNull();
+        key.MayNot().BeDefault();
+        isValid.MayNot().BeNull();
+        getValue.MayNot().BeNull();
+
+        var value = config[key.Value];
+
+        if (value == null)
+            return default;
+
+        if (isValid(value))
+            return getValue(value);
+        else
+            return default;
     }
 }
