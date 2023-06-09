@@ -19,14 +19,14 @@ public static class IConfigurationExtenders
     }
 
     public static T? GetValueOrDefault<T>(this IConfiguration config,
-       MultiTag key, Func<string, bool> isValid, Func<string, T> getValue)
+       string key, Func<string, bool> isValid, Func<string, T> getValue)
     {
         config.MayNot().BeNull();
         key.MayNot().BeDefault();
         isValid.MayNot().BeNull();
         getValue.MayNot().BeNull();
 
-        var value = config[key.Value];
+        var value = config[key];
 
         if (value == null)
             return default;
