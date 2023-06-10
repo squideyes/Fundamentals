@@ -16,6 +16,9 @@ public static partial class ValidationExtenders
 
     private static readonly Regex dnsNameValidator = GetDnsNameValidator();
 
+    private static readonly Regex cosmosNameValidator = 
+        GetCosmosNameValidator();
+
     private static readonly Dictionary<string, Regex> regexes = new();
 
     public static bool IsMultiTagValue(this string value)
@@ -207,6 +210,9 @@ public static partial class ValidationExtenders
     public static bool IsDnsName(this string value) =>
         dnsNameValidator.IsMatch(value);
 
+    public static bool IsComosName(this string value) =>
+        cosmosNameValidator.IsMatch(value);
+
     public static bool IsBlobName(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -230,6 +236,9 @@ public static partial class ValidationExtenders
         return true;
     }
 
-    [GeneratedRegex("^[a-z0-9](?!.*--)[a-z0-9-]{1,61}[a-z0-9]$", RegexOptions.Compiled)]
+    [GeneratedRegex("^[a-z0-9](?!.*--)[a-z0-9-]{1,61}[a-z0-9]$")]
     private static partial Regex GetDnsNameValidator();
+
+    [GeneratedRegex("^[A-Za-z0-9](?!.*--)[A-Za-z0-9-]{1,41}[A-Za-z0-9]$")]
+    private static partial Regex GetCosmosNameValidator();
 }
