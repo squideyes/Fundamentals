@@ -23,16 +23,39 @@ var seqApiUri = new Uri("http://host.docker.internal:5341");
 var seqApiKey = (string)null!;
 
 // Zero or more app-specific fields to enrich ALL log-items with
-var enrichWith = new Dictionary<Tag, object>
+var enrichWith = new TagValueSet()
 {
     { Tag.From("ClientId"), "ABC123" },
     { Tag.From("JunketId"), 12345 },
     { Tag.From("RunDate"), DateTime.Today }
 };
 
-// Create a standard logger
+var logFilePath = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
+
+// Create a standard logger; in this case with three app-specific
+// fields to enrich ALL of the log-items with and a custom ClientId
+// transform
 Log.Logger = SerilogHelper.GetStandardLogger(
-    seqApiUri, seqApiKey, Severity.Debug, enrichWith);
+    new StandardLoggerArgs()
+    {
+        SeqApiUri = seqApiUri,
+        SeqApiKey = seqApiKey,
+        MinSeverity = Severity.Debug,
+        EnrichWith = new TagValueSet()
+        {
+            { Tag.From("ClientId"), "ABC123" },
+            { Tag.From("JunketId"), 12345 },
+            { Tag.From("RunDate"), DateTime.Today }
+        }
+    },
+    configure =>
+    {
+        configure.WriteTo.File(
+            logFilePath, rollingInterval: RollingInterval.Day);
+
+        configure.Destructure
+            .ByTransforming<ClientId>(v => v.ToString());
+    });
 
 // Log "LogonSuccess" (a custom log-item)
 Log.Logger.Log(new LogonSucess(Brokerage.CanonTrading,
@@ -58,13 +81,13 @@ Log.Logger.Log(new MiscLogItem(
     }));
 
 // Log individual FluentValidation ValidationFailures
-Log.Logger.Log(new ValidationFailed(Tag.From("StartupValidation"), 
+Log.Logger.Log(new ValidationFailed(Tag.From("StartupValidation"),
     new ValidationFailure("Id", "'{Id}' must be a valid Id.")));
 
-host.Run();
+await host.RunAsync();
 
 // Always close and flush before terminating your app
 Log.CloseAndFlush();
 
 Console.WriteLine();
-Console.WriteLine($"Go to \"{seqApiUri}\" to review your log-items");
+Console.WriteLine($"For more info, see: {seqApiUri} and {logFilePath}");

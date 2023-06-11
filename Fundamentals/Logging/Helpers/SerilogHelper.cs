@@ -5,19 +5,15 @@
 
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using static SquidEyes.Fundamentals.Severity;
 
 namespace SquidEyes.Fundamentals;
 
 public static class SerilogHelper
 {
-    public static ILogger GetStandardLogger(Uri seqApiUri, string seqApiKey = null!,
-        Severity minServerity = Info, Dictionary<Tag, object> enrichWith = null!)
+    public static ILogger GetStandardLogger(
+        StandardLoggerArgs args, Action<LoggerConfiguration> configure = null!)
     {
-        seqApiUri.Must().Be(v => v.IsAbsoluteUri);
-        seqApiKey?.MayNot().BeNullOrWhitespace();
-
-        var minLogEventLevel = minServerity.ToLogEventLevel();
+        var minLogEventLevel = args.MinSeverity.ToLogEventLevel();
 
         var config = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
@@ -34,19 +30,22 @@ public static class SerilogHelper
             .Destructure.ByTransforming<TimeSpan>(
                 v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
 
-        if (enrichWith != null)
+        if (args.EnrichWith != null)
         {
-            foreach (var kv in enrichWith)
+            foreach (var kv in args.EnrichWith)
                 config.Enrich.WithProperty(kv.Key.ToString(), kv.Value);
         }
 
-        config.WriteTo.Seq(seqApiUri.AbsoluteUri,
-            apiKey: seqApiKey.Convert(v => string.IsNullOrWhiteSpace(v) ? null : v),
+        config.WriteTo.Seq(args.SeqApiUri.AbsoluteUri,
+            apiKey: args.SeqApiKey.Convert(
+                v => string.IsNullOrWhiteSpace(v) ? null : v),
             restrictedToMinimumLevel: minLogEventLevel);
 
         config.WriteTo.Console(
             theme: AnsiConsoleTheme.Code,
             outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+
+        configure?.Invoke(config);
 
         return config.CreateLogger();
     }

@@ -5,16 +5,16 @@ namespace LoggingDemo;
 internal class Worker : BackgroundService
 {
     private readonly ILogger<Worker> logger;
+    private readonly IHostApplicationLifetime lifeTime;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(ILogger<Worker> logger, IHostApplicationLifetime lifeTime)
     {
         this.logger = logger;
+        this.lifeTime = lifeTime;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Task.CompletedTask;
-
         try
         {
             try
@@ -33,5 +33,10 @@ internal class Worker : BackgroundService
             // Log "ErrorCaught" (a standard log-item)
             logger.Log(new ErrorCaught(outer, true));
         }
+
+        lifeTime.StopApplication();
+
+        while (!stoppingToken.IsCancellationRequested)
+            await Task.Delay(100);
     }
 }
