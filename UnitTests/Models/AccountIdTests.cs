@@ -13,7 +13,7 @@ public class AccountIdTests
 {
     [Fact]
     public void From_ValidInput_Constructs() =>
-        AccountId.From("ABCDEFGH(T092)");
+        AccountId.From("ABCDEFGHT092");
 
     [Fact]
     public void CustomFrom_ValidInput_Constructs() =>
@@ -37,7 +37,7 @@ public class AccountIdTests
     public void ToString_ValidInput_ReturnsFormattedString()
     {
         AccountId.From(ClientId.From("ABCDEFGH"), 'R', 14)
-            .ToString().Should().Be("ABCDEFGH(R014)");
+            .ToString().Should().Be("ABCDEFGHR014");
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public class AccountIdTests
     public void IsValue_MixedInput_ReturnsExpected(
         char letter, int ordinal, bool expected)
     {
-        var value = $"ABCDEFGH({letter}{ordinal:000})";
+        var value = $"ABCDEFGH{letter}{ordinal:000}";
 
         AccountId.IsValue(value).Should().Be(expected);
     }

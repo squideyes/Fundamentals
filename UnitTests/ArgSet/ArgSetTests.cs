@@ -23,7 +23,7 @@ public class ArgSetTests
             {
               "AccountId": {
                 "Kind": "AccountId",
-                "Value": "ABCDEFGH(T001)"
+                "Value": "ABCDEFGHT001"
               },
               "Boolean": {
                 "Kind": "Boolean",
@@ -168,7 +168,7 @@ public class ArgSetTests
     {
         var argSet = new ArgSet();
 
-        argSet.Upsert(From("AccountId"), AccountId.From("ABCDEFGH(T001)"));
+        argSet.Upsert(From("AccountId"), AccountId.From("ABCDEFGHT001"));
         argSet.Upsert(From("Boolean"), true);
         argSet.Upsert(From("ClientId"), ClientId.From("ABCDEFGH"));
         argSet.Upsert(From("DateOnly"), DateOnly.MaxValue);
