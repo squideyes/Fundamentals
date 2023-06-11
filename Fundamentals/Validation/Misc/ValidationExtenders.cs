@@ -45,7 +45,7 @@ public static partial class ValidationExtenders
         if (value is null)
             return false;
 
-        if (value == "")
+        if (string.IsNullOrEmpty(value))
             return mayBeEmpty;
 
         return value.IsNonEmptyAndTrimmed();

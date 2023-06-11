@@ -32,9 +32,9 @@ var enrichWith = new TagValueSet()
 
 var logFilePath = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
 
-// Create a standard logger; in this case with three app-specific
-// fields to enrich ALL of the log-items with and a custom ClientId
-// transform
+// Create a standard logger; in this case with a trio of app-specific
+// fields to enrich ALL of the log-items with, an extra (File) sink
+// and a custom ClientId transform
 Log.Logger = SerilogHelper.GetStandardLogger(
     new StandardLoggerArgs()
     {
