@@ -13,8 +13,6 @@ public readonly partial struct ClientId
 {
     private const int SIZE = 8;
 
-    public bool IsInitialized => IsInitialized;
-
     private static readonly char[] charSet =
         "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".ToCharArray();
 
