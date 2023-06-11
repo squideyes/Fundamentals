@@ -17,18 +17,21 @@ public static class SerilogHelper
 
         var config = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
-            .Destructure.ByTransforming<DateOnly>(
-                v => v.ToString("yyyy-MM-dd"))
-            .Destructure.ByTransforming<Enum>(
-                v => v.ToString())
-            .Destructure.ByTransforming<Guid>(
-                v => v.ToString("D"))
-            .Destructure.ByTransforming<Tag>(
-                v => v.ToString())
-            .Destructure.ByTransforming<TimeOnly>(
-                v => v.ToString("HH:mm:ss.fff"))
-            .Destructure.ByTransforming<TimeSpan>(
-                v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
+            .Destructure.ByTransforming<AccountId>(v => v.ToString())
+            .Destructure.ByTransforming<ClientId>(v => v.ToString())
+            .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
+            .Destructure.ByTransforming<Email>(v => v.ToString())
+            .Destructure.ByTransforming<Enum>(v => v.ToString())
+            .Destructure.ByTransforming<Guid>(v => v.ToString("D"))
+            .Destructure.ByTransforming<MultiTag>(v => v.ToString())
+            .Destructure.ByTransforming<Offset>(v => v.ToString())
+            .Destructure.ByTransforming<Phone>(v => v.ToString())
+            .Destructure.ByTransforming<Ratchet>(v => v.ToString())
+            .Destructure.ByTransforming<ShortId>(v => v.ToString())
+            .Destructure.ByTransforming<SemVer>(v => v.ToString())
+            .Destructure.ByTransforming<Tag>(v => v.ToString())
+            .Destructure.ByTransforming<TimeOnly>(v => v.ToString("HH:mm:ss.fff"))
+            .Destructure.ByTransforming<TimeSpan>(v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
 
         if (args.EnrichWith != null)
         {
