@@ -4,11 +4,24 @@
 // ********************************************************
 
 using System.Globalization;
+using static System.DayOfWeek;
 
 namespace SquidEyes.Fundamentals;
 
 public static class DateOnlyExtenders
 {
+    private static readonly DateTime epoch =
+        new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    public static int ToUnixTime(this DateTime value) =>
+        (int)value.Subtract(epoch).TotalSeconds;
+
+    public static bool IsWeekend(this DateOnly value) =>
+        value.DayOfWeek == Saturday || value.DayOfWeek == Sunday;
+
+    public static bool IsWeekday(this DateOnly value) =>
+        value.DayOfWeek >= Monday && value.DayOfWeek <= Friday;
+
     public static string ToDayName(this DateOnly date)
     {
         return date.Day switch
