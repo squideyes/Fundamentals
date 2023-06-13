@@ -21,6 +21,103 @@ public static partial class ValidationExtenders
 
     private static readonly Dictionary<string, Regex> regexes = new();
 
+    public static bool HasItems<T>(
+        this IEnumerable<T> items, bool nonDefault = true)
+    {
+        return items.HasItems(1, int.MaxValue,
+            v => !nonDefault || !Equals(v, default(T)));
+    }
+
+    public static bool HasItems<T>(
+        this IEnumerable<T> items, Func<T, bool>? isValid)
+    {
+        return items.HasItems(1, int.MaxValue, isValid);
+    }
+
+    public static bool HasItems<T>(this IEnumerable<T> items,
+        int minItems, int maxItems, bool nonDefault = true)
+    {
+        return items.HasItems(minItems, maxItems,
+            v => !nonDefault || !Equals(v, default(T)));
+    }
+
+    public static bool HasItems<T>(this IEnumerable<T> items,
+        int minItems, int maxItems, Func<T, bool>? isValid)
+    {
+        if (minItems < 1)
+            throw new ArgumentOutOfRangeException(nameof(minItems));
+
+        if (maxItems < minItems)
+            throw new ArgumentOutOfRangeException(nameof(maxItems));
+
+        int count = 0;
+
+        foreach (var item in items)
+        {
+            if (isValid != null && !isValid(item))
+                return false;
+
+            if (++count > maxItems)
+                return false;
+        }
+
+        return count >= minItems;
+    }
+
+    public static bool IsFlagsValue(this Enum value)
+    {
+        switch (Type.GetTypeCode(
+            Enum.GetUnderlyingType(value.GetType())))
+        {
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.SByte:
+            case TypeCode.Single:
+                if (Convert.ToInt64(value) < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                break;
+            default:
+                break;
+        }
+
+        ulong flags = Convert.ToUInt64(value);
+
+        var values = Enum.GetValues(value.GetType());
+
+        int count = values.Length - 1;
+
+        ulong initialFlags = flags;
+
+        ulong flag = 0;
+
+        while (count >= 0)
+        {
+            flag = Convert.ToUInt64(values.GetValue(count));
+
+            if ((count == 0) && (flag == 0))
+                break;
+
+            if ((flags & flag) == flag)
+            {
+                flags -= flag;
+
+                if (flags == 0)
+                    return true;
+            }
+
+            count--;
+        }
+
+        if (flags != 0)
+            return false;
+
+        if (initialFlags != 0 || flag == 0)
+            return true;
+
+        return false;
+    }
+
     public static bool IsMultiTagValue(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
