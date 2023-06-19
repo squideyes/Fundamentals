@@ -1,27 +1,27 @@
-// ********************************************************
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+//// ********************************************************
+//// The use of this source code is licensed under the terms
+//// of the MIT License (https://opensource.org/licenses/MIT)
+//// ********************************************************
 
-using Vogen;
+//using Vogen;
 
-namespace SquidEyes.Fundamentals;
+//namespace SquidEyes.Fundamentals;
 
-[ValueObject<string>]
-public readonly partial struct ShortId 
-{
-    private const int SIZE = 22;
+//[ValueObject<string>]
+//public readonly partial struct ShortId 
+//{
+//    private const int SIZE = 22;
 
-    private static readonly char[] charSet =
-        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz23456789".ToCharArray();
+//    private static readonly char[] charSet =
+//        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz23456789".ToCharArray();
 
-    private static readonly HashSet<char> hashSet = new(charSet);
+//    private static readonly HashSet<char> hashSet = new(charSet);
 
-    public static Validation Validate(string value) =>
-        VogenHelper.GetValidation<ShortId>(value, IsValue);
+//    public static Validation Validate(string value) =>
+//        VogenHelper.GetValidation<ShortId>(value, IsValue);
 
-    public static bool IsValue(string value) =>
-        value?.Length == SIZE && value.All(hashSet.Contains);
+//    public static bool IsValue(string value) =>
+//        value?.Length == SIZE && value.All(hashSet.Contains);
 
-    public static ShortId Next() => From(IdHelper.GetRandomId(charSet, SIZE));
-}
+//    public static ShortId Next() => From(IdHelper.GetRandomId(charSet, SIZE));
+//}

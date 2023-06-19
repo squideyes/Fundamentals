@@ -1,25 +1,25 @@
-// ********************************************************
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+//// ********************************************************
+//// The use of this source code is licensed under the terms
+//// of the MIT License (https://opensource.org/licenses/MIT)
+//// ********************************************************
 
-using Vogen;
+//using Vogen;
 
-namespace SquidEyes.Fundamentals;
+//namespace SquidEyes.Fundamentals;
 
-[ValueObject<string>]
-public readonly partial struct Email
-{
-    public const int MaxLength = 50;
+//[ValueObject<string>]
+//public readonly partial struct Email
+//{
+//    public const int MaxLength = 50;
 
-    private static readonly EmailValidator validator = new();
+//    private static readonly EmailValidator validator = new();
 
-    public static Validation Validate(string value) =>
-        VogenHelper.GetValidation<Email>(value, IsValue);
+//    public static Validation Validate(string value) =>
+//        VogenHelper.GetValidation<Email>(value, IsValue);
 
-    public static bool IsValue(string value) =>
-        value is not null && validator.IsValid(value, MaxLength);
+//    public static bool IsValue(string value) =>
+//        value is not null && validator.IsValid(value, MaxLength);
 
-    private static string NormalizeInput(string value) => 
-        value.ToLower();
-}
+//    private static string NormalizeInput(string value) => 
+//        value.ToLower();
+//}

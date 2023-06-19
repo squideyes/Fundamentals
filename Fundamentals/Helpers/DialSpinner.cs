@@ -1,142 +1,142 @@
-﻿// ********************************************************
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+﻿//// ********************************************************
+//// The use of this source code is licensed under the terms
+//// of the MIT License (https://opensource.org/licenses/MIT)
+//// ********************************************************
 
-using Loyc.Math;
-using System.Collections;
-using System.Numerics;
+//using Loyc.Math;
+//using System.Collections;
+//using System.Numerics;
 
-namespace SquidEyes.Fundamentals;
+//namespace SquidEyes.Fundamentals;
 
-public class DialSpinner : IEnumerable<IConvertible>
-{
-    private readonly List<IConvertible> values;
-    private readonly int defaultIndex;
+//public class DialSpinner : IEnumerable<IConvertible>
+//{
+//    private readonly List<IConvertible> values;
+//    private readonly int defaultIndex;
 
-    private int index = 0;
+//    private int index = 0;
 
-    public DialSpinner(IEnumerable<IConvertible> values, IConvertible @default)
-    {
-        if (!values.HasItems(1, int.MaxValue, v => !v.IsDefault()))
-            throw new ArgumentOutOfRangeException(nameof(values));
+//    public DialSpinner(IEnumerable<IConvertible> values, IConvertible @default)
+//    {
+//        if (!values.HasItems(1, int.MaxValue, v => !v.IsDefault()))
+//            throw new ArgumentOutOfRangeException(nameof(values));
 
-        var type = values.First().GetType();
+//        var type = values.First().GetType();
 
-        if (values.Any(v => v.GetType() != type))
-            throw new ArgumentOutOfRangeException(nameof(values));
+//        if (values.Any(v => v.GetType() != type))
+//            throw new ArgumentOutOfRangeException(nameof(values));
 
-        if (@default.GetType() != type)
-            throw new ArgumentOutOfRangeException(nameof(type));
+//        if (@default.GetType() != type)
+//            throw new ArgumentOutOfRangeException(nameof(type));
 
-        this.values = values.OrderBy(v => v).ToList();
+//        this.values = values.OrderBy(v => v).ToList();
 
-        defaultIndex = index = values.ToList().IndexOf(@default);
+//        defaultIndex = index = values.ToList().IndexOf(@default);
 
-        if (index == -1)
-            throw new ArgumentOutOfRangeException(nameof(@default));
-    }
+//        if (index == -1)
+//            throw new ArgumentOutOfRangeException(nameof(@default));
+//    }
 
-    public IConvertible Value => values[index];
+//    public IConvertible Value => values[index];
 
-    public int Count => values.Count;
+//    public int Count => values.Count;
 
-    public void Reset() => index = defaultIndex;
+//    public void Reset() => index = defaultIndex;
 
-    public int CompareTo(IConvertible other)
-    {
-        return Comparer.Default.Compare(
-            Value, Convert.ChangeType(other, Value.GetType()));
-    }
+//    public int CompareTo(IConvertible other)
+//    {
+//        return Comparer.Default.Compare(
+//            Value, Convert.ChangeType(other, Value.GetType()));
+//    }
 
-    public void First() => index = 0;
+//    public void First() => index = 0;
 
-    public void Last() => index = values.Count - 1;
+//    public void Last() => index = values.Count - 1;
 
-    public void Default() => index = defaultIndex;
+//    public void Default() => index = defaultIndex;
 
-    public bool Next(bool canWrapAround = true)
-    {
-        if (index == values.Count - 1)
-        {
-            if (canWrapAround)
-                First();
+//    public bool Next(bool canWrapAround = true)
+//    {
+//        if (index == values.Count - 1)
+//        {
+//            if (canWrapAround)
+//                First();
 
-            return canWrapAround;
-        }
-        else
-        {
-            index++;
+//            return canWrapAround;
+//        }
+//        else
+//        {
+//            index++;
 
-            return true;
-        }
-    }
+//            return true;
+//        }
+//    }
 
-    public bool Previous(bool canWrapAround = true)
-    {
-        if (index == 0)
-        {
-            if (canWrapAround)
-                Last();
+//    public bool Previous(bool canWrapAround = true)
+//    {
+//        if (index == 0)
+//        {
+//            if (canWrapAround)
+//                Last();
 
-            return canWrapAround;
-        }
-        else
-        {
-            index--;
+//            return canWrapAround;
+//        }
+//        else
+//        {
+//            index--;
 
-            return true;
-        }
-    }
+//            return true;
+//        }
+//    }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+//    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerator<IConvertible> GetEnumerator() => values.GetEnumerator();
+//    public IEnumerator<IConvertible> GetEnumerator() => values.GetEnumerator();
 
-    public static DialSpinner Create<T>(T minValue, T maxValue, T step, T @default)
-        where T : IConvertible, IComparable<T>, INumber<T>
-    {
-        return new DialSpinner(GetValues(minValue, maxValue, step, @default), @default);
-    }
+//    public static DialSpinner Create<T>(T minValue, T maxValue, T step, T @default)
+//        where T : IConvertible, IComparable<T>, INumber<T>
+//    {
+//        return new DialSpinner(GetValues(minValue, maxValue, step, @default), @default);
+//    }
 
-    private static List<IConvertible> GetValues<T>(T minValue, T maxValue, T step, T @default)
-        where T : IConvertible, IComparable<T>, INumber<T>
-    {
-        static T Round(T value)
-        {
-            var asDouble = (double)Convert.ChangeType(value, typeof(double));
+//    private static List<IConvertible> GetValues<T>(T minValue, T maxValue, T step, T @default)
+//        where T : IConvertible, IComparable<T>, INumber<T>
+//    {
+//        static T Round(T value)
+//        {
+//            var asDouble = (double)Convert.ChangeType(value, typeof(double));
 
-            var rounded = Math.Round(asDouble, 5);
+//            var rounded = Math.Round(asDouble, 5);
 
-            return (T)Convert.ChangeType(rounded, typeof(T));
-        }
+//            return (T)Convert.ChangeType(rounded, typeof(T));
+//        }
 
-        if (minValue.CompareTo(default) < 0)
-            throw new ArgumentOutOfRangeException(nameof(minValue));
+//        if (minValue.CompareTo(default) < 0)
+//            throw new ArgumentOutOfRangeException(nameof(minValue));
 
-        if (maxValue.CompareTo(minValue) <= 0)
-            throw new ArgumentOutOfRangeException(nameof(maxValue));
+//        if (maxValue.CompareTo(minValue) <= 0)
+//            throw new ArgumentOutOfRangeException(nameof(maxValue));
 
-        if (step.CompareTo(default) <= 0.0)
-            throw new ArgumentOutOfRangeException(nameof(step));
+//        if (step.CompareTo(default) <= 0.0)
+//            throw new ArgumentOutOfRangeException(nameof(step));
 
-        var values = new List<IConvertible>();
+//        var values = new List<IConvertible>();
 
-        var value = minValue;
+//        var value = minValue;
 
-        var math = Maths<T>.Math;
+//        var math = Maths<T>.Math;
 
-        do
-        {
-            values.Add(value);
+//        do
+//        {
+//            values.Add(value);
 
-            value = Round(math.Add(value, step));
-        }
-        while (value.CompareTo(maxValue) <= 0);
+//            value = Round(math.Add(value, step));
+//        }
+//        while (value.CompareTo(maxValue) <= 0);
 
-        if (!values.Contains(@default))
-            throw new ArgumentOutOfRangeException(nameof(@default));
+//        if (!values.Contains(@default))
+//            throw new ArgumentOutOfRangeException(nameof(@default));
 
-        return values;
-    }
-}
+//        return values;
+//    }
+//}
