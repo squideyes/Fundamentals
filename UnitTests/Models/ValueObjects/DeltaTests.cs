@@ -59,7 +59,7 @@ public class DeltaTests
     [InlineData("XXX=0.25", false)]
     [InlineData("Gain0.25", false)]
     public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsOffsetInput().Should().Be(expected);
+        input.IsDeltaInput().Should().Be(expected);
 
     [Theory]
     [InlineData("Gain=0.25", true)]
