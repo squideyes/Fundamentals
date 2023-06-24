@@ -10,6 +10,26 @@ namespace SquidEyes.Fundamentals;
 
 internal static class MiscExtenders
 {
+    public static char ToCode(this AccountMode mode)
+    {
+        return mode switch
+        {
+            AccountMode.Test => 'T',
+            AccountMode.Live => 'L',
+            _ => throw new ArgumentOutOfRangeException(nameof(mode))
+        };
+    }
+
+    public static AccountMode ToAccountMode(this char value)
+    {
+        return value switch
+        {
+            'T' => AccountMode.Test,
+            'L' => AccountMode.Live,
+            _ => throw new ArgumentOutOfRangeException(nameof(value))
+        };
+    }
+
     public static LogEventLevel ToLogEventLevel(this Severity logLevel)
     {
         return logLevel switch
