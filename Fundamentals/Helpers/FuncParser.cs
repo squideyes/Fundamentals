@@ -1,27 +1,27 @@
-//// ********************************************************
-//// The use of this source code is licensed under the terms
-//// of the MIT License (https://opensource.org/licenses/MIT)
-//// ********************************************************
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-//namespace SquidEyes.Fundamentals;
+namespace SquidEyes.Fundamentals;
 
-//public static class FuncParser
-//{
-//    public static List<T> Parse<T>(string input, Func<string, T> getValue)
-//    {
-//        input.MayNot().BeNullOrWhitespace();
+public static class FuncParser
+{
+    public static List<T> Parse<T>(string input, Func<string, T> getValue)
+    {
+        input.MayNot().BeNullOrWhitespace();
 
-//        getValue.MayNot().BeNull();
+        getValue.MayNot().BeNull();
 
-//        var items = new List<T>();
+        var items = new List<T>();
 
-//        var reader = new StringReader(input);
+        var reader = new StringReader(input);
 
-//        string line;
+        string line;
 
-//        while ((line = reader.ReadLine()!) != null)
-//            items.Add(getValue(line));
+        while ((line = reader.ReadLine()!) != null)
+            items.Add(getValue(line));
 
-//        return items;
-//    }
-//}
+        return items;
+    }
+}

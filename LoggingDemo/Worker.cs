@@ -1,42 +1,47 @@
-﻿//using SquidEyes.Fundamentals;
+﻿// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-//namespace LoggingDemo;
+using SquidEyes.Fundamentals;
 
-//internal class Worker : BackgroundService
-//{
-//    private readonly ILogger<Worker> logger;
-//    private readonly IHostApplicationLifetime lifeTime;
+namespace LoggingDemo;
 
-//    public Worker(ILogger<Worker> logger, IHostApplicationLifetime lifeTime)
-//    {
-//        this.logger = logger;
-//        this.lifeTime = lifeTime;
-//    }
+internal class Worker : BackgroundService
+{
+    private readonly ILogger<Worker> logger;
+    private readonly IHostApplicationLifetime lifeTime;
 
-//    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-//    {
-//        try
-//        {
-//            try
-//            {
-//                throw new ArgumentException(
-//                    "An \"Inner\" exception was caught!");
-//            }
-//            catch (Exception inner)
-//            {
-//                throw new Exception(
-//                    "An \"Outer\" exception was caught!", inner);
-//            }
-//        }
-//        catch (Exception outer)
-//        {
-//            // Log "ErrorCaught" (a standard log-item)
-//            logger.Log(new ErrorCaught(outer, true));
-//        }
+    public Worker(ILogger<Worker> logger, IHostApplicationLifetime lifeTime)
+    {
+        this.logger = logger;
+        this.lifeTime = lifeTime;
+    }
 
-//        lifeTime.StopApplication();
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            try
+            {
+                throw new ArgumentException(
+                    "An \"Inner\" exception was caught!");
+            }
+            catch (Exception inner)
+            {
+                throw new Exception(
+                    "An \"Outer\" exception was caught!", inner);
+            }
+        }
+        catch (Exception outer)
+        {
+            // Log "ErrorCaught" (a standard log-item)
+            logger.Log(new ErrorCaught(outer, true));
+        }
 
-//        while (!stoppingToken.IsCancellationRequested)
-//            await Task.Delay(100);
-//    }
-//}
+        lifeTime.StopApplication();
+
+        while (!stoppingToken.IsCancellationRequested)
+            await Task.Delay(100);
+    }
+}

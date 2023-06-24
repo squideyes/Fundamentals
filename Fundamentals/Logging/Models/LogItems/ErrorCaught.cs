@@ -1,44 +1,44 @@
-//// ********************************************************
-//// The use of this source code is licensed under the terms
-//// of the MIT License (https://opensource.org/licenses/MIT)
-//// ********************************************************
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-//using System.Diagnostics;
+using System.Diagnostics;
 
-//namespace SquidEyes.Fundamentals;
+namespace SquidEyes.Fundamentals;
 
-//public class ErrorCaught : LogItemBase
-//{
-//    private readonly Error error;
-//    private readonly TagValueSet tagValues;
+public class ErrorCaught : LogItemBase
+{
+    private readonly Error error;
+    private readonly TagValueSet tagValues;
 
-//    public ErrorCaught(Exception error, 
-//        bool? withFileInfo = null, TagValueSet tagValues = null!)
-//        : base(Severity.Error)
-//    {
-//        error.MayNot().BeNull();
+    public ErrorCaught(Exception error,
+        bool? withFileInfo = null, TagValueSet tagValues = null!)
+        : base(Severity.Error)
+    {
+        error.MayNot().BeNull();
 
-//        if (!withFileInfo.HasValue)
-//            withFileInfo = Debugger.IsAttached;
+        if (!withFileInfo.HasValue)
+            withFileInfo = Debugger.IsAttached;
 
-//        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
 
-//        this.error = new Error(error, withFileInfo.Value);
-//    }
+        this.error = new Error(error, withFileInfo.Value);
+    }
 
-//    public override (Tag, object)[] GetTagValues()
-//    {
-//        var tagValues = new List<(Tag, object)> {
-//            (Tag.From("Type"), error.Type.ToString()) };
+    public override (Tag, object)[] GetTagValues()
+    {
+        var tagValues = new List<(Tag, object)> {
+            (Tag.Create("Type"), error.Type.ToString()) };
 
-//        foreach (var message in error.Messages)
-//            tagValues.Add((Tag.From("Message"), message));
+        foreach (var message in error.Messages)
+            tagValues.Add((Tag.Create("Message"), message));
 
-//        tagValues.Add((Tag.From("Details"), error));
+        tagValues.Add((Tag.Create("Details"), error));
 
-//        if (this.tagValues != null)
-//            tagValues.AddRange(this.tagValues!.Select(kv => (kv.Key, kv.Value)));
+        if (this.tagValues != null)
+            tagValues.AddRange(this.tagValues!.Select(kv => (kv.Key, kv.Value)));
 
-//        return tagValues.ToArray();
-//    }
-//}
+        return tagValues.ToArray();
+    }
+}

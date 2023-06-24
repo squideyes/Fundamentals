@@ -1,55 +1,53 @@
-//// ********************************************************
-//// The use of this source code is licensed under the terms
-//// of the MIT License (https://opensource.org/licenses/MIT)
-//// ********************************************************
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-//using Serilog;
-//using Serilog.Sinks.SystemConsole.Themes;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
-//namespace SquidEyes.Fundamentals;
+namespace SquidEyes.Fundamentals;
 
-//public static class SerilogHelper
-//{
-//    public static ILogger GetStandardLogger(
-//        StandardLoggerArgs args, Action<LoggerConfiguration> configure = null!)
-//    {
-//        var minLogEventLevel = args.MinSeverity.ToLogEventLevel();
+public static class SerilogHelper
+{
+    public static ILogger GetStandardLogger(
+        StandardLoggerArgs args, Action<LoggerConfiguration> configure = null!)
+    {
+        var minLogEventLevel = args.MinSeverity.ToLogEventLevel();
 
-//        var config = new LoggerConfiguration()
-//            .MinimumLevel.Is(minLogEventLevel)
-//            .Destructure.ByTransforming<AccountId>(v => v.ToString())
-//            .Destructure.ByTransforming<ClientId>(v => v.ToString())
-//            .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
-//            .Destructure.ByTransforming<Email>(v => v.ToString())
-//            .Destructure.ByTransforming<Enum>(v => v.ToString())
-//            .Destructure.ByTransforming<Guid>(v => v.ToString("D"))
-//            .Destructure.ByTransforming<MultiTag>(v => v.ToString())
-//            .Destructure.ByTransforming<Offset>(v => v.ToString())
-//            .Destructure.ByTransforming<Phone>(v => v.ToString())
-//            .Destructure.ByTransforming<Ratchet>(v => v.ToString())
-//            .Destructure.ByTransforming<ShortId>(v => v.ToString())
-//            .Destructure.ByTransforming<SemVer>(v => v.ToString())
-//            .Destructure.ByTransforming<Tag>(v => v.ToString())
-//            .Destructure.ByTransforming<TimeOnly>(v => v.ToString("HH:mm:ss.fff"))
-//            .Destructure.ByTransforming<TimeSpan>(v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
+        var config = new LoggerConfiguration()
+            .MinimumLevel.Is(minLogEventLevel)
+            .Destructure.ByTransforming<AccountId>(v => v.ToString())
+            .Destructure.ByTransforming<ClientId>(v => v.ToString())
+            .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
+            .Destructure.ByTransforming<Delta>(v => v.ToString())
+            .Destructure.ByTransforming<Email>(v => v.ToString())
+            .Destructure.ByTransforming<Enum>(v => v.ToString())
+            .Destructure.ByTransforming<Guid>(v => v.ToString("D"))
+            .Destructure.ByTransforming<MultiTag>(v => v.ToString())
+            .Destructure.ByTransforming<Phone>(v => v.ToString())
+            .Destructure.ByTransforming<SemVer>(v => v.ToString())
+            .Destructure.ByTransforming<Tag>(v => v.ToString())
+            .Destructure.ByTransforming<TimeOnly>(v => v.ToString("HH:mm:ss.fff"))
+            .Destructure.ByTransforming<TimeSpan>(v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
 
-//        if (args.EnrichWith != null)
-//        {
-//            foreach (var kv in args.EnrichWith)
-//                config.Enrich.WithProperty(kv.Key.ToString(), kv.Value);
-//        }
+        if (args.EnrichWith != null)
+        {
+            foreach (var kv in args.EnrichWith)
+                config.Enrich.WithProperty(kv.Key.ToString(), kv.Value);
+        }
 
-//        config.WriteTo.Seq(args.SeqApiUri.AbsoluteUri,
-//            apiKey: args.SeqApiKey.Convert(
-//                v => string.IsNullOrWhiteSpace(v) ? null : v),
-//            restrictedToMinimumLevel: minLogEventLevel);
+        config.WriteTo.Seq(args.SeqApiUri.AbsoluteUri,
+            apiKey: args.SeqApiKey.Convert(
+                v => string.IsNullOrWhiteSpace(v) ? null : v),
+            restrictedToMinimumLevel: minLogEventLevel);
 
-//        config.WriteTo.Console(
-//            theme: AnsiConsoleTheme.Code,
-//            outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
+        config.WriteTo.Console(
+            theme: AnsiConsoleTheme.Code,
+            outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
-//        configure?.Invoke(config);
+        configure?.Invoke(config);
 
-//        return config.CreateLogger();
-//    }
-//}
+        return config.CreateLogger();
+    }
+}

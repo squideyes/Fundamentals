@@ -19,13 +19,13 @@ public static class GenericExtenders
     public static HashSet<T> ToHashSetOf<T>(this T value) =>
         new(new List<T> { value });
 
-    //public static bool In<T>(this T value, params T[] values)
-    //    where T : IEquatable<T>
-    //{
-    //    values.Must().Be(v => v.HasItems());
+    public static bool In<T>(this T value, params T[] values)
+        where T : IEquatable<T>
+    {
+        values.Must().Be(v => v.HasItems());
 
-    //    return values.Contains(value);
-    //}
+        return values.Contains(value);
+    }
 
     public static string ToString<T>(
         this T value, Func<T, string> getString = null!)

@@ -1,24 +1,29 @@
-﻿//using FluentValidation.Results;
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-//namespace SquidEyes.Fundamentals;
+using FluentValidation.Results;
 
-//public class ValidationFailed : LogItemBase
-//{
-//    private readonly ValidationFailure failure;
+namespace SquidEyes.Fundamentals;
 
-//    public ValidationFailed(Tag activity, ValidationFailure failure)
-//        : base(Severity.Warn, activity)
-//    {
-//        this.failure = failure.MayNot().BeNull();
-//    }
+public class ValidationFailed : LogItemBase
+{
+    private readonly ValidationFailure failure;
 
-//    public override (Tag, object)[] GetTagValues()
-//    {
-//        return new (Tag, object)[] 
-//        {
-//            (Tag.From("PropertyName"), failure.PropertyName),
-//            (Tag.From("ErrorCode"), failure.ErrorCode),
-//            (Tag.From("ErrorMessage"), failure.ErrorMessage)
-//        };
-//    }
-//}
+    public ValidationFailed(Tag activity, ValidationFailure failure)
+        : base(Severity.Warn, activity)
+    {
+        this.failure = failure.MayNot().BeNull();
+    }
+
+    public override (Tag, object)[] GetTagValues()
+    {
+        return new (Tag, object)[]
+        {
+            (Tag.Create("PropertyName"), failure.PropertyName),
+            (Tag.Create("ErrorCode"), failure.ErrorCode),
+            (Tag.Create("ErrorMessage"), failure.ErrorMessage)
+        };
+    }
+}

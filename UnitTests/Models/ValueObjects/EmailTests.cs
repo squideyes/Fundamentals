@@ -8,75 +8,78 @@ using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
 
-public class AccountIdTests
+public class EmailTests
 {
     [Fact]
     public void Create_GoodInput_Contructs()
     {
-        const string INPUT = "AAAAAAAAT001";
+        const string INPUT = "somedude@someco.com";
 
-        var accountId = AccountId.Create(INPUT);
+        var clientId = Email.Create(INPUT);
 
-        accountId.ClientId.Should().Be(ClientId.Create(INPUT[..8]));
-        accountId.Mode.Should().Be(LiveOrTest.Test);
-        accountId.Ordinal.Should().Be(1);
-        accountId.Input.Should().Be(INPUT);
-        accountId.ToString().Should().Be(INPUT);
+        clientId.Value.Should().Be(INPUT);
+        clientId.Input.Should().Be(INPUT);
+        clientId.ToString().Should().Be(INPUT);
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData("AAAAAAAAT000")]
-    [InlineData("AAAAAAAaT001")]
-    [InlineData("AAAAAAAAT001 ")]
-    [InlineData(" AAAAAAAAT001")]
-    [InlineData("AAAAAAAIT001")]
-    [InlineData("AAAAAAA1T001")]
-    [InlineData("AAAAAAAOT001")]
-    [InlineData("AAAAAAA0T001")]
+    [InlineData(" somedude@someco.com")]
+    [InlineData("somedude@someco.com ")]
+    [InlineData("somedudesomeco.com")]
+    [InlineData("some dude@someco.com")]
+    [InlineData("somedude@some co.com")]
+    [InlineData("somedude@someco.")]
+    [InlineData("somedude@someco")]
+    [InlineData("somedudesomecocom")]
+    [InlineData("some_dude@someco.com")]
+    [InlineData("somedude@some_co.com")]
+    [InlineData("somedude@10-minute-mail.com")]
+    [InlineData("somedude@some_co.scam")]
     public void Create_BadInput_ThrowsError(string input)
     {
-        FluentActions.Invoking(() => AccountId.Create(input))
+        FluentActions.Invoking(() => Email.Create(input))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData("AAAAAAAAT001", true)]
-    [InlineData(null, false)]
+    [InlineData("somedude@someco.com", true)]
+    [InlineData("a-b@c-d.com", true)]
+    [InlineData(" somedude@someco.com", false)]
+    [InlineData("somedude@someco.com ", false)]
+    [InlineData("somedudesomeco.com", false)]
+    [InlineData("some dude@someco.com", false)]
+    [InlineData("somedude@some co.com", false)]
+    [InlineData("somedude@someco.", false)]
+    [InlineData("somedude@someco", false)]
+    [InlineData("somedudesomecocom", false)]
+    [InlineData("some_dude@someco.com", false)]
+    [InlineData("somedude@some_co.com", false)]
+    [InlineData("somedude@10-minute-mail.com", false)]
+    [InlineData("somedude@some_co.scam", false)]
     [InlineData("", false)]
-    [InlineData(" ", false)]
-    [InlineData("AAAAAAAAZ001", false)]
-    [InlineData("AAAAAAAAT000", false)]
-    [InlineData("AAAAAAAAT00", false)]
-    [InlineData("AAAAAAAaT001", false)]
-    [InlineData("AAAAAAAAT001 ", false)]
-    [InlineData(" AAAAAAAAT001", false)]
-    [InlineData("AAAAAAAIT001", false)]
-    [InlineData("AAAAAAA1T001", false)]
-    [InlineData("AAAAAAAOT001", false)]
-    [InlineData("AAAAAAA0T001", false)]
+    [InlineData(null, false)]
     public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsAccountIdInput().Should().Be(expected);
+        input.IsEmailInput().Should().Be(expected);
 
     [Theory]
-    [InlineData("AAAAAAAAT001", true)]
-    [InlineData(null, false)]
+    [InlineData("somedude@someco.com", true)]
+    [InlineData("a-b@c-d.com", true)]
+    [InlineData(" somedude@someco.com", false)]
+    [InlineData("somedude@someco.com ", false)]
+    [InlineData("somedudesomeco.com", false)]
+    [InlineData("some dude@someco.com", false)]
+    [InlineData("somedude@some co.com", false)]
+    [InlineData("somedude@someco.", false)]
+    [InlineData("somedude@someco", false)]
+    [InlineData("somedudesomecocom", false)]
+    [InlineData("some_dude@someco.com", false)]
+    [InlineData("somedude@some_co.com", false)]
+    [InlineData("somedude@10-minute-mail.com", false)]
+    [InlineData("somedude@some_co.scam", false)]
     [InlineData("", false)]
-    [InlineData(" ", false)]
-    [InlineData("AAAAAAAAZ001", false)]
-    [InlineData("AAAAAAAAT000", false)]
-    [InlineData("AAAAAAAAT00", false)]
-    [InlineData("AAAAAAAaT001", false)]
-    [InlineData("AAAAAAAAT001 ", false)]
-    [InlineData(" AAAAAAAAT001", false)]
-    [InlineData("AAAAAAAIT001", false)]
-    [InlineData("AAAAAAA1T001", false)]
-    [InlineData("AAAAAAAOT001", false)]
-    [InlineData("AAAAAAA0T001", false)]
+    [InlineData(null, false)]
     public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        AccountId.TryCreate(input, out var _).Should().Be(expected);
+        Email.TryCreate(input, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()
@@ -104,7 +107,7 @@ public class AccountIdTests
         (b == a1).Should().BeFalse();
         (b == a2).Should().BeFalse();
         (a1 == null).Should().BeFalse();
-        ((AccountId)null! == null!).Should().BeTrue();
+        ((Email)null! == null!).Should().BeTrue();
         (null! == a1).Should().BeFalse();
         (null! == a2).Should().BeFalse();
         (null! == b).Should().BeFalse();
@@ -122,7 +125,7 @@ public class AccountIdTests
         (b != a1).Should().BeTrue();
         (b != a2).Should().BeTrue();
         (a1 != null).Should().BeTrue();
-        ((AccountId)null! != null!).Should().BeFalse();
+        ((Email)null! != null!).Should().BeFalse();
         (null! != a1).Should().BeTrue();
         (null! != a2).Should().BeTrue();
         (null! != b).Should().BeTrue();
@@ -145,9 +148,9 @@ public class AccountIdTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var accountId = AccountId.Create("AAAAAAAAT001");
+        var clientId = Email.Create("somedude@someco.com");
 
-        accountId.GetHashCode().Should().Be(accountId.Input!.GetHashCode());
+        clientId.GetHashCode().Should().Be(clientId.Input!.GetHashCode());
     }
 
     [Fact]
@@ -176,11 +179,11 @@ public class AccountIdTests
         (b >= a1).Should().BeTrue();
     }
 
-    private static (AccountId A1, AccountId A2, AccountId B) GetInstances()
+    private static (Email A1, Email A2, Email B) GetInstances()
     {
-        var a1 = AccountId.Create("AAAAAAAAT001");
-        var a2 = AccountId.Create("AAAAAAAAT001");
-        var b = AccountId.Create("BBBBBBBBT001");
+        var a1 = Email.Create("dude1@someco.com");
+        var a2 = Email.Create("dude1@someco.com");
+        var b = Email.Create("dude2@someco.com");
 
         return (a1, a2, b);
     }
