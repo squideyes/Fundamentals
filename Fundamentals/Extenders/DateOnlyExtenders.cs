@@ -4,7 +4,6 @@
 // ********************************************************
 
 using System.Globalization;
-using static System.DayOfWeek;
 
 namespace SquidEyes.Fundamentals;
 

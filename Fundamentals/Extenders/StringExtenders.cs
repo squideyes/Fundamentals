@@ -26,37 +26,37 @@ public static partial class StringExtenders
             .Select(v => trimmed ? v.Trim() : v));
     }
 
-    //public static string ToDelimitedString<T>(this List<T> items,
-    //    Func<T, string>? getValue = null,
-    //    string delimiter = ", ", string finalDelimiter = " or ")
-    //{
-    //    if (!items.HasItems())
-    //        throw new ArgumentOutOfRangeException(nameof(items));
+    public static string ToDelimitedString<T>(this List<T> items,
+        Func<T, string>? getValue = null,
+        string delimiter = ", ", string finalDelimiter = " or ")
+    {
+        if (!items.HasItems())
+            throw new ArgumentOutOfRangeException(nameof(items));
 
-    //    ArgumentNullException.ThrowIfNull(delimiter, nameof(delimiter));
+        ArgumentNullException.ThrowIfNull(delimiter, nameof(delimiter));
 
-    //    ArgumentNullException.ThrowIfNull(finalDelimiter, nameof(finalDelimiter));
+        ArgumentNullException.ThrowIfNull(finalDelimiter, nameof(finalDelimiter));
 
-    //    var sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-    //    for (int i = 0; i < items.Count - 1; i++)
-    //    {
-    //        if (i > 0)
-    //            sb.Append(delimiter);
+        for (int i = 0; i < items.Count - 1; i++)
+        {
+            if (i > 0)
+                sb.Append(delimiter);
 
-    //        if (getValue == null)
-    //            sb.Append(items[i]);
-    //        else
-    //            sb.Append(getValue(items[i]));
-    //    }
+            if (getValue == null)
+                sb.Append(items[i]);
+            else
+                sb.Append(getValue(items[i]));
+        }
 
-    //    if (sb.Length > 0)
-    //        sb.Append(finalDelimiter);
+        if (sb.Length > 0)
+            sb.Append(finalDelimiter);
 
-    //    sb.Append(items.Last());
+        sb.Append(items.Last());
 
-    //    return sb.ToString();
-    //}
+        return sb.ToString();
+    }
 
     public static List<string> ToLines(this string value)
     {
@@ -140,28 +140,28 @@ public static partial class StringExtenders
         return lines;
     }
 
-    //public static HashSet<T> ToHashSetOf<T>(
-    //    this string value, Func<string, T> getValue)
-    //{
-    //    return new HashSet<T>(value.ToListOf(getValue));
-    //}
+    public static HashSet<T> ToHashSetOf<T>(
+        this string value, Func<string, T> getValue)
+    {
+        return new HashSet<T>(value.ToListOf(getValue));
+    }
 
-    //public static List<T> ToListOf<T>(
-    //    this string value, Func<string, T> getValue)
-    //{
-    //    var items = new List<T>();
+    public static List<T> ToListOf<T>(
+        this string value, Func<string, T> getValue)
+    {
+        var items = new List<T>();
 
-    //    if (!value.IsEmptyOrWhitespace())
-    //    {
-    //        foreach (var item in value.Split(','))
-    //        {
-    //            if (!item.IsEmptyOrWhitespace())
-    //                items.Add(getValue(item));
-    //        }
-    //    }
+        if (!value.IsEmptyOrWhitespace())
+        {
+            foreach (var item in value.Split(','))
+            {
+                if (!item.IsEmptyOrWhitespace())
+                    items.Add(getValue(item));
+            }
+        }
 
-    //    return items;
-    //}
+        return items;
+    }
 
     public static bool InChars(this string value, string chars) =>
         value.All(chars.Contains);

@@ -5,13 +5,12 @@
 
 using Microsoft.Extensions.Logging;
 using System.Text;
-using MEL = Microsoft.Extensions.Logging;
 
 namespace SquidEyes.Fundamentals;
 
 public static class ILoggerExtenders
 {
-    public static void Log<T>(this MEL.ILogger logger, T logItem)
+    public static void Log<T>(this ILogger logger, T logItem)
         where T : LogItemBase
     {
         logger!.MayNot().BeNull();
