@@ -28,7 +28,7 @@ public class StandardLoggerArgs
 
             RuleFor(x => x.EnrichWith)
                 .Must(v => !v!.IsEmpty)
-                .WithMessage("'{PropertyName}' must be NULL or non-empty.")
+                .WithMessage("'{PropertyName}' must be null or non-empty.")
                 .When(v => v is not null);
         }
     }

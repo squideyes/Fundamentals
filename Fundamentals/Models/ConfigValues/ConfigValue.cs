@@ -22,7 +22,7 @@ public class ConfigValue<T>
         Message = status switch
         {
             ConfigValueStatus.NullInput => 
-                $"The '{tag}' value may not be NULL",
+                $"The '{tag}' value may not be null",
             ConfigValueStatus.BadInput => 
                 $"The '{tag}' value may not be whitespace, empty or contain non-ascii characters",
             ConfigValueStatus.ParseError => 
