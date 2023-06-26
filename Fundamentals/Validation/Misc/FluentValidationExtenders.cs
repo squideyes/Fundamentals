@@ -32,10 +32,10 @@ public static class FluentValidationExtenders
             .WithMessage(MUST_BE + "null or non-empty and trimmed.");
     }
 
-    public static IRuleBuilderOptions<IEnumerable<T>, string?> NonNullAndHasItems<T>(
-        this IRuleBuilder<IEnumerable<T>, string?> rule)
+    public static IRuleBuilderOptions<T, IEnumerable<TElement>> IsNonNullAndHasItems<T, TElement>(
+        this IRuleBuilder<T, IEnumerable<TElement>> ruleBuilder)
     {
-        return rule.Must(v => v is not null && v.HasItems())
-            .WithMessage(MUST_BE + "non-null and have one or more non-default items.");
+        return ruleBuilder.Must(v => v is not null && v.HasItems())
+            .WithMessage(MUST_BE + "non-null a contain one or more non-default items.");
     }
 }
