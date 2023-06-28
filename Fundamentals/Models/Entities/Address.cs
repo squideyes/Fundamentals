@@ -20,18 +20,18 @@ public class Address
                 .NotEmpty()
                 .Length(2)
                 .Must(CountryValidator.IsCountryCode)
-                .WithMessage("'Country' must be an ISO 3166 country code.");
+                .WithMessage("'{PropertyName}' must be an ISO 3166 country code.");
 
             RuleFor(x => x.Address1)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(50)
                 .Must(v => v!.IsTrimmed())
-                .WithMessage("'Address1' must be non-empty and trimmed.");
+                .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Address2)
                 .Must(v => v!.IsTrimmed())
-                .WithMessage("'Address2' must be non-empty and trimmed.")
+                .WithMessage("'{PropertyName}' must be non-empty and trimmed.")
                 .When(v => v is not null);
 
             RuleFor(x => x.Locality)
@@ -39,20 +39,20 @@ public class Address
                 .NotEmpty()
                 .MaximumLength(25)
                 .Must(v => v!.IsTrimmed())
-                .WithMessage("'Locality' must be non-empty and trimmed.");
+                .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Region)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(25)
                 .Must(v => v!.IsTrimmed())
-                .WithMessage("'Region' must be non-empty and trimmed.");
+                .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(v => IsPostalCode(v.Country, v.PostalCode))
-                .WithMessage(v => $"'PostalCode' must be valid for {v.Country}.");
+                .WithMessage(v => $"'{{PropertyName}}' must be valid for {v.Country}.");
         }
     }
 
