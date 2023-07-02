@@ -124,7 +124,7 @@ public static partial class ValidationExtenders
     public static bool IsNullOrTrimmed(this string value) =>
         value is null || value!.IsNonEmptyAndTrimmed();
 
-    public static bool IsTrimmed(this string value, bool mayBeEmpty = false)
+    public static bool IsNonNullTrimmed(this string value, bool mayBeEmpty = false)
     {
         if (value is null)
             return false;

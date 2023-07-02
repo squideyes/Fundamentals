@@ -20,7 +20,7 @@ public class StandardLoggerArgs
                 .WithMessage("'{PropertyName}' must be an absolute URI.");
 
             RuleFor(x => x.SeqApiKey)
-                .IsTrimmed(true)
+                .IsNonNullAndTrimmed(true)
                 .When(v => v is not null);
 
             RuleFor(x => x.MinSeverity)

@@ -11,7 +11,7 @@ public static class FluentValidationExtenders
 {
     private const string MUST_BE = "'{PropertyName}' must be ";
 
-    public static IRuleBuilderOptions<T, string?> IsTrimmed<T>(
+    public static IRuleBuilderOptions<T, string?> IsNonNullAndTrimmed<T>(
         this IRuleBuilder<T, string?> rule, bool mayBeEmpty = false)
     {
         string message;
@@ -21,7 +21,7 @@ public static class FluentValidationExtenders
         else
             message = MUST_BE + "non-empty and trimmed.";
 
-        return rule.Must(v => v!.IsTrimmed(mayBeEmpty))
+        return rule.Must(v => v!.IsNonNullTrimmed(mayBeEmpty))
             .WithMessage(message);
     }
 
