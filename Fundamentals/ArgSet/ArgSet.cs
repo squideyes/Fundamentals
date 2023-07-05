@@ -9,9 +9,9 @@ namespace SquidEyes.Fundamentals;
 
 public class ArgSet : IEnumerable<KeyValuePair<MultiTag, Arg>>
 {
-    private readonly Dictionary<MultiTag, Arg> args = new();
+    private readonly Dictionary<MultiTag, Arg> Args = new();
 
-    public int Count => args.Count;
+    public int Count => Args.Count;
 
     public bool IsEmpty => Count == 0;
 
@@ -91,55 +91,55 @@ public class ArgSet : IEnumerable<KeyValuePair<MultiTag, Arg>>
     {
         multiTag.MayNot().BeDefault();
 
-        args[multiTag] = new Arg(value!);
+        Args[multiTag] = new Arg(value!);
     }
 
-    public AccountId GetAccountId(MultiTag multiTag) => (AccountId)args[multiTag].Value;
+    public AccountId GetAccountId(MultiTag multiTag) => (AccountId)Args[multiTag].Value;
 
-    public bool GetBoolean(MultiTag multiTag) => (bool)args[multiTag].Value;
+    public bool GetBoolean(MultiTag multiTag) => (bool)Args[multiTag].Value;
 
-    public ClientId GetClientId(MultiTag multiTag) => (ClientId)args[multiTag].Value;
+    public ClientId GetClientId(MultiTag multiTag) => (ClientId)Args[multiTag].Value;
 
-    public DateOnly GetDateOnly(MultiTag multiTag) => (DateOnly)args[multiTag].Value;
+    public DateOnly GetDateOnly(MultiTag multiTag) => (DateOnly)Args[multiTag].Value;
 
-    public DateTime GetDateTime(MultiTag multiTag) => (DateTime)args[multiTag].Value;
+    public DateTime GetDateTime(MultiTag multiTag) => (DateTime)Args[multiTag].Value;
 
-    public double GetDouble(MultiTag multiTag) => (double)args[multiTag].Value;
+    public double GetDouble(MultiTag multiTag) => (double)Args[multiTag].Value;
 
-    public Email GetEmail(MultiTag multiTag) => (Email)args[multiTag].Value;
+    public Email GetEmail(MultiTag multiTag) => (Email)Args[multiTag].Value;
 
     public T GetEnum<T>(MultiTag multiTag)
     {
         if (!typeof(T).IsEnum)
             throw new ArgumentOutOfRangeException(nameof(T));
 
-        return (T)args[multiTag].Value;
+        return (T)Args[multiTag].Value;
     }
 
-    public Guid GetGuid(MultiTag multiTag) => (Guid)args[multiTag].Value;
+    public Guid GetGuid(MultiTag multiTag) => (Guid)Args[multiTag].Value;
 
-    public float GetFloat(MultiTag multiTag) => (float)args[multiTag].Value;
+    public float GetFloat(MultiTag multiTag) => (float)Args[multiTag].Value;
 
-    public int GetInt32(MultiTag multiTag) => (int)args[multiTag].Value;
+    public int GetInt32(MultiTag multiTag) => (int)Args[multiTag].Value;
 
-    public long GetInt64(MultiTag multiTag) => (long)args[multiTag].Value;
+    public long GetInt64(MultiTag multiTag) => (long)Args[multiTag].Value;
 
-    public Delta GetDelta(MultiTag multiTag) => (Delta)args[multiTag].Value;
+    public Delta GetDelta(MultiTag multiTag) => (Delta)Args[multiTag].Value;
 
-    public Phone GetPhone(MultiTag multiTag) => (Phone)args[multiTag].Value;
+    public Phone GetPhone(MultiTag multiTag) => (Phone)Args[multiTag].Value;
 
-    public string GetString(MultiTag multiTag) => (string)args[multiTag].Value;
+    public string GetString(MultiTag multiTag) => (string)Args[multiTag].Value;
 
-    public TimeOnly GetTimeOnly(MultiTag multiTag) => (TimeOnly)args[multiTag].Value;
+    public TimeOnly GetTimeOnly(MultiTag multiTag) => (TimeOnly)Args[multiTag].Value;
 
-    public TimeSpan GetTimeSpan(MultiTag multiTag) => (TimeSpan)args[multiTag].Value;
+    public TimeSpan GetTimeSpan(MultiTag multiTag) => (TimeSpan)Args[multiTag].Value;
 
-    public Tag GetTag(MultiTag multiTag) => (Tag)args[multiTag].Value;
+    public Tag GetTag(MultiTag multiTag) => (Tag)Args[multiTag].Value;
 
-    public Uri GetUri(MultiTag multiTag) => (Uri)args[multiTag].Value;
+    public Uri GetUri(MultiTag multiTag) => (Uri)Args[multiTag].Value;
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public IEnumerator<KeyValuePair<MultiTag, Arg>> GetEnumerator() =>
-        args.GetEnumerator();
+        Args.GetEnumerator();
 }
