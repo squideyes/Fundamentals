@@ -20,6 +20,7 @@ public enum ArgKind
     Float,
     Int32,
     Int64,
+    MultiTag,
     Phone,
     String,
     TimeOnly,

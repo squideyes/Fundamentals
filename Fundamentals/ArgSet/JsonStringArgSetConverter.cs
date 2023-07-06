@@ -10,6 +10,50 @@ namespace SquidEyes.Fundamentals;
 
 public class JsonStringArgSetConverter : JsonConverter<ArgSet>
 {
+    public override void Write(Utf8JsonWriter writer,
+        ArgSet value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+
+        foreach (var kv in value.Args)
+        {
+            writer.WritePropertyName(kv.Key.ToString());
+
+            writer.WriteStartObject();
+
+            writer.WriteString("Kind", kv.Value.Kind.ToString());
+
+            if (kv.Value.Kind == ArgKind.Enum)
+                writer.WriteString("Type", kv.Value.Type!.ToString());
+
+            switch (kv.Value.Kind)
+            {
+                case ArgKind.Boolean:
+                    writer.WriteBoolean("Value", (bool)kv.Value.Value);
+                    break;
+                case ArgKind.Double:
+                    writer.WriteNumber("Value", (double)kv.Value.Value);
+                    break;
+                case ArgKind.Float:
+                    writer.WriteNumber("Value", (float)kv.Value.Value);
+                    break;
+                case ArgKind.Int32:
+                    writer.WriteNumber("Value", (int)kv.Value.Value);
+                    break;
+                case ArgKind.Int64:
+                    writer.WriteNumber("Value", (long)kv.Value.Value);
+                    break;
+                default:
+                    writer.WriteString("Value", kv.Value.GetFormattedValue());
+                    break;
+            }
+
+            writer.WriteEndObject();
+        }
+
+        writer.WriteEndObject();
+    }
+
     public override ArgSet? Read(ref Utf8JsonReader reader,
         Type typeToConvert, JsonSerializerOptions options)
     {
@@ -78,69 +122,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
 
             reader.Read();
 
-            switch (kind)
-            {
-                case ArgKind.AccountId:
-                    argSet.Upsert(key, AccountId.Create(reader.GetString()!));
-                    break;
-                case ArgKind.Boolean:
-                    argSet.Upsert(key, reader.GetBoolean());
-                    break;
-                case ArgKind.ClientId:
-                    argSet.Upsert(key, ClientId.Create(reader.GetString()!));
-                    break;
-                case ArgKind.DateOnly:
-                    argSet.Upsert(key, DateOnly.Parse(reader.GetString()!));
-                    break;
-                case ArgKind.DateTime:
-                    argSet.Upsert(key, DateTime.Parse(reader.GetString()!));
-                    break;
-                case ArgKind.Double:
-                    argSet.Upsert(key, reader.GetDouble());
-                    break;
-                case ArgKind.Email:
-                    argSet.Upsert(key, Email.Create(reader.GetString()!));
-                    break;
-                case ArgKind.Enum:
-                    argSet.UpsertEnum(
-                        key, Enum.Parse(type, reader.GetString()!));
-                    break;
-                case ArgKind.Float:
-                    argSet.Upsert(key, reader.GetSingle());
-                    break;
-                case ArgKind.Guid:
-                    argSet.Upsert(key, Guid.Parse(reader.GetString()!));
-                    break;
-                case ArgKind.Int32:
-                    argSet.Upsert(key, reader.GetInt32());
-                    break;
-                case ArgKind.Int64:
-                    argSet.Upsert(key, reader.GetInt64());
-                    break;
-                case ArgKind.Delta:
-                    argSet.Upsert(key, Delta.Create(reader.GetString()!));
-                    break;
-                case ArgKind.Phone:
-                    argSet.Upsert(key, Phone.Create(reader.GetString()!));
-                    break;
-                case ArgKind.String:
-                    argSet.Upsert(key, reader.GetString()!);
-                    break;
-                case ArgKind.TimeOnly:
-                    argSet.Upsert(key, TimeOnly.Parse(reader.GetString()!));
-                    break;
-                case ArgKind.TimeSpan:
-                    argSet.Upsert(key, TimeSpan.Parse(reader.GetString()!));
-                    break;
-                case ArgKind.Tag:
-                    argSet.Upsert(key, Tag.Create(reader.GetString()!));
-                    break;
-                case ArgKind.Uri:
-                    argSet.Upsert(key, new Uri(reader.GetString()!));
-                    break;
-                default:
-                    throw new JsonException();
-            };
+            argSet.Set(key, GetArg(ref reader, kind, type));
 
             reader.Read();
 
@@ -163,64 +145,33 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
         return argSet;
     }
 
-    public override void Write(Utf8JsonWriter writer,
-        ArgSet value, JsonSerializerOptions options)
+    private static Arg GetArg(ref Utf8JsonReader reader, ArgKind kind, Type type)
     {
-        static string GetValueString(Arg arg)
+        Arg GetArg<T>(T value) => Arg.Create<T>(value, kind);
+
+        return kind switch
         {
-            return arg.Kind switch
-            {
-                ArgKind.DateOnly => arg.Get<DateOnly>()
-                    .ToString("MM/dd/yyyy"),
-                ArgKind.DateTime => arg.Get<DateTime>()
-                    .ToString("MM/dd/yyyy HH:mm:ss.fff"),
-                ArgKind.TimeSpan => arg.Get<TimeSpan>()
-                    .ToString(@"d\.hh\:mm\:ss\.fff"),
-                ArgKind.TimeOnly => arg.Get<TimeOnly>()
-                    .ToString("HH:mm:ss.fff"),
-                _ => arg.Value.ToString()!
-            };
-        }
-
-        writer.WriteStartObject();
-
-        foreach (var kv in value)
-        {
-            writer.WritePropertyName(kv.Key.ToString());
-
-            writer.WriteStartObject();
-
-            writer.WriteString("Kind", kv.Value.Kind.ToString());
-
-            if (kv.Value.Kind == ArgKind.Enum)
-                writer.WriteString("Type", kv.Value.Type!.ToString());
-
-            switch (kv.Value.Kind)
-            {
-                case ArgKind.Boolean:
-                    writer.WriteBoolean("Value", (bool)kv.Value.Value);
-                    break;
-                case ArgKind.Double:
-                    writer.WriteNumber("Value", (double)kv.Value.Value);
-                    break;
-                case ArgKind.Float:
-                    writer.WriteNumber("Value", (float)kv.Value.Value);
-                    break;
-                case ArgKind.Int32:
-                    writer.WriteNumber("Value", (int)kv.Value.Value);
-                    break;
-                case ArgKind.Int64:
-                    writer.WriteNumber("Value", (long)kv.Value.Value);
-                    break;
-                default:
-                    writer.WriteString("Value", GetValueString(kv.Value));
-                    break;
-            }
-
-
-            writer.WriteEndObject();
-        }
-
-        writer.WriteEndObject();
+            ArgKind.AccountId => GetArg(AccountId.Create(reader.GetString()!)),
+            ArgKind.Boolean => GetArg(reader.GetBoolean()),
+            ArgKind.ClientId => GetArg(ClientId.Create(reader.GetString()!)),
+            ArgKind.DateOnly => GetArg(DateOnly.Parse(reader.GetString()!)),
+            ArgKind.DateTime => GetArg(DateTime.Parse(reader.GetString()!)),
+            ArgKind.Double => GetArg(reader.GetDouble()),
+            ArgKind.Email => GetArg(Email.Create(reader.GetString()!)),
+            ArgKind.Enum => GetArg((Enum)Enum.Parse(type, reader.GetString()!)),
+            ArgKind.Float => GetArg(reader.GetSingle()),
+            ArgKind.Guid => GetArg(Guid.Parse(reader.GetString()!)),
+            ArgKind.Int32 => GetArg(reader.GetInt32()),
+            ArgKind.Int64 => GetArg(reader.GetInt64()),
+            ArgKind.Delta => GetArg(Delta.Create(reader.GetString()!)),
+            ArgKind.MultiTag => GetArg(MultiTag.Create(reader.GetString()!)),
+            ArgKind.Phone => GetArg(Phone.Create(reader.GetString()!)),
+            ArgKind.String => GetArg(reader.GetString()!),
+            ArgKind.TimeOnly => GetArg(TimeOnly.Parse(reader.GetString()!)),
+            ArgKind.TimeSpan => GetArg(TimeSpan.Parse(reader.GetString()!)),
+            ArgKind.Tag => GetArg(Tag.Create(reader.GetString()!)),
+            ArgKind.Uri => GetArg(new Uri(reader.GetString()!)),
+            _ => throw new JsonException()
+        };
     }
 }

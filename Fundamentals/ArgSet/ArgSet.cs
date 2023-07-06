@@ -1,145 +1,139 @@
-// ********************************************************
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+﻿namespace SquidEyes.Fundamentals;
 
-using System.Collections;
-
-namespace SquidEyes.Fundamentals;
-
-public class ArgSet : IEnumerable<KeyValuePair<MultiTag, Arg>>
+public class ArgSet : IEquatable<ArgSet>
 {
-    private readonly Dictionary<MultiTag, Arg> Args = new();
-
     public int Count => Args.Count;
 
     public bool IsEmpty => Count == 0;
 
-    public void Upsert(MultiTag multiTag, AccountId value) =>
-        SimpleUpsert(multiTag, value);
+    internal Dictionary<MultiTag, Arg> Args { get; } = new();
 
-    public void Upsert(MultiTag multiTag, bool value) =>
-        SimpleUpsert(multiTag, value);
+    public bool ContainsKey(MultiTag key) => Args.ContainsKey(key);
 
-    public void Upsert(MultiTag multiTag, ClientId value) =>
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, bool value) =>
+        PrivateSet(key, value, ArgKind.Boolean);
 
-    public void Upsert(MultiTag multiTag, DateOnly value) =>
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, AccountId value) =>
+        PrivateSet(key, value, ArgKind.AccountId);
 
-    public void Upsert(MultiTag multiTag, DateTime value) =>
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, ClientId value) =>
+        PrivateSet(key, value, ArgKind.ClientId);
 
-    public void Upsert(MultiTag multiTag, double value) =>
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, DateOnly value) =>
+        PrivateSet(key, value, ArgKind.DateOnly);
 
-    public void Upsert(MultiTag multiTag, Email value) =>
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, DateTime value) =>
+        PrivateSet(key, value, ArgKind.DateTime);
 
-    public void Upsert<T>(MultiTag multiTag, T value)
-        where T : Enum
+    public void Set(MultiTag key, Delta value) =>
+        PrivateSet(key, value, ArgKind.Delta);
+
+    public void Set(MultiTag key, double value) =>
+        PrivateSet(key, value, ArgKind.Double);
+
+    public void Set(MultiTag key, Email value) =>
+        PrivateSet(key, value, ArgKind.Email);
+
+    public void Set<T>(MultiTag key, T value)
+        where T : struct, Enum
     {
-        SimpleUpsert(multiTag, value);
+        PrivateSet(key, value, ArgKind.Enum);
     }
 
-    internal void UpsertEnum(MultiTag multiTag, object value)
-    {
-        if (!value.GetType().IsEnum)
-            throw new ArgumentOutOfRangeException(nameof(value));
+    public void Set(MultiTag key, float value) =>
+        PrivateSet(key, value, ArgKind.Float);
 
-        SimpleUpsert(multiTag, value);
+    public void Set(MultiTag key, Guid value) =>
+        PrivateSet(key, value, ArgKind.Guid);
+
+    public void Set(MultiTag key, int value) =>
+        PrivateSet(key, value, ArgKind.Int32);
+
+    public void Set(MultiTag key, long value) =>
+        PrivateSet(key, value, ArgKind.Int64);
+
+    public void Set(MultiTag key, MultiTag value) =>
+        PrivateSet(key, value, ArgKind.MultiTag);
+
+    public void Set(MultiTag key, Phone value) =>
+        PrivateSet(key, value, ArgKind.Phone);
+
+    public void Set(MultiTag key, string value) =>
+        PrivateSet(key, value, ArgKind.String);
+
+    public void Set(MultiTag key, Tag value) =>
+        PrivateSet(key, value, ArgKind.Tag);
+
+    public void Set(MultiTag key, TimeOnly value) =>
+        PrivateSet(key, value, ArgKind.TimeOnly);
+
+    public void Set(MultiTag key, TimeSpan value) =>
+        PrivateSet(key, value, ArgKind.TimeSpan);
+
+    public void Set(MultiTag key, Uri value) =>
+        PrivateSet(key, value, ArgKind.Uri);
+
+    internal void Set(MultiTag key, Enum value) =>
+        PrivateSet(key, value, ArgKind.Enum);
+
+    internal void Set(MultiTag key, Arg arg) => Args[key] = arg;
+
+    public T Get<T>(MultiTag key) => (T)Args[key].Value;
+
+    public T Get<T>(MultiTag key, T @default)
+    {
+        if (@default.IsDefault())
+            throw new ArgumentOutOfRangeException(nameof(@default));
+
+        if (Args.TryGetValue(key, out Arg? arg))
+        {
+            if (arg.Value.TryCast(out T result))
+                return result;
+
+            var article = arg.Kind.ToString()[0].IsPlural() ? "An" : "A";
+
+            throw new InvalidCastException(
+                $"{article} {arg.Kind} argument may not be cast to a \"{typeof(T)}\".");
+        }
+
+        return @default;
     }
 
-    public void Upsert(MultiTag multiTag, float value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, Guid value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, int value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, long value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, Delta value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, Phone value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, string value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, TimeOnly value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, TimeSpan value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, Tag value) =>
-        SimpleUpsert(multiTag, value);
-
-    public void Upsert(MultiTag multiTag, Uri value)
+    private void PrivateSet(MultiTag key, object value, ArgKind kind)
     {
-        value.IsAbsoluteUri.Must().Be(true);
+        key.MayNot().BeNull();
+        value.MayNot().BeDefault();
 
-        SimpleUpsert(multiTag, value);
+        Args[key] = Arg.Create(value!, kind);
     }
 
-    private void SimpleUpsert<T>(MultiTag multiTag, T value)
+    public bool Equals(ArgSet? other)
     {
-        multiTag.MayNot().BeDefault();
+        if (other is null)
+            return false;
 
-        Args[multiTag] = new Arg(value!);
+        if (other.Count != Count)
+            return false;
+
+        if (!Args.Keys.All(other.ContainsKey))
+            return false;
+
+        return Args.Keys.All(k => other.Args[k] == Args[k]);
     }
 
-    public AccountId GetAccountId(MultiTag multiTag) => (AccountId)Args[multiTag].Value;
+    public override bool Equals(object? other) =>
+        other is ArgSet argSet && Equals(argSet);
 
-    public bool GetBoolean(MultiTag multiTag) => (bool)Args[multiTag].Value;
+    public override int GetHashCode() => Args.GetHashCode();
 
-    public ClientId GetClientId(MultiTag multiTag) => (ClientId)Args[multiTag].Value;
-
-    public DateOnly GetDateOnly(MultiTag multiTag) => (DateOnly)Args[multiTag].Value;
-
-    public DateTime GetDateTime(MultiTag multiTag) => (DateTime)Args[multiTag].Value;
-
-    public double GetDouble(MultiTag multiTag) => (double)Args[multiTag].Value;
-
-    public Email GetEmail(MultiTag multiTag) => (Email)Args[multiTag].Value;
-
-    public T GetEnum<T>(MultiTag multiTag)
+    public static bool operator ==(ArgSet left, ArgSet right)
     {
-        if (!typeof(T).IsEnum)
-            throw new ArgumentOutOfRangeException(nameof(T));
+        if (left is null)
+            return right is null;
 
-        return (T)Args[multiTag].Value;
+        return left.Equals(right);
     }
 
-    public Guid GetGuid(MultiTag multiTag) => (Guid)Args[multiTag].Value;
-
-    public float GetFloat(MultiTag multiTag) => (float)Args[multiTag].Value;
-
-    public int GetInt32(MultiTag multiTag) => (int)Args[multiTag].Value;
-
-    public long GetInt64(MultiTag multiTag) => (long)Args[multiTag].Value;
-
-    public Delta GetDelta(MultiTag multiTag) => (Delta)Args[multiTag].Value;
-
-    public Phone GetPhone(MultiTag multiTag) => (Phone)Args[multiTag].Value;
-
-    public string GetString(MultiTag multiTag) => (string)Args[multiTag].Value;
-
-    public TimeOnly GetTimeOnly(MultiTag multiTag) => (TimeOnly)Args[multiTag].Value;
-
-    public TimeSpan GetTimeSpan(MultiTag multiTag) => (TimeSpan)Args[multiTag].Value;
-
-    public Tag GetTag(MultiTag multiTag) => (Tag)Args[multiTag].Value;
-
-    public Uri GetUri(MultiTag multiTag) => (Uri)Args[multiTag].Value;
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    public IEnumerator<KeyValuePair<MultiTag, Arg>> GetEnumerator() =>
-        Args.GetEnumerator();
+    public static bool operator !=(ArgSet left, ArgSet right) =>
+        !(left == right);
 }

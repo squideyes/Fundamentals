@@ -5,11 +5,42 @@
 
 using Microsoft.Extensions.Logging;
 using Serilog.Events;
+using System.ComponentModel;
 
 namespace SquidEyes.Fundamentals;
 
 internal static class MiscExtenders
 {
+    public static bool IsPlural(this char value) => "AEIOU".Contains(value);
+
+    public static bool TryCast<T>(this object instance, out T result)
+    {
+        result = default!;
+
+        if (instance is T t)
+        {
+            result = t;
+
+            return true;
+        }
+
+        if (instance != null)
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+
+            if (converter.CanConvertFrom(instance.GetType()))
+            {
+                result = (T)converter.ConvertFrom(instance)!;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        return !typeof(T).IsValueType;
+    }
+
     public static char ToCode(this AccountMode mode)
     {
         return mode switch

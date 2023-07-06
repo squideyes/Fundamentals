@@ -1,53 +1,57 @@
-// ********************************************************
-// The use of this source code is licensed under the terms
-// of the MIT License (https://opensource.org/licenses/MIT)
-// ********************************************************
+﻿namespace SquidEyes.Fundamentals;
 
-namespace SquidEyes.Fundamentals;
-
-public class Arg
+internal class Arg : IEquatable<Arg>
 {
-    public Arg(object value)
+    private Arg(object value, ArgKind kind)
     {
-        Kind = GetArgKind(value);
+        Kind = kind;
         Value = value;
 
-        if (Kind == ArgKind.Enum)
+        if (kind == ArgKind.Enum)
             Type = value.GetType();
+        else
+            Type = null!;
     }
 
-    public ArgKind Kind { get; }
-    public Type? Type { get; }
-    public object Value { get; }
+    internal ArgKind Kind { get; }
+    internal object Value { get; }
+    internal Type Type { get; }
 
-    public T Get<T>() => (T)Value;
-
-    public static ArgKind GetArgKind(object value)
+    public bool Equals(Arg? other)
     {
-        if (value.GetType().IsEnum)
-            return ArgKind.Enum;
+        return other is not null
+            && other.Kind == Kind
+            && other.Value == Value
+            && other.Type == Type;
+    }
 
-        return value switch
+    public override bool Equals(object? other) =>
+        other is Arg arg && Equals(arg);
+
+    public override int GetHashCode() => HashCode.Combine(Kind, Value, Type);
+
+    internal string GetFormattedValue()
+    {
+        return Kind switch
         {
-            AccountId => ArgKind.AccountId,
-            bool _ => ArgKind.Boolean,
-            ClientId _ => ArgKind.ClientId,
-            DateTime _ => ArgKind.DateTime,
-            DateOnly _ => ArgKind.DateOnly,
-            double _ => ArgKind.Double,
-            Email _ => ArgKind.Email,
-            float _ => ArgKind.Float,
-            Guid _ => ArgKind.Guid,
-            int _ => ArgKind.Int32,
-            long _ => ArgKind.Int64,
-            Delta _ => ArgKind.Delta,
-            Phone _ => ArgKind.Phone,
-            string _ => ArgKind.String,
-            TimeOnly _ => ArgKind.TimeOnly,
-            TimeSpan _ => ArgKind.TimeSpan,
-            Tag _ => ArgKind.Tag,
-            Uri _ => ArgKind.Uri,
-            _ => throw new ArgumentOutOfRangeException(nameof(value))
+            ArgKind.DateOnly => Value.As<DateOnly>().ToString("MM/dd/yyyy"),
+            ArgKind.DateTime => Value.As<DateTime>().ToString("MM/dd/yyyy HH:mm:ss.fff"),
+            ArgKind.TimeSpan => Value.As<TimeSpan>().ToString(@"d\.hh\:mm\:ss\.fff"),
+            ArgKind.TimeOnly => Value.As<TimeOnly>().ToString("HH:mm:ss.fff"),
+            _ => Value.ToString()!
         };
     }
+
+    internal static Arg Create<T>(T value, ArgKind kind) => new(value!, kind);
+
+    public static bool operator ==(Arg left, Arg right)
+    {
+        if (left is null)
+            return right is null;
+
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Arg left, Arg right) =>
+        !(left == right);
 }

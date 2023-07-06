@@ -74,6 +74,10 @@ public class ArgSetTests
                 "Kind": "Int64",
                 "Value": 9223372036854775807
               },
+              "MultiTag": {
+                "Kind": "MultiTag",
+                "Value": "A:B:C:D:E:F:G:H:I:J"
+              },
               "Phone": {
                 "Kind": "Phone",
                 "Value": "+1 (215) 316-8538"
@@ -98,7 +102,7 @@ public class ArgSetTests
                 "Kind": "Uri",
                 "Value": "http://google.com/"
               }
-            }            
+            }                     
             """;
 
         static string NoWhitespace(string value) =>
@@ -123,25 +127,26 @@ public class ArgSetTests
         void Validate<T>(MultiTag multiTag, Func<ArgSet, MultiTag, T> getValue) =>
             getValue(target, multiTag).Should().Be(getValue(source, multiTag));
 
-        Validate(Create("AccountId"), (a, k) => a.GetAccountId(k));
-        Validate(Create("Boolean"), (a, k) => a.GetBoolean(k));
-        Validate(Create("ClientId"), (a, k) => a.GetClientId(k));
-        Validate(Create("DateOnly"), (a, k) => a.GetDateOnly(k));
-        Validate(Create("DateTime"), (a, k) => a.GetDateTime(k));
-        Validate(Create("Delta"), (a, k) => a.GetDelta(k));
-        Validate(Create("Double"), (a, k) => a.GetDouble(k));
-        Validate(Create("Email"), (a, k) => a.GetEmail(k));
-        Validate(Create("Enum"), (a, k) => a.GetEnum<ArgKind>(k));
-        Validate(Create("Guid"), (a, k) => a.GetGuid(k));
-        Validate(Create("Float"), (a, k) => a.GetFloat(k));
-        Validate(Create("Int32"), (a, k) => a.GetInt32(k));
-        Validate(Create("Int64"), (a, k) => a.GetInt64(k));
-        Validate(Create("Phone"), (a, k) => a.GetPhone(k));
-        Validate(Create("String"), (a, k) => a.GetString(k));
-        Validate(Create("TimeOnly"), (a, k) => a.GetTimeOnly(k));
-        Validate(Create("TimeSpan"), (a, k) => a.GetTimeSpan(k));
-        Validate(Create("Tag"), (a, k) => a.GetTag(k));
-        Validate(Create("Uri"), (a, k) => a.GetUri(k));
+        Validate(Create("AccountId"), (a, k) => a.Get<AccountId>(k));
+        Validate(Create("Boolean"), (a, k) => a.Get<bool>(k));
+        Validate(Create("ClientId"), (a, k) => a.Get<ClientId>(k));
+        Validate(Create("DateOnly"), (a, k) => a.Get<DateOnly>(k));
+        Validate(Create("DateTime"), (a, k) => a.Get<DateTime>(k));
+        Validate(Create("Delta"), (a, k) => a.Get<Delta>(k));
+        Validate(Create("Double"), (a, k) => a.Get<double>(k));
+        Validate(Create("Email"), (a, k) => a.Get<Email>(k));
+        Validate(Create("Enum"), (a, k) => a.Get<ArgKind>(k));
+        Validate(Create("Guid"), (a, k) => a.Get<Guid>(k));
+        Validate(Create("Float"), (a, k) => a.Get<float>(k));
+        Validate(Create("Int32"), (a, k) => a.Get<int>(k));
+        Validate(Create("Int64"), (a, k) => a.Get<long>(k));
+        Validate(Create("MultiTag"), (a, k) => a.Get<MultiTag>(k));
+        Validate(Create("Phone"), (a, k) => a.Get<Phone>(k));
+        Validate(Create("String"), (a, k) => a.Get<string>(k));
+        Validate(Create("TimeOnly"), (a, k) => a.Get<TimeOnly>(k));
+        Validate(Create("TimeSpan"), (a, k) => a.Get<TimeSpan>(k));
+        Validate(Create("Tag"), (a, k) => a.Get<Tag>(k));
+        Validate(Create("Uri"), (a, k) => a.Get<Uri>(k));
     }
 
     private static JsonSerializerOptions GetJsonSerializerOptions()
@@ -161,25 +166,26 @@ public class ArgSetTests
     {
         var argSet = new ArgSet();
 
-        argSet.Upsert(Create("AccountId"), AccountId.Create("ABCDEFGHT001"));
-        argSet.Upsert(Create("Boolean"), true);
-        argSet.Upsert(Create("ClientId"), ClientId.Create("ABCDEFGH"));
-        argSet.Upsert(Create("DateOnly"), DateOnly.MaxValue);
-        argSet.Upsert(Create("DateTime"), new DateTime(2023, 1, 2, 3, 4, 5, 6));
-        argSet.Upsert(Create("Delta"), Delta.Create("Gain=3.5"));
-        argSet.Upsert(Create("Double"), double.MaxValue);
-        argSet.Upsert(Create("Email"), Email.Create("louis@squideyes.com"));
-        argSet.Upsert(Create("Enum"), ArgKind.TimeSpan);
-        argSet.Upsert(Create("Float"), float.MaxValue);
-        argSet.Upsert(Create("Guid"), new Guid("2ED156F8-D481-4E8D-AE2B-89D80010ACCB"));
-        argSet.Upsert(Create("Int32"), int.MaxValue);
-        argSet.Upsert(Create("Int64"), long.MaxValue);
-        argSet.Upsert(Create("Phone"), Phone.Create("+1 (215) 316-8538"));
-        argSet.Upsert(Create("String"), "Hello darkness my old friend");
-        argSet.Upsert(Create("TimeOnly"), new TimeOnly(1, 2, 3, 4));
-        argSet.Upsert(Create("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
-        argSet.Upsert(Create("Tag"), Tag.Create("SomeTag"));
-        argSet.Upsert(Create("Uri"), new Uri("http://google.com"));
+        argSet.Set(Create("AccountId"), AccountId.Create("ABCDEFGHT001"));
+        argSet.Set(Create("Boolean"), true);
+        argSet.Set(Create("ClientId"), ClientId.Create("ABCDEFGH"));
+        argSet.Set(Create("DateOnly"), DateOnly.MaxValue);
+        argSet.Set(Create("DateTime"), new DateTime(2023, 1, 2, 3, 4, 5, 6));
+        argSet.Set(Create("Delta"), Delta.Create("Gain=3.5"));
+        argSet.Set(Create("Double"), double.MaxValue);
+        argSet.Set(Create("Email"), Email.Create("louis@squideyes.com"));
+        argSet.Set(Create("Enum"), ArgKind.TimeSpan);
+        argSet.Set(Create("Float"), float.MaxValue);
+        argSet.Set(Create("Guid"), new Guid("2ED156F8-D481-4E8D-AE2B-89D80010ACCB"));
+        argSet.Set(Create("Int32"), int.MaxValue);
+        argSet.Set(Create("Int64"), long.MaxValue);
+        argSet.Set(Create("MultiTag"), Create("A:B:C:D:E:F:G:H:I:J"));
+        argSet.Set(Create("Phone"), Phone.Create("+1 (215) 316-8538"));
+        argSet.Set(Create("String"), "Hello darkness my old friend");
+        argSet.Set(Create("TimeOnly"), new TimeOnly(1, 2, 3, 4));
+        argSet.Set(Create("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
+        argSet.Set(Create("Tag"), Tag.Create("SomeTag"));
+        argSet.Set(Create("Uri"), new Uri("http://google.com"));
 
         return argSet;
     }
