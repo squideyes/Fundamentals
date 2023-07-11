@@ -9,13 +9,13 @@ public sealed class AccountId : ValueObjectBase<AccountId>
 {
     public const int Length = 12;
 
-    public ClientId? ClientId { get; private set; }
+    public ActorId? ActorId { get; private set; }
     public LiveOrTest Mode { get; private set; }
     public int Ordinal { get; private set; }
 
     protected override void SetProperties(string input)
     {
-        ClientId = ClientId.Create(input[0..8]);
+        ActorId = ActorId.Create(input[0..8]);
         Mode = input[8].ToLiveOrTest();
         Ordinal = int.Parse(input[9..]);
     }
@@ -28,7 +28,7 @@ public sealed class AccountId : ValueObjectBase<AccountId>
         if (input.Length != Length)
             return false;
 
-        if (!input[0..8].IsClientIdInput())
+        if (!input[0..8].IsActorIdInput())
             return false;
 
         if (!input[8].IsLiveOrTestCode())

@@ -10,8 +10,8 @@ public static partial class ValueObjectValidators
     public static bool IsAccountIdInput(this string input) =>
         AccountId.IsInput(input);
 
-    public static bool IsClientIdInput(this string input) =>
-        ClientId.IsInput(input);
+    public static bool IsActorIdInput(this string input) =>
+        ActorId.IsInput(input);
 
     public static bool IsDeltaInput(this string input) =>
         Delta.IsInput(input);

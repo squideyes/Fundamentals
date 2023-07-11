@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public sealed class ClientId : ValueObjectBase<ClientId>
+public sealed class ActorId : ValueObjectBase<ActorId>
 {
     public const int Length = 8;
 
@@ -28,12 +28,12 @@ public sealed class ClientId : ValueObjectBase<ClientId>
             && input.All(hashSet.Contains);
     }
 
-    public static ClientId Create(string input) =>
+    public static ActorId Create(string input) =>
         DoCreate(input, IsInput);
 
-    public static bool TryCreate(string input, out ClientId result) =>
+    public static bool TryCreate(string input, out ActorId result) =>
         DoTryCreate(input, IsInput, out result);
 
-    public static ClientId Next() =>
+    public static ActorId Next() =>
         Create(IdHelper.GetRandomId(charSet, Length));
 }

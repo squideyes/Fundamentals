@@ -8,16 +8,16 @@ using System.Text.Json.Serialization;
 
 namespace SquidEyes.Fundamentals;
 
-public class JsonStringClientIdConverter : JsonConverter<ClientId>
+public class JsonStringActorIdConverter : JsonConverter<ActorId>
 {
-    public override ClientId Read(ref Utf8JsonReader reader, 
+    public override ActorId Read(ref Utf8JsonReader reader, 
         Type typeToConvert, JsonSerializerOptions options)
     {
-        return ClientId.Create(reader.GetString()!);
+        return ActorId.Create(reader.GetString()!);
     }
 
     public override void Write(Utf8JsonWriter writer, 
-        ClientId value, JsonSerializerOptions options)
+        ActorId value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.ToString());
     }

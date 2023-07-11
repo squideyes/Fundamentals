@@ -29,8 +29,8 @@ public class ArgSetTests
                 "Kind": "Boolean",
                 "Value": true
               },
-              "ClientId": {
-                "Kind": "ClientId",
+              "ActorId": {
+                "Kind": "ActorId",
                 "Value": "ABCDEFGH"
               },
               "DateOnly": {
@@ -129,7 +129,7 @@ public class ArgSetTests
 
         Validate(Create("AccountId"), (a, k) => a.Get<AccountId>(k));
         Validate(Create("Boolean"), (a, k) => a.Get<bool>(k));
-        Validate(Create("ClientId"), (a, k) => a.Get<ClientId>(k));
+        Validate(Create("ActorId"), (a, k) => a.Get<ActorId>(k));
         Validate(Create("DateOnly"), (a, k) => a.Get<DateOnly>(k));
         Validate(Create("DateTime"), (a, k) => a.Get<DateTime>(k));
         Validate(Create("Delta"), (a, k) => a.Get<Delta>(k));
@@ -168,7 +168,7 @@ public class ArgSetTests
 
         argSet.Set(Create("AccountId"), AccountId.Create("ABCDEFGHT001"));
         argSet.Set(Create("Boolean"), true);
-        argSet.Set(Create("ClientId"), ClientId.Create("ABCDEFGH"));
+        argSet.Set(Create("ActorId"), ActorId.Create("ABCDEFGH"));
         argSet.Set(Create("DateOnly"), DateOnly.MaxValue);
         argSet.Set(Create("DateTime"), new DateTime(2023, 1, 2, 3, 4, 5, 6));
         argSet.Set(Create("Delta"), Delta.Create("Gain=3.5"));

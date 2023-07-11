@@ -17,7 +17,7 @@ public class AccountIdTests
 
         var accountId = AccountId.Create(INPUT);
 
-        accountId.ClientId.Should().Be(ClientId.Create(INPUT[..8]));
+        accountId.ActorId.Should().Be(ActorId.Create(INPUT[..8]));
         accountId.Mode.Should().Be(LiveOrTest.Test);
         accountId.Ordinal.Should().Be(1);
         accountId.Input.Should().Be(INPUT);

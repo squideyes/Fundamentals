@@ -138,9 +138,9 @@ public class TagTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var clientId = Tag.Create("Tag1");
+        var actorId = Tag.Create("Tag1");
 
-        clientId.GetHashCode().Should().Be(clientId.Input.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input.GetHashCode());
     }
 
     [Fact]

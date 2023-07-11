@@ -25,7 +25,7 @@ var seqApiKey = (string)null!;
 // Zero or more app-specific fields to enrich ALL log-items with
 var enrichWith = new TagValueSet()
 {
-    { Tag.Create("ClientId"), "ABC123" },
+    { Tag.Create("ActorId"), "ABC123" },
     { Tag.Create("JunketId"), 12345 },
     { Tag.Create("RunDate"), DateTime.Today }
 };
@@ -34,7 +34,7 @@ var logFilePath = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
 
 // Create a standard logger; in this case with a trio of app-specific
 // fields to enrich ALL of the log-items with, an extra (File) sink
-// and a custom ClientId transform
+// and a custom ActorId transform
 Log.Logger = SerilogHelper.GetStandardLogger(
     new StandardLoggerArgs()
     {
@@ -43,7 +43,7 @@ Log.Logger = SerilogHelper.GetStandardLogger(
         MinSeverity = Severity.Debug,
         EnrichWith = new TagValueSet()
         {
-            { Tag.Create("ClientId"), "ABC123" },
+            { Tag.Create("ActorId"), "ABC123" },
             { Tag.Create("JunketId"), 12345 },
             { Tag.Create("RunDate"), DateTime.Today }
         }
@@ -54,7 +54,7 @@ Log.Logger = SerilogHelper.GetStandardLogger(
             logFilePath, rollingInterval: RollingInterval.Day);
 
         configure.Destructure
-            .ByTransforming<ClientId>(v => v.ToString());
+            .ByTransforming<ActorId>(v => v.ToString());
     });
 
 // Log "LogonSuccess" (a custom log-item)

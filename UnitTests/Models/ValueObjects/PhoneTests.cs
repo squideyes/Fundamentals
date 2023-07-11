@@ -15,11 +15,11 @@ public class PhoneTests
     {
         const string INPUT = "+442079476330";
 
-        var clientId = Phone.Create(INPUT);
+        var actorId = Phone.Create(INPUT);
 
-        clientId.Value.Should().Be(INPUT);
-        clientId.Input.Should().Be(INPUT);
-        clientId.ToString().Should().Be(INPUT);
+        actorId.Value.Should().Be(INPUT);
+        actorId.Input.Should().Be(INPUT);
+        actorId.ToString().Should().Be(INPUT);
     }
 
     [Theory]
@@ -137,9 +137,9 @@ public class PhoneTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var clientId = Phone.Create("+442079476330");
+        var actorId = Phone.Create("+442079476330");
 
-        clientId.GetHashCode().Should().Be(clientId.Input!.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input!.GetHashCode());
     }
 
     [Fact]

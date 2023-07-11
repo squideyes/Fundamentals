@@ -15,14 +15,14 @@ public class SemVerTests
     {
         const string INPUT = "v1.2.3-alpha";
 
-        var clientId = SemVer.Create(INPUT);
+        var actorId = SemVer.Create(INPUT);
 
-        clientId.Major.Should().Be(1);
-        clientId.Minor.Should().Be(2);
-        clientId.Patch.Should().Be(3);
-        clientId.Label.Should().Be("alpha");
-        clientId.Input.Should().Be(INPUT);
-        clientId.ToString().Should().Be(INPUT);
+        actorId.Major.Should().Be(1);
+        actorId.Minor.Should().Be(2);
+        actorId.Patch.Should().Be(3);
+        actorId.Label.Should().Be("alpha");
+        actorId.Input.Should().Be(INPUT);
+        actorId.ToString().Should().Be(INPUT);
     }
 
     [Theory]
@@ -222,9 +222,9 @@ public class SemVerTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var clientId = SemVer.Create("v1.2.3-alpha");
+        var actorId = SemVer.Create("v1.2.3-alpha");
 
-        clientId.GetHashCode().Should().Be(clientId.Input!.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input!.GetHashCode());
     }
 
     [Fact]

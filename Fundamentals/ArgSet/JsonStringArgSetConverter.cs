@@ -153,7 +153,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
         {
             ArgKind.AccountId => GetArg(AccountId.Create(reader.GetString()!)),
             ArgKind.Boolean => GetArg(reader.GetBoolean()),
-            ArgKind.ClientId => GetArg(ClientId.Create(reader.GetString()!)),
+            ArgKind.ActorId => GetArg(ActorId.Create(reader.GetString()!)),
             ArgKind.DateOnly => GetArg(DateOnly.Parse(reader.GetString()!)),
             ArgKind.DateTime => GetArg(DateTime.Parse(reader.GetString()!)),
             ArgKind.Double => GetArg(reader.GetDouble()),

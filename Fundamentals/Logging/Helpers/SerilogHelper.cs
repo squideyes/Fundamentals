@@ -18,7 +18,7 @@ public static class SerilogHelper
         var config = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
             .Destructure.ByTransforming<AccountId>(v => v.ToString())
-            .Destructure.ByTransforming<ClientId>(v => v.ToString())
+            .Destructure.ByTransforming<ActorId>(v => v.ToString())
             .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
             .Destructure.ByTransforming<Delta>(v => v.ToString())
             .Destructure.ByTransforming<Email>(v => v.ToString())

@@ -9,7 +9,7 @@ public enum ArgKind
 {
     AccountId = 1,
     Boolean,
-    ClientId,
+    ActorId,
     DateOnly,
     DateTime,
     Delta,

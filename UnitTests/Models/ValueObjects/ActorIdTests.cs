@@ -8,18 +8,18 @@ using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
 
-public class ClientIdTests
+public class ActorIdTests
 {
     [Fact]
     public void Create_GoodInput_Contructs()
     {
         const string INPUT = "AAAAAAAA";
 
-        var clientId = ClientId.Create(INPUT);
+        var actorId = ActorId.Create(INPUT);
 
-        clientId.Value.Should().Be(INPUT);
-        clientId.Input.Should().Be(INPUT);
-        clientId.ToString().Should().Be(INPUT);
+        actorId.Value.Should().Be(INPUT);
+        actorId.Input.Should().Be(INPUT);
+        actorId.ToString().Should().Be(INPUT);
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class ClientIdTests
     [InlineData("AAAAAAA0")]
     public void Create_BadInput_ThrowsError(string input)
     {
-        FluentActions.Invoking(() => ClientId.Create(input))
+        FluentActions.Invoking(() => ActorId.Create(input))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -54,7 +54,7 @@ public class ClientIdTests
     [InlineData("AAAAAAAO", false)]
     [InlineData("AAAAAAA0", false)]
     public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsClientIdInput().Should().Be(expected);
+        input.IsActorIdInput().Should().Be(expected);
 
     [Theory]
     [InlineData("AAAAAAAA", true)]
@@ -70,15 +70,15 @@ public class ClientIdTests
     [InlineData("AAAAAAAO", false)]
     [InlineData("AAAAAAA0", false)]
     public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        ClientId.TryCreate(input, out var _).Should().Be(expected);
+        ActorId.TryCreate(input, out var _).Should().Be(expected);
 
     [Fact]
     public void Next_NoInput_Constructs()
     {
-        var clientId = ClientId.Next();
+        var actorId = ActorId.Next();
 
-        clientId.Value.Should().Be(clientId.Input);
-        clientId.ToString().Should().Be(clientId.Input);
+        actorId.Value.Should().Be(actorId.Input);
+        actorId.ToString().Should().Be(actorId.Input);
     }
 
     [Fact]
@@ -107,7 +107,7 @@ public class ClientIdTests
         (b == a1).Should().BeFalse();
         (b == a2).Should().BeFalse();
         (a1 == null).Should().BeFalse();
-        ((ClientId)null! == null!).Should().BeTrue();
+        ((ActorId)null! == null!).Should().BeTrue();
         (null! == a1).Should().BeFalse();
         (null! == a2).Should().BeFalse();
         (null! == b).Should().BeFalse();
@@ -125,7 +125,7 @@ public class ClientIdTests
         (b != a1).Should().BeTrue();
         (b != a2).Should().BeTrue();
         (a1 != null).Should().BeTrue();
-        ((ClientId)null! != null!).Should().BeFalse();
+        ((ActorId)null! != null!).Should().BeFalse();
         (null! != a1).Should().BeTrue();
         (null! != a2).Should().BeTrue();
         (null! != b).Should().BeTrue();
@@ -148,9 +148,9 @@ public class ClientIdTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var clientId = ClientId.Create("AAAAAAAA");
+        var actorId = ActorId.Create("AAAAAAAA");
 
-        clientId.GetHashCode().Should().Be(clientId.Input!.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input!.GetHashCode());
     }
 
     [Fact]
@@ -179,11 +179,11 @@ public class ClientIdTests
         (b >= a1).Should().BeTrue();
     }
 
-    private static (ClientId A1, ClientId A2, ClientId B) GetInstances()
+    private static (ActorId A1, ActorId A2, ActorId B) GetInstances()
     {
-        var a1 = ClientId.Create("AAAAAAAA");
-        var a2 = ClientId.Create("AAAAAAAA");
-        var b = ClientId.Create("BBBBBBBB");
+        var a1 = ActorId.Create("AAAAAAAA");
+        var a2 = ActorId.Create("AAAAAAAA");
+        var b = ActorId.Create("BBBBBBBB");
 
         return (a1, a2, b);
     }

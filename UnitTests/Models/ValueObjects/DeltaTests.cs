@@ -17,12 +17,12 @@ public class DeltaTests
     {
         var input = $"{vector}={value}";
 
-        var clientId = Delta.Create(input);
+        var actorId = Delta.Create(input);
 
-        clientId.Vector.Should().Be(vector);
-        clientId.Value.Should().Be(value);
-        clientId.Input.Should().Be(input);
-        clientId.ToString().Should().Be(input);
+        actorId.Vector.Should().Be(vector);
+        actorId.Value.Should().Be(value);
+        actorId.Input.Should().Be(input);
+        actorId.ToString().Should().Be(input);
     }
 
     [Theory]
@@ -154,9 +154,9 @@ public class DeltaTests
     [Fact]
     public void GetHashCode_GoodInput_EqualsInputGetHashCode()
     {
-        var clientId = Delta.Create("Gain=0.25");
+        var actorId = Delta.Create("Gain=0.25");
 
-        clientId.GetHashCode().Should().Be(clientId.Input!.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input!.GetHashCode());
     }
 
     [Fact]

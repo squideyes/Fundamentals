@@ -16,8 +16,8 @@ public class ArgSet : IEquatable<ArgSet>
     public void Set(MultiTag key, AccountId value) =>
         PrivateSet(key, value, ArgKind.AccountId);
 
-    public void Set(MultiTag key, ClientId value) =>
-        PrivateSet(key, value, ArgKind.ClientId);
+    public void Set(MultiTag key, ActorId value) =>
+        PrivateSet(key, value, ArgKind.ActorId);
 
     public void Set(MultiTag key, DateOnly value) =>
         PrivateSet(key, value, ArgKind.DateOnly);
