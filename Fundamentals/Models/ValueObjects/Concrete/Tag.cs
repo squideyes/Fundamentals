@@ -9,6 +9,8 @@ namespace SquidEyes.Fundamentals;
 
 public sealed partial class Tag : ValueObjectBase<Tag>
 {
+    public static readonly int MaxLength = 24;
+
     private static readonly Regex validator = GetValidator();
 
     public string? Value { get; private set; }

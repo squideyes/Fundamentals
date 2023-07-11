@@ -9,7 +9,7 @@ namespace SquidEyes.Fundamentals;
 
 public sealed partial class SemVer : ValueObjectBase<SemVer>
 {
-    public const int MaxLength = 25;
+    public const int MaxLength = 24;
 
     private static readonly Regex validator = GetValidator();
 

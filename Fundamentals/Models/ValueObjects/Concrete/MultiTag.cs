@@ -7,7 +7,7 @@ namespace SquidEyes.Fundamentals;
 
 public sealed partial class MultiTag : ValueObjectBase<MultiTag>
 {
-    public const int MaxLength = 10;
+    public const int MaxTags = 10;
 
     public Tag[]? Tags { get; private set; }
 
@@ -24,7 +24,7 @@ public sealed partial class MultiTag : ValueObjectBase<MultiTag>
 
         var fields = input.Split(':');
 
-        if (fields.Length > MaxLength)
+        if (fields.Length > MaxTags)
             return false;
 
         return fields.All(v => Tag.TryCreate(v, out Tag _));
