@@ -70,6 +70,9 @@ public class ArgSet : IEquatable<ArgSet>
     public void Set(MultiTag key, TimeSpan value) =>
         PrivateSet(key, value, ArgKind.TimeSpan);
 
+    public void Set(MultiTag key, TradeDate value) =>
+        PrivateSet(key, value, ArgKind.TradeDate);
+
     public void Set(MultiTag key, Uri value) =>
         PrivateSet(key, value, ArgKind.Uri);
 

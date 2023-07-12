@@ -98,6 +98,10 @@ public class ArgSetTests
                 "Kind": "Tag",
                 "Value": "SomeTag"
               },
+              "TradeDate": {
+                "Kind": "TradeDate",
+                "Value": "12/16/2019"
+              },
               "Uri": {
                 "Kind": "Uri",
                 "Value": "http://google.com/"
@@ -146,6 +150,7 @@ public class ArgSetTests
         Validate(Create("TimeOnly"), (a, k) => a.Get<TimeOnly>(k));
         Validate(Create("TimeSpan"), (a, k) => a.Get<TimeSpan>(k));
         Validate(Create("Tag"), (a, k) => a.Get<Tag>(k));
+        Validate(Create("TradeDate"), (a, k) => a.Get<TradeDate>(k));
         Validate(Create("Uri"), (a, k) => a.Get<Uri>(k));
     }
 
@@ -185,6 +190,7 @@ public class ArgSetTests
         argSet.Set(Create("TimeOnly"), new TimeOnly(1, 2, 3, 4));
         argSet.Set(Create("TimeSpan"), new TimeSpan(1, 2, 3, 4, 5));
         argSet.Set(Create("Tag"), Tag.Create("SomeTag"));
+        argSet.Set(Create("TradeDate"), KnownTradeDates.From(TradeDate.MinValue));
         argSet.Set(Create("Uri"), new Uri("http://google.com"));
 
         return argSet;

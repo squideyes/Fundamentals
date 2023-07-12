@@ -170,6 +170,8 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
             ArgKind.TimeOnly => GetArg(TimeOnly.Parse(reader.GetString()!)),
             ArgKind.TimeSpan => GetArg(TimeSpan.Parse(reader.GetString()!)),
             ArgKind.Tag => GetArg(Tag.Create(reader.GetString()!)),
+            ArgKind.TradeDate => GetArg(KnownTradeDates.From(
+                DateOnly.Parse(reader.GetString()!))),
             ArgKind.Uri => GetArg(new Uri(reader.GetString()!)),
             _ => throw new JsonException()
         };

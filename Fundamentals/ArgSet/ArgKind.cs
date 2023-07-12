@@ -26,5 +26,6 @@ public enum ArgKind
     TimeOnly,
     TimeSpan,
     Tag,
+    TradeDate,
     Uri
 }
