@@ -10,7 +10,7 @@ namespace SquidEyes.Fundamentals;
 public static class GenericValidators
 {
     [DebuggerHidden]
-    public static T BeDefault<T>(this Must<T> m)
+    public static T Default<T>(this MustBe<T> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => v.IsDefault(),
@@ -18,7 +18,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T BeDefault<T>(this MayNot<T> m)
+    public static T Default<T>(this MayNotBe<T> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => !v.IsDefault(),
@@ -26,7 +26,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T BeEnumValue<T>(this Must<T> m)
+    public static T EnumValue<T>(this MustBe<T> m)
         where T : struct, Enum
     {
         return m.ThrowErrorIfNotIsValid(
@@ -35,7 +35,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T BeBetween<T>(this Must<T> m, T min, T max)
+    public static T Between<T>(this MustBe<T> m, T min, T max)
         where T : IComparable<T>
     {
         if (max.CompareTo(min) < 0)
@@ -47,17 +47,17 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T BeNonDefaultAndValid<T>(this Must<T> m)
+    public static T NonDefaultAndValid<T>(this MustBe<T> m)
         where T : IValidatable
     {
-        m.Value.MayNot().BeDefault();
+        m.Value.MayNotBe().Default();
         m.Value.Validate();
 
         return m.Value;
     }
 
     [DebuggerHidden]
-    public static T BeNull<T>(this Must<T> m)
+    public static T Null<T>(this MustBe<T> m)
         where T : class
     {
         return m.ThrowErrorIfNotIsValid(
@@ -66,7 +66,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T BeNull<T>(this MayNot<T> m)
+    public static T Null<T>(this MayNotBe<T> m)
         where T : class
     {
         return m.ThrowErrorIfNotIsValid(
@@ -75,7 +75,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T Be<T>(this Must<T> m, T value)
+    public static T EqualTo<T>(this MustBe<T> m, T value)
         where T : IEquatable<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -84,7 +84,7 @@ public static class GenericValidators
     }
 
     [DebuggerHidden]
-    public static T Be<T>(this Must<T> m, Func<T, bool> isValid)
+    public static T True<T>(this MustBe<T> m, Func<T, bool> isValid)
     {
         if (isValid is null)
         {

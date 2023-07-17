@@ -18,7 +18,7 @@ public static class FloatExtenders
         {
             precision++;
 
-            precision.Must().BeLessThan(8);
+            precision.MustBe().LessThan(8);
         }
 
         return precision;

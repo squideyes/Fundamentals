@@ -11,7 +11,7 @@ public abstract class LookupSetBase<T>
 
     public void Add(Tag tag, T value)
     {
-        tag.MayNot().BeDefault();
+        tag.MayNotBe().Default();
 
         ValidateValue(value);
 

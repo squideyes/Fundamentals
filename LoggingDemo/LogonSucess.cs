@@ -10,9 +10,9 @@ public class LogonSucess : LogItemBase
     public LogonSucess(Brokerage brokerage, Gateway[] endpoints)
         : base(Severity.Info)
     {
-        Brokerage = brokerage.Must().BeEnumValue();
+        Brokerage = brokerage.MustBe().EnumValue();
 
-        Endpoints = endpoints.Must().Be(
+        Endpoints = endpoints.MustBe().True(
             v => v.Length > 0 && v.All(e => Enum.IsDefined(e)));
     }
 

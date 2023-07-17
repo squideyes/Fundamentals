@@ -11,7 +11,7 @@ namespace SquidEyes.Fundamentals;
 public static class INumberValidators
 {
     [DebuggerHidden]
-    public static T BeZero<T>(this Must<T> m)
+    public static T Zero<T>(this MustBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -20,7 +20,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeZero<T>(this MayNot<T> m)
+    public static T Zero<T>(this MayNotBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -29,7 +29,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeGreaterThan<T>(this Must<T> m, T value)
+    public static T GreaterThan<T>(this MustBe<T> m, T value)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -38,7 +38,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeGreaterThanOrEqualTo<T>(this Must<T> m, T value)
+    public static T GreaterThanOrEqualTo<T>(this MustBe<T> m, T value)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -47,7 +47,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeLessThan<T>(this Must<T> m, T value)
+    public static T LessThan<T>(this MustBe<T> m, T value)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -56,7 +56,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeLessThanOrEqualTo<T>(this Must<T> m, T value)
+    public static T LessThanOrEqualTo<T>(this MustBe<T> m, T value)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -65,7 +65,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BePositive<T>(this Must<T> m)
+    public static T Positive<T>(this MustBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -74,7 +74,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BePositiveOrZero<T>(this Must<T> m)
+    public static T PositiveOrZero<T>(this MustBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -83,7 +83,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeNegative<T>(this Must<T> m)
+    public static T Negative<T>(this MustBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(
@@ -92,7 +92,7 @@ public static class INumberValidators
     }
 
     [DebuggerHidden]
-    public static T BeNegativeOrZero<T>(this Must<T> m)
+    public static T NegativeOrZero<T>(this MustBe<T> m)
         where T : INumber<T>
     {
         return m.ThrowErrorIfNotIsValid(

@@ -26,7 +26,7 @@ public class HttpHelper
 
     public HttpHelper(HttpClient client, Uri baseUri)
     {
-        baseUri.IsAbsoluteUri.Must().Be(true);
+        baseUri.IsAbsoluteUri.MustBe().EqualTo(true);
 
         this.client = client;
 
@@ -38,10 +38,10 @@ public class HttpHelper
 
     public HttpHelper AppendPathSegment(string segment)
     {
-        segment.MayNot().BeNullOrWhitespace();
+        segment.MayNotBe().NullOrWhitespace();
 
         Uri.IsWellFormedUriString(
-            segment, UriKind.Relative).Must().Be(true);
+            segment, UriKind.Relative).MustBe().EqualTo(true);
 
         segments.Add(segment);
 

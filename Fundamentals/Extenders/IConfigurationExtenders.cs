@@ -12,8 +12,8 @@ public static class IConfigurationExtenders
     public static T GetAs<T>(this IConfiguration config, MultiTag key)
         where T : IConvertible
     {
-        config.MayNot().BeNull();
-        key.MayNot().BeDefault();
+        config.MayNotBe().Null();
+        key.MayNotBe().Default();
 
         return (T)Convert.ChangeType(config[key.ToString()]!, typeof(T));
     }
@@ -21,10 +21,10 @@ public static class IConfigurationExtenders
     public static T? GetValueOrDefault<T>(this IConfiguration config,
        string key, Func<string, bool> isValid, Func<string, T> getValue)
     {
-        config.MayNot().BeNull();
-        key.MayNot().BeDefault();
-        isValid.MayNot().BeNull();
-        getValue.MayNot().BeNull();
+        config.MayNotBe().Null();
+        key.MayNotBe().Default();
+        isValid.MayNotBe().Null();
+        getValue.MayNotBe().Null();
 
         var value = config[key];
 

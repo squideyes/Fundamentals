@@ -20,7 +20,7 @@ public class ValueSet
 
     public List<T> Get<T>()
     {
-        typeof(T).Must().Be(v => v == type);
+        typeof(T).MustBe().True(v => v == type);
 
         return values.Cast<T>().ToList();
     }
@@ -34,8 +34,8 @@ public class ValueSet
     public static ValueSet From<T>(IEnumerable<T> values)
         where T : Enum
     {
-        values.Any().Must().Be(true);
-        values.Must().Be(v => v.IsUnique());
+        values.Any().MustBe().EqualTo(true);
+        values.MustBe().True(v => v.IsUnique());
 
         return new(typeof(T), values.Cast<object>().ToList());
     }
@@ -45,8 +45,8 @@ public class ValueSet
 
     public static ValueSet From(IEnumerable<int> values)
     {
-        values.Any().Must().Be(true);
-        values.Must().Be(v => v.IsUnique());
+        values.Any().MustBe().EqualTo(true);
+        values.MustBe().True(v => v.IsUnique());
 
         return new(typeof(int), values.Cast<object>().ToList());
     }
@@ -68,8 +68,8 @@ public class ValueSet
 
     public static ValueSet From(IEnumerable<double> values)
     {
-        values.Any().Must().Be(true);
-        values.Must().Be(v => v.IsUnique());
+        values.Any().MustBe().EqualTo(true);
+        values.MustBe().True(v => v.IsUnique());
 
         return new(typeof(double), values.Cast<object>().ToList());
     }
@@ -95,7 +95,7 @@ public class ValueSet
     private static void ValidateMinMaxStep<T>(T min, T max, T step)
         where T : INumber<T>
     {
-        max.Must().BeGreaterThan(min);
-        step.Must().Be(v => v > T.Zero && step <= (max - min));
+        max.MustBe().GreaterThan(min);
+        step.MustBe().True(v => v > T.Zero && step <= (max - min));
     }
 }

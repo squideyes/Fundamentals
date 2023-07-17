@@ -10,7 +10,7 @@ namespace SquidEyes.Fundamentals;
 public static class MiscValidators
 {
     [DebuggerHidden]
-    public static ArgSet BeNullOrEmpty(this MayNot<ArgSet> m)
+    public static ArgSet NullOrEmpty(this MayNotBe<ArgSet> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => v is not null && !v.IsEmpty,
@@ -18,7 +18,7 @@ public static class MiscValidators
     }
 
     [DebuggerHidden]
-    public static List<V> BeEmpty<V>(this MayNot<List<V>> m)
+    public static List<V> Empty<V>(this MayNotBe<List<V>> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => v.IsNotEmpty(),
@@ -26,7 +26,7 @@ public static class MiscValidators
     }
 
     [DebuggerHidden]
-    public static string BeNullOrEmpty(this MayNot<string> m)
+    public static string NullOrEmpty(this MayNotBe<string> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => !string.IsNullOrEmpty(v),
@@ -34,7 +34,7 @@ public static class MiscValidators
     }
 
     [DebuggerHidden]
-    public static string BeNullOrWhitespace(this MayNot<string> m)
+    public static string NullOrWhitespace(this MayNotBe<string> m)
     {
         return m.ThrowErrorIfNotIsValid(
             v => !string.IsNullOrWhiteSpace(v),

@@ -12,7 +12,7 @@ public class MiscLogItem : LogItemBase
     public MiscLogItem(Severity severity, Tag activity, TagValueSet tagValues = null!)
         : base(severity, activity)
     {
-        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.MustBe().True(v => v is null || !v.IsEmpty);
     }
 
     public override (Tag, object)[] GetTagValues()

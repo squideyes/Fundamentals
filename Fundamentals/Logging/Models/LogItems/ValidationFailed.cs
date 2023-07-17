@@ -14,7 +14,7 @@ public class ValidationFailed : LogItemBase
     public ValidationFailed(Tag activity, ValidationFailure failure)
         : base(Severity.Warn, activity)
     {
-        this.failure = failure.MayNot().BeNull();
+        this.failure = failure.MayNotBe().Null();
     }
 
     public override (Tag, object)[] GetTagValues()

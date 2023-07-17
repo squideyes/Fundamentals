@@ -16,12 +16,12 @@ public class ErrorCaught : LogItemBase
         bool? withFileInfo = null, TagValueSet tagValues = null!)
         : base(Severity.Error)
     {
-        error.MayNot().BeNull();
+        error.MayNotBe().Null();
 
         if (!withFileInfo.HasValue)
             withFileInfo = Debugger.IsAttached;
 
-        this.tagValues = tagValues.Must().Be(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.MustBe().True(v => v is null || !v.IsEmpty);
 
         this.error = new Error(error, withFileInfo.Value);
     }

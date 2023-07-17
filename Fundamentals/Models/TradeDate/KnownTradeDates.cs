@@ -32,8 +32,8 @@ public static class KnownTradeDates
     public static bool TryGetPreloadDates(
         TradeDate tradeDate, int daysBack, out TradeDate[] preloadDates)
     {
-        tradeDate.MayNot().BeDefault();
-        daysBack.Must().BeBetween(1, 5);
+        tradeDate.MayNotBe().Default();
+        daysBack.MustBe().Between(1, 5);
 
         var tradeDates = new List<TradeDate>();
 
@@ -53,7 +53,7 @@ public static class KnownTradeDates
     public static bool TryGetPriorTradeDate(
         TradeDate tradeDate, out TradeDate value)
     {
-        tradeDate.MayNot().BeDefault();
+        tradeDate.MayNotBe().Default();
 
         var date = tradeDate.AsDateOnly();
 

@@ -13,8 +13,8 @@ public static class ILoggerExtenders
     public static void Log<T>(this ILogger logger, T logItem)
         where T : LogItemBase
     {
-        logger!.MayNot().BeNull();
-        logItem.MayNot().BeNull();
+        logger!.MayNotBe().Null();
+        logItem.MayNotBe().Null();
 
         logItem.Validate();
 
@@ -38,7 +38,7 @@ public static class ILoggerExtenders
 
         foreach (var (tag, value) in logItem.GetTagValues())
         {
-            tag.MayNot().BeDefault();
+            tag.MayNotBe().Default();
 
             Append(tag.ToString(), value);
         }
@@ -50,8 +50,8 @@ public static class ILoggerExtenders
     public static void Log<T>(this Serilog.ILogger logger, T logItem)
         where T : LogItemBase
     {
-        logger!.MayNot().BeNull();
-        logItem.MayNot().BeNull();
+        logger!.MayNotBe().Null();
+        logItem.MayNotBe().Null();
 
         logItem.Validate();
 
@@ -75,7 +75,7 @@ public static class ILoggerExtenders
 
         foreach (var (tag, value) in logItem.GetTagValues())
         {
-            tag.MayNot().BeDefault();
+            tag.MayNotBe().Default();
 
             Append(tag.ToString(), value);
         }

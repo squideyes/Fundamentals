@@ -9,15 +9,15 @@ namespace SquidEyes.Fundamentals;
 
 public static class VerbExtenders
 {
-    public static Must<T> Must<T>(this T value, Func<T, bool> canEval = null!,
+    public static MustBe<T> MustBe<T>(this T value, Func<T, bool> canEval = null!,
         [CallerArgumentExpression(nameof(value))] string argName = null!)
     {
-        return new Must<T>(value, argName, canEval ?? (v => true));
+        return new MustBe<T>(value, argName, canEval ?? (v => true));
     }
 
-    public static MayNot<T> MayNot<T>(this T value, Func<T, bool> canEval = null!,
+    public static MayNotBe<T> MayNotBe<T>(this T value, Func<T, bool> canEval = null!,
         [CallerArgumentExpression(nameof(value))] string argName = null!)
     {
-        return new MayNot<T>(value, argName, canEval ?? (v => true));
+        return new MayNotBe<T>(value, argName, canEval ?? (v => true));
     }
 }

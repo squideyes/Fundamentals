@@ -5,9 +5,9 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class MayNot<T> : VerbBase<T, MayNot<T>>
+public class MayNotBe<T> : VerbBase<T, MayNotBe<T>>
 {
-    public MayNot(T value, string argName, Func<T, bool> canEval)
+    public MayNotBe(T value, string argName, Func<T, bool> canEval)
         : base(value, argName, canEval, "Value may not")
     {
     }

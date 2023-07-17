@@ -104,8 +104,8 @@ public class ArgSet : IEquatable<ArgSet>
 
     private void PrivateSet(MultiTag key, object value, ArgKind kind)
     {
-        key.MayNot().BeNull();
-        value.MayNot().BeDefault();
+        key.MayNotBe().Null();
+        value.MayNotBe().Default();
 
         Args[key] = Arg.Create(value!, kind);
     }

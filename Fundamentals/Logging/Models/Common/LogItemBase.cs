@@ -13,7 +13,7 @@ public abstract class LogItemBase
     {
         Ordinal = Interlocked.Increment(ref ordinal);
 
-        Severity = severity.Must().BeEnumValue();
+        Severity = severity.MustBe().EnumValue();
 
         Activity = activity == null ? 
             Tag.Create(GetType().Name) : activity!.Value!;

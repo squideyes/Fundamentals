@@ -48,7 +48,7 @@ public static class DateTimeExtenders
 
     private static DateTime ToZoneFromUtc(this DateTime value, TimeZoneInfo tzi)
     {
-        value.Kind.Must().Be(v => v == DateTimeKind.Utc);
+        value.Kind.MustBe().True(v => v == DateTimeKind.Utc);
 
         return TimeZoneInfo.ConvertTimeFromUtc(value, tzi);
     }
@@ -69,14 +69,14 @@ public static class DateTimeExtenders
 
     private static DateTime ToUtcFromZone(this DateTime value, TimeZoneInfo tzi)
     {
-        value.Kind.Must().Be(v => v == DateTimeKind.Unspecified);
+        value.Kind.MustBe().True(v => v == DateTimeKind.Unspecified);
 
         return TimeZoneInfo.ConvertTimeToUtc(value, tzi);
     }
 
     public static bool OnInterval(this DateTime value, int seconds)
     {
-        seconds.Must().BePositive();
+        seconds.MustBe().Positive();
 
         return value.Ticks % TimeSpan.FromSeconds(seconds).Ticks == 0L;
     }

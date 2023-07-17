@@ -16,8 +16,8 @@ public class CsvEnumerator : IEnumerable<string[]>, IDisposable
 
     public CsvEnumerator(StreamReader reader, int expectedFields, bool skipFirst = false)
     {
-        reader.MayNot().BeNull();
-        expectedFields.Must().BePositive();
+        reader.MayNotBe().Null();
+        expectedFields.MustBe().Positive();
 
         this.reader = reader;
         this.expectedFields = expectedFields;
@@ -49,7 +49,7 @@ public class CsvEnumerator : IEnumerable<string[]>, IDisposable
             var fields = line.Split(',');
 
             if (fields.Length != expectedFields)
-                fields.Length.Must().Be(expectedFields);
+                fields.Length.MustBe().EqualTo(expectedFields);
 
             if (skipFirst)
             {

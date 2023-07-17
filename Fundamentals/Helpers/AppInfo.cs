@@ -32,8 +32,8 @@ public class AppInfo
 
     public static string GetTitle(string packageId, Version version)
     {
-        packageId.MayNot().BeNullOrWhitespace();
-        version.MayNot().BeNull();
+        packageId.MayNotBe().NullOrWhitespace();
+        version.MayNotBe().Null();
 
         var sb = new StringBuilder();
 

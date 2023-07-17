@@ -14,7 +14,7 @@ public class TagValueSet : IEnumerable<KeyValuePair<Tag, object>>
     public bool IsEmpty => !dict.Any();
 
     public void Add(Tag tag, object value) =>
-        dict.Add(tag.MayNot().BeDefault(), value);
+        dict.Add(tag.MayNotBe().Default(), value);
 
     public static TagValueSet From(string format, params object[] args)
     {

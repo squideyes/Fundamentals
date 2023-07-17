@@ -24,7 +24,7 @@ public static class GenericExtenders
     public static bool In<T>(this T value, params T[] values)
         where T : IEquatable<T>
     {
-        values.Must().Be(v => v.HasItems());
+        values.MustBe().True(v => v.HasItems());
 
         return values.Contains(value);
     }

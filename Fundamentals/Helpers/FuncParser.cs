@@ -9,9 +9,9 @@ public static class FuncParser
 {
     public static List<T> Parse<T>(string input, Func<string, T> getValue)
     {
-        input.MayNot().BeNullOrWhitespace();
+        input.MayNotBe().NullOrWhitespace();
 
-        getValue.MayNot().BeNull();
+        getValue.MayNotBe().Null();
 
         var items = new List<T>();
 
