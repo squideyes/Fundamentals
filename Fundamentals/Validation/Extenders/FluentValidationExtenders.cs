@@ -21,7 +21,7 @@ public static class FluentValidationExtenders
         else
             message = MUST_BE + "non-empty and trimmed.";
 
-        return rule.Must(v => v!.IsNonNullTrimmed(mayBeEmpty))
+        return rule.Must(v => v!.IsNonNullAndTrimmed(mayBeEmpty))
             .WithMessage(message);
     }
 

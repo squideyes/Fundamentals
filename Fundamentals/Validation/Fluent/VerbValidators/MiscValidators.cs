@@ -10,6 +10,22 @@ namespace SquidEyes.Fundamentals;
 public static class MiscValidators
 {
     [DebuggerHidden]
+    public static string NonNullAndTrimmed(
+        this MustBe<string> m, bool mayBeEmpty = false)
+    {
+        string suffix;
+
+        if (mayBeEmpty)
+            suffix = "empty or non-empty and trimmed.";
+        else
+            suffix = "non-empty and trimmed.";
+
+        return m.ThrowErrorIfNotIsValid(
+            v => v.IsNonNullAndTrimmed(false),
+            v => suffix);
+    }
+
+    [DebuggerHidden]
     public static ArgSet NullOrEmpty(this MayNotBe<ArgSet> m)
     {
         return m.ThrowErrorIfNotIsValid(

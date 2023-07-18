@@ -26,11 +26,11 @@ public class Address
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(50)
-                .Must(v => v!.IsNonNullTrimmed())
+                .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Address2)
-                .Must(v => v!.IsNonNullTrimmed())
+                .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.")
                 .When(v => v is not null);
 
@@ -38,14 +38,14 @@ public class Address
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(25)
-                .Must(v => v!.IsNonNullTrimmed())
+                .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Region)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(25)
-                .Must(v => v!.IsNonNullTrimmed())
+                .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x)
