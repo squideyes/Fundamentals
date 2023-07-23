@@ -38,7 +38,6 @@ internal class Arg : IEquatable<Arg>
             ArgKind.DateTime => Value.As<DateTime>().ToString("MM/dd/yyyy HH:mm:ss.fff"),
             ArgKind.TimeSpan => Value.As<TimeSpan>().ToString(@"d\.hh\:mm\:ss\.fff"),
             ArgKind.TimeOnly => Value.As<TimeOnly>().ToString("HH:mm:ss.fff"),
-            ArgKind.TradeDate => Value.As<TradeDate>().AsDateOnly().ToString("MM/dd/yyyy"),
             _ => Value.ToString()!
         };
     }
