@@ -14,7 +14,7 @@ public abstract class VerbBase<T, M>
 
     private readonly string prefix;
 
-    internal VerbBase(T value, 
+    internal VerbBase(T value,
         string argName, Func<T, bool> canEval, string prefix)
     {
         Value = value;
@@ -51,7 +51,7 @@ public abstract class VerbBase<T, M>
     }
 
     [DebuggerHidden]
-    internal T ThrowErrorIfNotIsValid(Func<T, bool> isValid, Func<T, string> getSuffix)=>
+    internal T ThrowErrorIfNotIsValid(Func<T, bool> isValid, Func<T, string> getSuffix) =>
         ThrowErrorIfNotIsValid(isValid, $"{prefix}{getSuffix(Value)}.");
 
     [DebuggerHidden]

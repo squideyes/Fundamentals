@@ -7,8 +7,8 @@ namespace SquidEyes.Fundamentals;
 
 public class VerbException : ArgumentException
 {
-    public VerbException(string argame, string message)
-        : base($"{message} (Argument: \"{argame}\")")
+    public VerbException(string argName, string message)
+        : base($"{message} (Argument: \"{argName}\")")
     {
     }
 }

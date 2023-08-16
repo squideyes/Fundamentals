@@ -17,13 +17,12 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>dotnet;value-objects;argument-collection;arguments;guard-clauses;validation;arrays;helpers;extenders;primative-obsession</PackageTags>
         <RepositoryType>git</RepositoryType>
-        <PackageIcon>Icon.jpg</PackageIcon>
+        <PackageIcon>Icon.png</PackageIcon>
         <RepositoryUrl>https://github.com/squideyes/Fundamentals</RepositoryUrl>
         <PackageProjectUrl>https://github.com/squideyes/Fundamentals</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="Icon.jpg" Pack="true" PackagePath="" />
         <None Include="..\README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
@@ -37,5 +36,12 @@
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
 	</ItemGroup>
+
+    <ItemGroup>
+      <None Update="Icon.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
 
 </Project>

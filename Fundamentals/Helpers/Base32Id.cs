@@ -8,10 +8,20 @@ using System.Text;
 
 namespace SquidEyes.Fundamentals;
 
-public static class IdHelper
+public static class Base32Id
 {
-    internal static string GetRandomId(char[] charSet, int size)
+    private static readonly char[] charSet =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".ToCharArray();
+
+    private static readonly HashSet<char> hashSet = charSet.ToHashSet();
+
+    public static bool Contains(char c) => hashSet.Contains(c);
+
+    public static string Next(int size)
     {
+        size.MustBe().Between(4, 16)
+            .MustBe().True(v => v % 4 == 0);
+
         var data = new byte[4 * size];
 
         using (var rng = RandomNumberGenerator.Create())

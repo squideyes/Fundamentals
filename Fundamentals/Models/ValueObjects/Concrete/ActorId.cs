@@ -9,11 +9,6 @@ public sealed class ActorId : ValueObjectBase<ActorId>
 {
     public const int Length = 8;
 
-    private static readonly char[] charSet =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".ToCharArray();
-
-    private static readonly HashSet<char> hashSet = charSet.ToHashSet();
-
     public string? Value { get; private set; }
 
     protected override void SetProperties(string input)
@@ -21,12 +16,8 @@ public sealed class ActorId : ValueObjectBase<ActorId>
         Value = input;
     }
 
-    public static bool IsInput(string input)
-    {
-        return input is not null
-            && input.Length == Length
-            && input.All(hashSet.Contains);
-    }
+    public static bool IsInput(string input) => input is not null
+        && input.Length == Length && input.All(Base32Id.Contains);
 
     public static ActorId Create(string input) =>
         DoCreate(input, IsInput);
@@ -34,6 +25,5 @@ public sealed class ActorId : ValueObjectBase<ActorId>
     public static bool TryCreate(string input, out ActorId result) =>
         DoTryCreate(input, IsInput, out result);
 
-    public static ActorId Next() =>
-        Create(IdHelper.GetRandomId(charSet, Length));
+    public static ActorId Next() => Create(Base32Id.Next(Length));
 }

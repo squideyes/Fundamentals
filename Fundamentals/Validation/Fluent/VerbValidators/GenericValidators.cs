@@ -80,7 +80,7 @@ public static class GenericValidators
     {
         return m.ThrowErrorIfNotIsValid(
             v => m.Value.Equals(value),
-            v => "be equal to");
+            v => $"be equal to {value}");
     }
 
     [DebuggerHidden]
