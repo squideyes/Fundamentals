@@ -3,9 +3,11 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using FluentValidation.Results;
+
 namespace SquidEyes.Fundamentals;
 
-public class ConfigValue<T>
+public class ConfigValue<T> : IConfigValue
 {
     internal ConfigValue(Tag tag, T value)
     {
@@ -21,13 +23,13 @@ public class ConfigValue<T>
 
         Message = status switch
         {
-            ConfigValueStatus.NullInput => 
+            ConfigValueStatus.NullInput =>
                 $"The '{tag}' value may not be null",
-            ConfigValueStatus.BadInput => 
+            ConfigValueStatus.BadInput =>
                 $"The '{tag}' value may not be whitespace, empty or contain non-ascii characters",
-            ConfigValueStatus.ParseError => 
+            ConfigValueStatus.ParseError =>
                 $"The '{tag}' value could not be parsed (Input: {input})",
-            ConfigValueStatus.NotValid => 
+            ConfigValueStatus.NotValid =>
                 $"The '{tag}' value is an invalid {typeof(T).Name}.",
             _ => null
         };
@@ -39,4 +41,6 @@ public class ConfigValue<T>
     public string? Message { get; internal set; }
 
     public bool IsValid => Status == ConfigValueStatus.IsValid;
+
+    public ValidationFailure ToValidationFailure() => new(Tag.ToString(), Message);
 }

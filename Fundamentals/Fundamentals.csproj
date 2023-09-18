@@ -33,6 +33,7 @@
 		<PackageReference Include="Loyc.Math" Version="30.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="OneOf" Version="3.0.263" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
 	</ItemGroup>

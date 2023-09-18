@@ -10,6 +10,9 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class StringExtenders
 {
+    public static string WhitespaceToNull(this string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null! : value;
+
     public static string ToPlusAndDigits(this string value) =>
         "+" + string.Join("", value.Skip(1).Where(char.IsDigit));
 

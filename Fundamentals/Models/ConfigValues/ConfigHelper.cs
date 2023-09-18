@@ -139,13 +139,13 @@ public static class ConfigHelper
             return new ConfigValue<Guid>(tag, value);
     }
 
-    public static ConfigValue<T> CreateIntEnum<T>(
+    public static ConfigValue<T> CreateEnum<T>(
         Tag tag, string input, Func<T, bool> isValid = null!)
         where T : struct, Enum
     {
         if (!HasBasics(tag, input, out ConfigValue<T> result))
             return result;
-        else if (!Enum.TryParse<T>(input, out T value))
+        else if (!Enum.TryParse(input, out T value))
             return new ConfigValue<T>(tag, input, ParseError);
         else if (isValid is not null && !isValid(value))
             return new ConfigValue<T>(tag, input, NotValid);
@@ -154,14 +154,25 @@ public static class ConfigHelper
     }
 
     public static ConfigValue<string> CreateString(
-        Tag tag, string input, Func<string, bool> isValid = null!)
+        Tag tag, string input, Func<string, bool> isValid)
     {
-        if (!HasBasics(tag, input, out ConfigValue<string> result))
-            return result;
-        else if (isValid is not null && !isValid(input))
+        if (isValid is not null && !isValid(input))
             return new ConfigValue<string>(tag, input, NotValid);
         else
             return new ConfigValue<string>(tag, input);
+    }
+
+    public static ConfigValue<Uri> CreateUri(Tag tag, string input, 
+        UriKind uriKind = UriKind.Absolute, Func<Uri, bool> isValid = null!)
+    {
+        if (input is null)
+            return new ConfigValue<Uri>(tag, input!, NullInput);
+        else if (!Uri.TryCreate(input, uriKind, out Uri? value))
+            return new ConfigValue<Uri>(tag, input, ParseError);
+        else if (isValid is not null && !isValid(value))
+            return new ConfigValue<Uri>(tag, input, NotValid);
+        else
+            return new ConfigValue<Uri>(tag, value);
     }
 
     private static bool HasBasics<T>(

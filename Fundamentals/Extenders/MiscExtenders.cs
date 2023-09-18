@@ -69,7 +69,7 @@ internal static class MiscExtenders
             Severity.Info => LogEventLevel.Information,
             Severity.Warn => LogEventLevel.Warning,
             Severity.Error => LogEventLevel.Error,
-            _ => throw new LogSmartException(
+            _ => throw new LoggingException(
                 "A defined \"severity\" must be supplied.")
         };
     }
@@ -82,7 +82,7 @@ internal static class MiscExtenders
             Severity.Info => LogLevel.Information,
             Severity.Warn => LogLevel.Warning,
             Severity.Error => LogLevel.Error,
-            _ => throw new LogSmartException(
+            _ => throw new LoggingException(
                 "A defined \"severity\" must be supplied.")
         };
     }

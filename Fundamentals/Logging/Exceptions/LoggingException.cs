@@ -5,18 +5,10 @@
 
 namespace SquidEyes.Fundamentals;
 
-public enum ConfigDataKind
+public class LoggingException : Exception
 {
-    Boolean = 1,
-    DateOnly,
-    DateTime,
-    Double,
-    Enum,
-    Float,
-    Guid,
-    Int32,
-    Int64,
-    TimeOnly, 
-    TimeSpan,
-    String
+    public LoggingException(string message)
+        : base(message)
+    {
+    }
 }

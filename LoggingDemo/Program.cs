@@ -8,6 +8,29 @@ using LoggingDemo;
 using Serilog;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
+using System.Diagnostics;
+using static SquidEyes.Fundamentals.StandardLoggerBuilder;
+
+// Use SelfLog to catch internal Serilog errors
+Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+// The filename to write custom log-items to
+var logFileName = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
+
+// Gets IConfiguration used to bootstrap the program
+var config = GetBootstrapConfig(args, "LoggingDemo__");
+
+// Only used to log boostrap failures
+var logger = GetBootstrapLogger();
+
+// Gets enrichment data to include with EVERY log-item
+if (!TryGetEnrichWiths(logger, config, out TagValueSet enrichWiths))
+    return;
+
+// Try to instantiate a new "standard" Serilog.Log.Logger
+if (!TrySetStandardLogger(logger, config, enrichWiths, Customize))
+    return;
 
 // "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging
 var host = Host.CreateDefaultBuilder()
@@ -17,45 +40,6 @@ var host = Host.CreateDefaultBuilder()
     })
     .UseSerilog()
     .Build();
-
-// Typically read in from KeyVault or another secret store
-var seqApiUri = new Uri("http://host.docker.internal:5341");
-var seqApiKey = (string)null!;
-
-// Zero or more app-specific fields to enrich ALL log-items with
-var enrichWith = new TagValueSet()
-{
-    { Tag.Create("ActorId"), "ABC123" },
-    { Tag.Create("JunketId"), 12345 },
-    { Tag.Create("RunDate"), DateTime.Today }
-};
-
-var logFilePath = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
-
-// Create a standard logger; in this case with a trio of app-specific
-// fields to enrich ALL of the log-items with, an extra (File) sink
-// and a custom ActorId transform
-Log.Logger = SerilogHelper.GetStandardLogger(
-    new StandardLoggerArgs()
-    {
-        SeqApiUri = seqApiUri,
-        SeqApiKey = seqApiKey,
-        MinSeverity = Severity.Debug,
-        EnrichWith = new TagValueSet()
-        {
-            { Tag.Create("ActorId"), "ABC123" },
-            { Tag.Create("JunketId"), 12345 },
-            { Tag.Create("RunDate"), DateTime.Today }
-        }
-    },
-    configure =>
-    {
-        configure.WriteTo.File(
-            logFilePath, rollingInterval: RollingInterval.Day);
-
-        configure.Destructure
-            .ByTransforming<ActorId>(v => v.ToString());
-    });
 
 // Log "LogonSuccess" (a custom log-item)
 Log.Logger.Log(new LogonSucess(Brokerage.CanonTrading,
@@ -90,4 +74,72 @@ await host.RunAsync();
 Log.CloseAndFlush();
 
 Console.WriteLine();
-Console.WriteLine($"For more info, see: {seqApiUri} and {logFilePath}");
+Console.WriteLine($"For more info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
+
+// Loads (but doesn't validate!) "bootstrap" configuration values
+static IConfiguration GetBootstrapConfig(string[] args, string envVarPrefix)
+{
+    var mappings = new Dictionary<string, string>()
+        {
+            { "--JunketId", "Context:JunketId" },
+            { "--UserId", "Context:UserId" },
+            { "--SeqApiUri", "Serilog:SeqApiUri" },
+            { "--SeqApiKey", "Serilog:SeqApiKey" },
+            { "--MinSeverity", "Serilog:MinSeverity" }
+        };
+
+    return new ConfigurationBuilder()
+        .AddEnvironmentVariables(envVarPrefix)
+        .AddCommandLine(args, mappings)
+        .Build();
+}
+
+// Customizes the standard logger
+void Customize(LoggerConfiguration config)
+{
+    config.WriteTo.File(logFileName, rollingInterval: RollingInterval.Day);
+
+    config.Destructure.ByTransforming<Brokerage>(v =>
+    {
+        return v switch
+        {
+            Brokerage.CanonTrading => "Canon Trading",
+            Brokerage.DiscountTrading => "Discount Trading",
+            Brokerage.AmpFutures => "Amp Trading",
+            Brokerage.OptimusFutures => "Optimus Futures",
+            _ => throw new ArgumentOutOfRangeException(nameof(v))
+        };
+    });
+}
+
+// Tries to get a TagValueSet to enrich log-items with
+static bool TryGetEnrichWiths(Serilog.ILogger logger,
+    IConfiguration config, out TagValueSet enrichWiths)
+{
+    var validationResult = new ValidationResult();
+
+    var junketId = ConfigHelper.CreateInt32("JunketId",
+        config["Context:JunketId"]!, v => v > 0).Validate(validationResult);
+
+    var userId = ConfigHelper.CreateString("UserId", config["Context:UserId"]!,
+        v => v.IsNonNullAndTrimmed()).Validate(validationResult);
+
+    if (!validationResult.IsValid)
+    {
+        enrichWiths = null!;
+
+        foreach (var e in validationResult.Errors)
+            logger.Warning($"{e.PropertyName}: {e.ErrorMessage}");
+
+        return false;
+    }
+
+    enrichWiths = new TagValueSet
+        {
+            { junketId.Tag, junketId.Value },
+            { userId.Tag, userId.Value! },
+            { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
+        };
+
+    return true;
+}

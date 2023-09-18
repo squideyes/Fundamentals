@@ -2,9 +2,14 @@
   "profiles": {
     "LoggingDemo": {
       "commandName": "Project",
+      "commandLineArgs": "--JunketId=12345",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LoggingDemo__Context__UserId": "ABC123",
+        "LoggingDemo__Serilog__SeqApiUri": "http://localhost:5341",
+        "LoggingDemo__Serilog__SeqApiKey": "",
+        "LoggingDemo__Serilog__MinSeverity": "Debug"
       },
       "applicationUrl": "https://localhost:61211;http://localhost:61212"
     }
