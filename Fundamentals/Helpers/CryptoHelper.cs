@@ -10,10 +10,7 @@ namespace SquidEyes.Fundamentals;
 
 public static class CryptoHelper
 {
-    public static string GetHash(string name, string email, string mobile) =>
-        GetSha256Hash(name + email + mobile);
-
-    private static string GetSha256Hash(string value)
+    public static string GetSha256Hash(string value)
     {
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(value));
 
