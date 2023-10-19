@@ -13,7 +13,7 @@ namespace SquidEyes.Fundamentals;
 public static class StandardLoggerBuilder
 {
     public static bool TrySetStandardLogger(ILogger logger, IConfiguration config,  
-        TagValueSet enrichWiths, Action<LoggerConfiguration> configure = null!)
+        TagValueSet enrichWiths = null!, Action<LoggerConfiguration> configure = null!)
     {
         var oneOf = SerilogArgs.Create(config);
 
@@ -29,7 +29,7 @@ public static class StandardLoggerBuilder
 
         var minLogEventLevel = serilogArgs.MinSeverity.ToLogEventLevel();
 
-        var loggerConfiguration = new LoggerConfiguration()
+        var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
             .Destructure.ByTransforming<AccountId>(v => v.ToString())
             .Destructure.ByTransforming<ActorId>(v => v.ToString())
@@ -45,20 +45,23 @@ public static class StandardLoggerBuilder
             .Destructure.ByTransforming<TimeOnly>(v => v.ToString("HH:mm:ss.fff"))
             .Destructure.ByTransforming<TimeSpan>(v => v.ToString(@"d\.hh\:mm\:ss\.fff"));
 
-        foreach (var tv in enrichWiths)
-            loggerConfiguration.Enrich.WithProperty(tv.Key.ToString(), tv.Value);
+        if (enrichWiths is not null)
+        {
+            foreach (var tv in enrichWiths)
+                loggerConfig.Enrich.WithProperty(tv.Key.ToString(), tv.Value);
+        }
 
-        loggerConfiguration.Enrich.FromLogContext();
+        loggerConfig.Enrich.FromLogContext();
 
-        loggerConfiguration.WriteTo.Seq(serilogArgs.SeqApiUri.AbsoluteUri,
+        loggerConfig.WriteTo.Seq(serilogArgs.SeqApiUri.AbsoluteUri,
             apiKey: serilogArgs.SeqApiKey, restrictedToMinimumLevel: minLogEventLevel);
 
-        loggerConfiguration.WriteTo.Console(theme: AnsiConsoleTheme.Code, outputTemplate:
+        loggerConfig.WriteTo.Console(theme: AnsiConsoleTheme.Code, outputTemplate:
             "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");
 
-        configure?.Invoke(loggerConfiguration);
+        configure?.Invoke(loggerConfig);
 
-        Log.Logger = loggerConfiguration.CreateLogger();
+        Log.Logger = loggerConfig.CreateLogger();
 
         return true;
     }
