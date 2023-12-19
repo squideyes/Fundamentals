@@ -9,7 +9,6 @@ namespace SquidEyes.Fundamentals;
 
 public class TagValueSet : IEnumerable<KeyValuePair<Tag, object>>
 {
-
     private readonly Dictionary<Tag, object> dict = new();
 
     public bool IsEmpty => !dict.Any();

@@ -135,11 +135,11 @@ static bool TryGetEnrichWiths(Serilog.ILogger logger,
     }
 
     enrichWiths = new TagValueSet
-        {
-            { junketId.Tag, junketId.Value },
-            { userId.Tag, userId.Value! },
-            { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
-        };
+    {
+        { junketId.Tag, junketId.Value },
+        { userId.Tag, userId.Value! },
+        { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
+    };
 
     return true;
 }
