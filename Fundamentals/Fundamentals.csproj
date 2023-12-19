@@ -27,15 +27,15 @@
     </ItemGroup>
 
     <ItemGroup>
-		<PackageReference Include="FluentValidation" Version="11.8.0" />
+		<PackageReference Include="FluentValidation" Version="11.8.1" />
 		<PackageReference Include="ISO3166" Version="1.0.4" />
-		<PackageReference Include="libphonenumber-csharp" Version="8.13.23" />
+		<PackageReference Include="libphonenumber-csharp" Version="8.13.26" />
 		<PackageReference Include="Loyc.Math" Version="30.1.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="OneOf" Version="3.0.263" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-		<PackageReference Include="Serilog.Sinks.Seq" Version="5.2.3" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="6.0.0" />
 	</ItemGroup>
 
     <ItemGroup>

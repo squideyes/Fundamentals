@@ -13,38 +13,49 @@ public class Address
 {
     public class Validator : AbstractValidator<Address>
     {
+        public static class MaxLengths
+        {
+            public const int Country = 2;
+            public const int Address = 50;
+            public const int Locality = 25;
+            public const int Region = 25;
+        }
+
         public Validator()
         {
             RuleFor(x => x.Country)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Length(2)
+                .Length(MaxLengths.Country)
                 .Must(CountryValidator.IsCountryCode)
                 .WithMessage("'{PropertyName}' must be an ISO 3166 country code.");
 
             RuleFor(x => x.Address1)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .MaximumLength(50)
+                .MaximumLength(MaxLengths.Address)
                 .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Address2)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .MaximumLength(MaxLengths.Address)
                 .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.")
-                .When(v => v is not null);
+                .When(v => v is not null, ApplyConditionTo.AllValidators);
 
             RuleFor(x => x.Locality)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .MaximumLength(25)
+                .MaximumLength(MaxLengths.Locality)
                 .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
             RuleFor(x => x.Region)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .MaximumLength(25)
+                .MaximumLength(MaxLengths.Region)
                 .Must(v => v!.IsNonNullAndTrimmed())
                 .WithMessage("'{PropertyName}' must be non-empty and trimmed.");
 
