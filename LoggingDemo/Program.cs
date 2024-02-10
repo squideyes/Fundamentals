@@ -18,8 +18,8 @@ Serilog.Debugging.SelfLog.Enable(Console.Error);
 // The filename to write custom log-items to
 var logFileName = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
 
-// Gets IConfiguration used to bootstrap the program
-var config = GetBootstrapConfig(args, "LoggingDemo__");
+// Gets IConfiguration used by the program
+var config = GetConfig(args, "LoggingDemo__");
 
 // Only used to log boostrap failures
 var logger = GetBootstrapLogger();
@@ -76,17 +76,17 @@ Log.CloseAndFlush();
 Console.WriteLine();
 Console.WriteLine($"For more info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
 
-// Loads (but doesn't validate!) "bootstrap" configuration values
-static IConfiguration GetBootstrapConfig(string[] args, string envVarPrefix)
+// Loads (but doesn't validate!) configuration values
+static IConfiguration GetConfig(string[] args, string envVarPrefix)
 {
     var mappings = new Dictionary<string, string>()
-        {
-            { "--JunketId", "Context:JunketId" },
-            { "--UserId", "Context:UserId" },
-            { "--SeqApiUri", "Serilog:SeqApiUri" },
-            { "--SeqApiKey", "Serilog:SeqApiKey" },
-            { "--MinSeverity", "Serilog:MinSeverity" }
-        };
+    {
+        { "--JunketId", "Context:JunketId" },
+        { "--UserId", "Context:UserId" },
+        { "--SeqApiUri", "Serilog:SeqApiUri" },
+        { "--SeqApiKey", "Serilog:SeqApiKey" },
+        { "--MinSeverity", "Serilog:MinSeverity" }
+    };
 
     return new ConfigurationBuilder()
         .AddEnvironmentVariables(envVarPrefix)

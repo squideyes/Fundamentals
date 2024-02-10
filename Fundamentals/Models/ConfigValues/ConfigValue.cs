@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using ErrorOr;
 using FluentValidation.Results;
 
 namespace SquidEyes.Fundamentals;
@@ -42,5 +43,16 @@ public class ConfigValue<T> : IConfigValue
 
     public bool IsValid => Status == ConfigValueStatus.IsValid;
 
-    public ValidationFailure ToValidationFailure() => new(Tag.ToString(), Message);
+    public ValidationFailure ToValidationFailure() =>
+        new(Tag.ToString(), Message);
+
+    public Error ToError(string code = null!)
+    {
+        if (Status == ConfigValueStatus.IsValid)
+            throw new InvalidOperationException();
+
+        code.MustBe().True(v => v is null || v.IsNonNullAndTrimmed());
+
+        return Error.Validation(code, Tag + ": " + Message!);
+    }
 }

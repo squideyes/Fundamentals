@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using ErrorOr;
 using static SquidEyes.Fundamentals.ConfigValueStatus;
 
 namespace SquidEyes.Fundamentals;
@@ -186,5 +187,19 @@ public static class ConfigHelper
             result = new ConfigValue<T>(tag, input, BadInput);
 
         return result == null;
+    }
+
+    public static bool TryGetErrors(string code,
+        IEnumerable<IConfigValue> values, out List<Error> errors)
+    {
+        errors = [];
+
+        foreach (var value in values)
+        {
+            if (!value.IsValid)
+                errors.Add(value.ToError(code));
+        }
+
+        return errors.Count > 0;
     }
 }

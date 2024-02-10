@@ -135,6 +135,18 @@ public static partial class ValidationExtenders
         return value.IsNonEmptyAndTrimmed();
     }
 
+    public static bool IsNullOrNonNullAndTrimmed(
+        this string value, bool mayBeEmpty = false)
+    {
+        if (value is null)
+            return true;
+
+        if (string.IsNullOrEmpty(value))
+            return mayBeEmpty;
+
+        return value.IsNonEmptyAndTrimmed();
+    }
+
     private static bool IsNonEmptyAndTrimmed(this string value)
     {
         return value is not null

@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class Error
+public class ErrorInfo
 {
-    internal Error(Exception error, bool withFileInfo)
+    internal ErrorInfo(Exception error, bool withFileInfo)
     {
         Type = error.GetType().ToString();
-        Messages = new string[] { error.Message };
+        Messages = [error.Message];
         Source = error.Source!;
         TargetSite = error.TargetSite!.ToString()!;
         StackTrace = error.GetStackTrace(withFileInfo);
 
         if (error.InnerException is not null)
-            InnerError = new Error(error.InnerException, withFileInfo);
+            InnerErrorInfo = new ErrorInfo(error.InnerException, withFileInfo);
     }
 
     public string Type { get; }
@@ -24,5 +24,5 @@ public class Error
     public string Source { get; }
     public string TargetSite { get; }
     public string[] StackTrace { get; }
-    public Error? InnerError { get; }
+    public ErrorInfo? InnerErrorInfo { get; }
 }
