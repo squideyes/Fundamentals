@@ -15,19 +15,17 @@ public static class StandardLoggerBuilder
     public static bool TrySetStandardLogger(ILogger logger, IConfiguration config,  
         TagValueSet enrichWiths = null!, Action<LoggerConfiguration> configure = null!)
     {
-        var oneOf = SerilogArgs.Create(config);
+        var ee = SerilogArgs.Create(config);
 
-        if (oneOf.TryPickT1(out var result, out var _))
+        if (ee.IsError)
         {
-            foreach (var e in result.Errors)
-                logger.Warning($"{e.PropertyName}: {e.ErrorMessage}");
+            foreach (var e in ee.Errors)
+                logger.Warning($"TrySetStandardLogger Error: {e.Description}");
 
-            return false;
+            return true;
         }
 
-        var serilogArgs = oneOf.AsT0;
-
-        var minLogEventLevel = serilogArgs.MinSeverity.ToLogEventLevel();
+        var minLogEventLevel = ee.Value.MinSeverity.ToLogEventLevel();
 
         var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
@@ -53,8 +51,8 @@ public static class StandardLoggerBuilder
 
         loggerConfig.Enrich.FromLogContext();
 
-        loggerConfig.WriteTo.Seq(serilogArgs.SeqApiUri.AbsoluteUri,
-            apiKey: serilogArgs.SeqApiKey, restrictedToMinimumLevel: minLogEventLevel);
+        loggerConfig.WriteTo.Seq(ee.Value.SeqApiUri.AbsoluteUri,
+            apiKey: ee.Value.SeqApiKey, restrictedToMinimumLevel: minLogEventLevel);
 
         loggerConfig.WriteTo.Console(theme: AnsiConsoleTheme.Code, outputTemplate:
             "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj}{NewLine}{Exception}");

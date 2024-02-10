@@ -11,7 +11,7 @@ namespace SquidEyes.Fundamentals;
 
 public class HttpHelper
 {
-    private readonly List<string> segments = new();
+    private readonly List<string> segments = [];
     private readonly Dictionary<string, string?> queryParams = new();
 
     private readonly HttpClient client;
@@ -99,8 +99,7 @@ public class HttpHelper
     public async Task<T?> GetJsonAsync<T>(JsonSerializerOptions? options = null)
         where T : class, new()
     {
-        if (jsonSerializerOptions == null)
-            jsonSerializerOptions = GetJsonSerializerOptions();
+        jsonSerializerOptions ??= GetJsonSerializerOptions();
 
         var json = await GetStringAsync();
 

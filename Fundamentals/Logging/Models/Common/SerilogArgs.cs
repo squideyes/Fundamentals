@@ -1,6 +1,8 @@
-﻿using FluentValidation.Results;
+﻿using ErrorOr;
+using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
-using OneOf;
+
+using EO = ErrorOr;
 
 namespace SquidEyes.Fundamentals;
 
@@ -17,23 +19,27 @@ public class SerilogArgs
     public string SeqApiKey { get; }
     public Severity MinSeverity { get; }
 
-    public static OneOf<SerilogArgs, ValidationResult> Create(IConfiguration config)
+    public static ErrorOr<SerilogArgs> Create(IConfiguration config)
     {
-        var validationResult = new ValidationResult();
+        var result = new ValidationResult();
 
         var uri = ConfigHelper.CreateUri(
-            "SeqApiUri", config["Serilog:SeqApiUri"]!).Validate(validationResult);
+            "SeqApiUri", config["Serilog:SeqApiUri"]!).Validate(result);
 
-        var key = ConfigHelper.CreateString("SeqApiKey", 
-            config["Serilog:SeqApiKey"]!, v => string.IsNullOrWhiteSpace(v) 
-                || v.IsNonNullAndTrimmed()).Validate(validationResult);
+        var key = ConfigHelper.CreateString("SeqApiKey",
+            config["Serilog:SeqApiKey"]!, v => string.IsNullOrWhiteSpace(v)
+                || v.IsNonNullAndTrimmed()).Validate(result);
 
         var ms = ConfigHelper.CreateEnum<Severity>(
-            "MinSeverity", config["Serilog:MinSeverity"]!).Validate(validationResult);
+            "MinSeverity", config["Serilog:MinSeverity"]!).Validate(result);
 
-        if (!validationResult.IsValid)
-            return validationResult;
+        if (!result.IsValid)
+        {
+            return result.Errors.ConvertAll(
+                e => EO.Error.Validation(e.PropertyName, e.ErrorMessage));
+        }
 
-        return new SerilogArgs(uri.Value!, key.Value.WhitespaceToNull(), ms.Value);
+        return new SerilogArgs(
+            uri.Value!, key.Value.WhitespaceToNull(), ms.Value);
     }
 }
