@@ -202,4 +202,15 @@ public static class ConfigHelper
 
         return errors.Count > 0;
     }
+
+    public static Error GetValidationError(
+        string code, Tag tag, string message)
+    {
+        code.MustBe().True(v => v is null || v.IsNonNullAndTrimmed());
+        tag.MayNotBe().Default();
+        message.MustBe().NonNullAndTrimmed();
+
+        return Error.Validation(code, tag + ": " + message!);
+    }
+
 }

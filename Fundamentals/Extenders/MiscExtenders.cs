@@ -11,6 +11,14 @@ namespace SquidEyes.Fundamentals;
 
 internal static class MiscExtenders
 {
+    public static bool SetOutThenReturn<T>(
+        this bool state, out T instance, T value)
+    {
+        instance = value;
+
+        return state;
+    }
+
     public static bool IsPlural(this char value) => "AEIOU".Contains(value);
 
     public static bool TryCast<T>(this object instance, out T result)
