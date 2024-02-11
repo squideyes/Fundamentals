@@ -9,17 +9,9 @@ using System.ComponentModel;
 
 namespace SquidEyes.Fundamentals;
 
-internal static class MiscExtenders
+internal static class MiscInternalExtenders
 {
     public static bool IsPlural(this char value) => "AEIOU".Contains(value);
-
-    public static bool SetOutThenReturn<T>(
-        this bool state, out T instance, T value)
-    {
-        instance = value;
-
-        return state;
-    }
 
     public static bool TryCast<T>(this object instance, out T result)
     {

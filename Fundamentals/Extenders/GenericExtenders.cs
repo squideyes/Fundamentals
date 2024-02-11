@@ -7,6 +7,14 @@ namespace SquidEyes.Fundamentals;
 
 public static class GenericExtenders
 {
+    public static bool SetOutThenReturn<T>(
+        this bool state, out T instance, T value)
+    {
+        instance = value;
+
+        return state;
+    }
+
     public static T As<T>(this object value) => (T)value;
 
     public static bool HasMaskBits(this byte value, byte mask) =>
