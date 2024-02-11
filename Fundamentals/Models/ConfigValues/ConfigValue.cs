@@ -46,13 +46,21 @@ public class ConfigValue<T> : IConfigValue
     public ValidationFailure ToValidationFailure() =>
         new(Tag.ToString(), Message);
 
+    public Error GetValidationError(
+        string code, Tag tag, string message)
+    {
+        code.MustBe().True(v => v is null || v.IsNonNullAndTrimmed());
+        tag.MayNotBe().Default();
+        message.MustBe().NonNullAndTrimmed();
+
+        return Error.Validation(code, tag + ": " + message!);
+    }
+
     public Error ToError(string code = null!)
     {
         if (Status == ConfigValueStatus.IsValid)
             throw new InvalidOperationException();
 
-        code.MustBe().True(v => v is null || v.IsNonNullAndTrimmed());
-
-        return Error.Validation(code, Tag + ": " + Message!);
+        return GetValidationError(code, Tag, Message!);
     }
 }
