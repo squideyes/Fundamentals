@@ -23,7 +23,7 @@ public class TagTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("tag1")]
@@ -33,14 +33,14 @@ public class TagTests
     [InlineData("TagLongerThanMaxLengthTag")]
     [InlineData("Bad@Tag")]
     [InlineData("Bad Tag")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => Tag.Create(input))
+        FluentActions.Invoking(() => Tag.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("Tag1", true)]
@@ -52,11 +52,11 @@ public class TagTests
     [InlineData("TagLongerThanMaxLengthTag", false)]
     [InlineData("Bad@Tag", false)]
     [InlineData("Bad Tag", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsTagInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsTagInput().Should().Be(expected);
 
     [Theory]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("Tag1", true)]
@@ -68,8 +68,8 @@ public class TagTests
     [InlineData("TagLongerThanMaxLengthTag", false)]
     [InlineData("Bad@Tag", false)]
     [InlineData("Bad Tag", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        Tag.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        Tag.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()
@@ -140,7 +140,7 @@ public class TagTests
     {
         var actorId = Tag.Create("Tag1");
 
-        actorId.GetHashCode().Should().Be(actorId.Input.GetHashCode());
+        actorId.GetHashCode().Should().Be(actorId.Input!.GetHashCode());
     }
 
     [Fact]

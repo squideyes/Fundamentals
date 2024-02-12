@@ -5,7 +5,7 @@
 
 **SquidEyes.Fundamentals** is a set of helper classes and extension methods.  The solution includes more than 300 unit-tests, and has been **open-sourced under a MIT license** (see License.md for further details).  Even so, the code is mostly for the author's own personal use so there is no documentation on offer, nor does the author have any intent of documenting the code in the near future.
 
-If you want to see what it's all about, please check out SquidEyes.UnitTests. As you will see, the code is rather prosaic (validation extenders, JSON converters, string manipulation methods, etc.).  Even so, there are a number of standouts:
+If you want to see what it's all about, please check out the  **UnitTests** and **LoggingDemo** projects. As you will see, the code is rather prosaic (validation extenders, JSON converters, string manipulation methods, etc.).  Even so, there are a number of standouts:
 
 |Class|Description|
 |---|---|
@@ -17,6 +17,9 @@ If you want to see what it's all about, please check out SquidEyes.UnitTests. As
 |SerilogHelper|Helps to build and configure a "standard" Serilog logger, with Seq and Console sinks.  See the **LoggingDemo** project for a comprehensive usage example.|
 |SlidingBuffer|A fixed-size generic buffer that supports forward and reverse iteration and indexing.|
 
+Before running the **LoggingDemo**, you may want to install a Seq instance on Docker Desktop.  It's beyond the scope of this README to elaborate on how to do this, but here's the Docker run command I used to setup Seq:
+
+> docker run -d --name seq-dev --restart unless-stopped -p 5341:80  -v "C:\SeqDev:/data" -e ACCEPT_EULA=Y datalust/seq:latest
 #
 Contributions are always welcome (see [CONTRIBUTING.md](https://github.com/squideyes/Fundamentals/blob/master/CONTRIBUTING.md) for details)
 

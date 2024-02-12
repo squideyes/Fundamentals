@@ -10,8 +10,7 @@ public static class TaskExtenders
     // Task.Run(() => { ... }).Forget();
     public static void Forget(this Task task)
     {
-        if (task == null)
-            throw new ArgumentNullException(nameof(task));
+        task.MayNotBe().Null();
 
         if (!task.IsCompleted || task.IsFaulted)
             _ = ForgetAwaited(task);

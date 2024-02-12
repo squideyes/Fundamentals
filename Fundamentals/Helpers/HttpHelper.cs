@@ -12,7 +12,7 @@ namespace SquidEyes.Fundamentals;
 public class HttpHelper
 {
     private readonly List<string> segments = [];
-    private readonly Dictionary<string, string?> queryParams = new();
+    private readonly Dictionary<string, string?> queryParams = [];
 
     private readonly HttpClient client;
     private readonly Uri baseUri;

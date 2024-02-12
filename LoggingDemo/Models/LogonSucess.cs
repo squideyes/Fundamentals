@@ -5,30 +5,23 @@
 
 namespace SquidEyes.Fundamentals.LoggingDemo;
 
-public class LogonSucess : LogItemBase
+public class LogonSucess(Brokerage brokerage, Gateway[] endpoints) 
+    : LogItemBase(Severity.Info)
 {
-    public LogonSucess(Brokerage brokerage, Gateway[] endpoints)
-        : base(Severity.Info)
-    {
-        Brokerage = brokerage.MustBe().EnumValue();
+    public Brokerage Brokerage { get; } = brokerage.MustBe().EnumValue();
 
-        Endpoints = endpoints.MustBe().True(
-            v => v.Length > 0 && v.All(e => Enum.IsDefined(e)));
-    }
-
-    public Brokerage Brokerage { get; }
-    public Gateway[] Endpoints { get; }
+    public Gateway[] Endpoints { get; } = endpoints.MustBe()
+        .True(v => v.Length > 0 && v.All(e => Enum.IsDefined(e)));
 
     public string? Gateway { get; init; }
 
     public override (Tag, object)[] GetTagValues()
     {
-        return new List<(Tag, object)>
-        {
+        return
+        [
             (Tag.Create(nameof(Brokerage)), Brokerage),
             (Tag.Create(nameof(Endpoints)), Endpoints),
             (Tag.Create(nameof(Gateway)), Gateway!)
-        }
-        .ToArray();
+        ];
     }
 }

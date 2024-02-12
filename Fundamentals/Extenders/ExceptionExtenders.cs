@@ -41,6 +41,6 @@ public static class ExceptionExtenders
             result.Add(sb.ToString());
         }
 
-        return result.ToArray();
+        return [.. result];
     }
 }

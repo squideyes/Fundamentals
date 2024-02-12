@@ -26,7 +26,7 @@ public class SemVerTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("1.2.3-alpha")]
@@ -63,16 +63,16 @@ public class SemVerTests
     [InlineData("v1.2.0")]
     [InlineData("v1.2.3-ALPHA")]
     [InlineData("v1.2.3-AL@HA")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => SemVer.Create(input))
+        FluentActions.Invoking(() => SemVer.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
     [InlineData("v1.2.3-alpha", true)]
     [InlineData("v1.2.3", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("1.2.3-alpha", false)]
@@ -109,13 +109,13 @@ public class SemVerTests
     [InlineData("v1.2.0", false)]
     [InlineData("v1.2.3-ALPHA", false)]
     [InlineData("v1.2.3-AL@HA", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsSemVerInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsSemVerInput().Should().Be(expected);
 
     [Theory]
     [InlineData("v1.2.3-alpha", true)]
     [InlineData("v1.2.3", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("1.2.3-alpha", false)]
@@ -152,8 +152,8 @@ public class SemVerTests
     [InlineData("v1.2.0", false)]
     [InlineData("v1.2.3-ALPHA", false)]
     [InlineData("v1.2.3-AL@HA", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        SemVer.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        SemVer.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()

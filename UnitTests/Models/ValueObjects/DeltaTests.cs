@@ -26,7 +26,7 @@ public class DeltaTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(" Gain=0.25")]
@@ -39,9 +39,9 @@ public class DeltaTests
     [InlineData("Gain=XXX")]
     [InlineData("XXX=0.25")]
     [InlineData("Gain0.25")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => Delta.Create(input))
+        FluentActions.Invoking(() => Delta.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -50,7 +50,7 @@ public class DeltaTests
     [InlineData("Loss=1", true)]
     [InlineData("gain=0.25", true)]
     [InlineData("loss=1", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData(" Gain=0.25", false)]
@@ -63,15 +63,15 @@ public class DeltaTests
     [InlineData("Gain=XXX", false)]
     [InlineData("XXX=0.25", false)]
     [InlineData("Gain0.25", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsDeltaInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsDeltaInput().Should().Be(expected);
 
     [Theory]
     [InlineData("Gain=0.25", true)]
     [InlineData("Loss=1", true)]
     [InlineData("gain=0.25", true)]
     [InlineData("loss=1", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData(" Gain=0.25", false)]
@@ -84,8 +84,8 @@ public class DeltaTests
     [InlineData("Gain=XXX", false)]
     [InlineData("XXX=0.25", false)]
     [InlineData("Gain0.25", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        Delta.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        Delta.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()

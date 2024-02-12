@@ -172,7 +172,7 @@ public class IEnumerableExtendersTests
 
         FluentActions.Invoking(() =>
             items.HasItems(minItems, maxItems, nonDefault))
-            .Should().Throw<ArgumentOutOfRangeException>();
+            .Should().Throw<VerbException>();
     }
 
     [Theory]
@@ -184,7 +184,7 @@ public class IEnumerableExtendersTests
         var items = new HashSet<int> { 1, 2, 3 };
 
         FluentActions.Invoking(() => items.HasItems(minItems, maxItems,
-            null)).Should().Throw<ArgumentOutOfRangeException>();
+            null)).Should().Throw<VerbException>();
     }
 
     [Theory]

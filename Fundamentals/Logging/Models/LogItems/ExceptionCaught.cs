@@ -7,12 +7,12 @@ using System.Diagnostics;
 
 namespace SquidEyes.Fundamentals;
 
-public class ErrorCaught : LogItemBase
+public class ExceptionCaught : LogItemBase
 {
     private readonly ErrorInfo errorInfos;
     private readonly TagValueSet tagValues;
 
-    public ErrorCaught(Exception error,
+    public ExceptionCaught(Exception error,
         bool? withFileInfo = null, TagValueSet tagValues = null!)
         : base(Severity.Error)
     {
@@ -21,7 +21,8 @@ public class ErrorCaught : LogItemBase
         if (!withFileInfo.HasValue)
             withFileInfo = Debugger.IsAttached;
 
-        this.tagValues = tagValues.MustBe().True(v => v is null || !v.IsEmpty);
+        this.tagValues = tagValues.MustBe()
+            .True(v => v is null || !v.IsEmpty);
 
         errorInfos = new ErrorInfo(error, withFileInfo.Value);
     }
@@ -37,7 +38,10 @@ public class ErrorCaught : LogItemBase
         tagValues.Add((Tag.Create("Details"), errorInfos));
 
         if (this.tagValues != null)
-            tagValues.AddRange(this.tagValues!.Select(kv => (kv.Key, kv.Value)));
+        {
+            tagValues.AddRange(this.tagValues!
+                .Select(kv => (kv.Key, kv.Value)));
+        }
 
         return [.. tagValues];
     }

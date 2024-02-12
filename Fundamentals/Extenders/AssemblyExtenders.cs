@@ -17,7 +17,7 @@ public static class AssemblyExtenders
         var attribs = Attribute.GetCustomAttributes(
             assembly, typeof(T), false);
 
-        if (attribs != null && attribs.Any())
+        if (attribs != null && attribs.Length != 0)
             result = (T)attribs[0];
 
         return result;

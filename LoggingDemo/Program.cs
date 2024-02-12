@@ -42,8 +42,8 @@ var host = Host.CreateDefaultBuilder()
     .Build();
 
 // Log "LogonSuccess" (a custom log-item)
-Log.Logger.Log(new LogonSucess(Brokerage.CanonTrading,
-    new[] { Gateway.Chicago, Gateway.UsWest }));
+Log.Logger.Log(new LogonSucess(
+    Brokerage.CanonTrading, [Gateway.Chicago, Gateway.UsWest]));
 
 // Log "MiscLogItem" with a simple "Message" Context
 Log.Logger.Log(new MiscLogItem(Severity.Warn,
@@ -74,7 +74,9 @@ await host.RunAsync();
 Log.CloseAndFlush();
 
 Console.WriteLine();
-Console.WriteLine($"For more info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
+
+Console.WriteLine(
+    $"For info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
 
 // Loads (but doesn't validate!) configuration values
 static IConfiguration GetConfig(string[] args, string envVarPrefix)

@@ -26,8 +26,7 @@ public static class IEnumerableExtenders
             while (innerMoveNext());
         }
 
-        if (chunkSize < 1)
-            throw new ArgumentOutOfRangeException(nameof(chunkSize));
+        chunkSize.MustBe().Positive();
 
         using var e = enumerable.GetEnumerator();
 

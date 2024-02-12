@@ -27,10 +27,10 @@ public class PhoneTests
     [InlineData("+1215316555")]
     [InlineData("+121531655555")]
     [InlineData("")]
-    [InlineData(null)]
-    public void Create_BadInput_ThrowsError(string input)
+    [InlineData(null!)]
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => Phone.Create(input))
+        FluentActions.Invoking(() => Phone.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -48,9 +48,9 @@ public class PhoneTests
     [InlineData("+1215316555", false)]
     [InlineData("+121531655555", false)]
     [InlineData("", false)]
-    [InlineData(null, false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsPhoneInput().Should().Be(expected);
+    [InlineData(null!, false)]
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsPhoneInput().Should().Be(expected);
 
     [Theory]
     [InlineData("+442079476330", true)]
@@ -66,9 +66,9 @@ public class PhoneTests
     [InlineData("+1215316555", false)]
     [InlineData("+121531655555", false)]
     [InlineData("", false)]
-    [InlineData(null, false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        Phone.TryCreate(input, out var _).Should().Be(expected);
+    [InlineData(null!, false)]
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        Phone.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()

@@ -57,9 +57,9 @@ public class EmailTests
     [InlineData("somedude@10-minute-mail.com", false)]
     [InlineData("somedude@some_co.scam", false)]
     [InlineData("", false)]
-    [InlineData(null, false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsEmailInput().Should().Be(expected);
+    [InlineData(null!, false)]
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsEmailInput().Should().Be(expected);
 
     [Theory]
     [InlineData("somedude@someco.com", true)]
@@ -77,9 +77,9 @@ public class EmailTests
     [InlineData("somedude@10-minute-mail.com", false)]
     [InlineData("somedude@some_co.scam", false)]
     [InlineData("", false)]
-    [InlineData(null, false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        Email.TryCreate(input, out var _).Should().Be(expected);
+    [InlineData(null!, false)]
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        Email.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()

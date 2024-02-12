@@ -23,9 +23,9 @@ public abstract class LogItemBase
     public Severity Severity { get; }
     public Tag Activity { get; }
 
-    public abstract (Tag, object)[] GetTagValues();
-
     public virtual void Validate()
     {
     }
+
+    public abstract (Tag, object)[] GetTagValues();
 }

@@ -19,7 +19,7 @@ public static partial class ValidationExtenders
     private static readonly Regex cosmosNameValidator =
         GetCosmosNameValidator();
 
-    private static readonly Dictionary<string, Regex> regexes = new();
+    private static readonly Dictionary<string, Regex> regexes = [];
 
     public static bool HasItems<T>(
         this IEnumerable<T> items, bool nonDefault = true)
@@ -44,11 +44,8 @@ public static partial class ValidationExtenders
     public static bool HasItems<T>(this IEnumerable<T> items,
         int minItems, int maxItems, Func<T, bool>? isValid)
     {
-        if (minItems < 1)
-            throw new ArgumentOutOfRangeException(nameof(minItems));
-
-        if (maxItems < minItems)
-            throw new ArgumentOutOfRangeException(nameof(maxItems));
+        minItems.MustBe().Positive();
+        maxItems.MustBe().GreaterThanOrEqualTo(minItems);
 
         int count = 0;
 
@@ -187,7 +184,7 @@ public static partial class ValidationExtenders
 
     public static bool IsNotEmpty<T>(this List<T> value)
     {
-        return value is not null && value.Any() && !value
+        return value is not null && value.Count != 0 && !value
             .Any(v => v.IsDefault() || v.IsDefault());
     }
 
@@ -213,14 +210,14 @@ public static partial class ValidationExtenders
     }
 
     public static bool HasFlags(this Enum value) => value.GetType()
-        .GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+        .GetCustomAttributes(typeof(FlagsAttribute), false).Length != 0;
 
     public static bool IsPhoneNumber(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
 
-        if (!value.StartsWith("+") && value.Length > 2)
+        if (!value.StartsWith('+') && value.Length > 2)
             return false;
 
         try

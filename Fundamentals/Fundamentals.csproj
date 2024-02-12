@@ -11,7 +11,7 @@
 		<Authors>Louis S. Berman</Authors>
 		<Company>SquidEyes, LLC.</Company>
 		<Description>A set of helper classes and extension methods</Description>
-		<Copyright>Copyright 2023 by SquidEyes, LLC.</Copyright>
+		<Copyright>Copyright 2024 by SquidEyes, LLC.</Copyright>
         <PackageId>SquidEyes.Fundamentals</PackageId>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>

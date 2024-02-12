@@ -28,7 +28,7 @@ public class MultiTagTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("Tag1:Tag2:Tag3:Tag4:Tag5:Tag6:Tag7:Tag8:Tag9:Tag10:Tag11")]
@@ -41,14 +41,14 @@ public class MultiTagTests
     [InlineData("Tag1:Bad Tag")]
     [InlineData("Tag1:")]
     [InlineData(":Tag2")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => MultiTag.Create(input))
+        FluentActions.Invoking(() => MultiTag.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("Tag1", true)]
@@ -64,11 +64,11 @@ public class MultiTagTests
     [InlineData("Tag1:Bad Tag", false)]
     [InlineData("Tag1:", false)]
     [InlineData(":Tag2", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsMultiTagInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsMultiTagInput().Should().Be(expected);
 
     [Theory]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("Tag1", true)]
@@ -84,8 +84,8 @@ public class MultiTagTests
     [InlineData("Tag1:Bad Tag", false)]
     [InlineData("Tag1:", false)]
     [InlineData(":Tag2", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        MultiTag.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        MultiTag.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()

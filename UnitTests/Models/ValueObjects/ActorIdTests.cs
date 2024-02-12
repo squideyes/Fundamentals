@@ -23,7 +23,7 @@ public class ActorIdTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("AAAAAAA")]
@@ -34,15 +34,15 @@ public class ActorIdTests
     [InlineData("AAAAAAA1")]
     [InlineData("AAAAAAAO")]
     [InlineData("AAAAAAA0")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => ActorId.Create(input))
+        FluentActions.Invoking(() => ActorId.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
     [InlineData("AAAAAAAA", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("AAAAAAA", false)]
@@ -53,12 +53,12 @@ public class ActorIdTests
     [InlineData("AAAAAAA1", false)]
     [InlineData("AAAAAAAO", false)]
     [InlineData("AAAAAAA0", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsActorIdInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsActorIdInput().Should().Be(expected);
 
     [Theory]
     [InlineData("AAAAAAAA", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("AAAAAAA", false)]
@@ -69,8 +69,8 @@ public class ActorIdTests
     [InlineData("AAAAAAA1", false)]
     [InlineData("AAAAAAAO", false)]
     [InlineData("AAAAAAA0", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        ActorId.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        ActorId.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void Next_NoInput_Constructs()

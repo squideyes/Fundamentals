@@ -25,7 +25,7 @@ public class AccountIdTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("AAAAAAAAT000")]
@@ -36,15 +36,15 @@ public class AccountIdTests
     [InlineData("AAAAAAA1T001")]
     [InlineData("AAAAAAAOT001")]
     [InlineData("AAAAAAA0T001")]
-    public void Create_BadInput_ThrowsError(string input)
+    public void Create_BadInput_ThrowsError(string? input)
     {
-        FluentActions.Invoking(() => AccountId.Create(input))
+        FluentActions.Invoking(() => AccountId.Create(input!))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Theory]
     [InlineData("AAAAAAAAT001", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("AAAAAAAAZ001", false)]
@@ -57,12 +57,12 @@ public class AccountIdTests
     [InlineData("AAAAAAA1T001", false)]
     [InlineData("AAAAAAAOT001", false)]
     [InlineData("AAAAAAA0T001", false)]
-    public void IsValue_MixedInput_ReturnsExpected(string input, bool expected) =>
-        input.IsAccountIdInput().Should().Be(expected);
+    public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        input!.IsAccountIdInput().Should().Be(expected);
 
     [Theory]
     [InlineData("AAAAAAAAT001", true)]
-    [InlineData(null, false)]
+    [InlineData(null!, false)]
     [InlineData("", false)]
     [InlineData(" ", false)]
     [InlineData("AAAAAAAAZ001", false)]
@@ -75,8 +75,8 @@ public class AccountIdTests
     [InlineData("AAAAAAA1T001", false)]
     [InlineData("AAAAAAAOT001", false)]
     [InlineData("AAAAAAA0T001", false)]
-    public void TryCreate_MixedInput_ReturnsExpected(string input, bool expected) =>
-        AccountId.TryCreate(input, out var _).Should().Be(expected);
+    public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>
+        AccountId.TryCreate(input!, out var _).Should().Be(expected);
 
     [Fact]
     public void TypeEquals_GoodInput_ReturnsExpected()
