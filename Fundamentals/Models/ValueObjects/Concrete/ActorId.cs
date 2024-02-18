@@ -16,8 +16,8 @@ public sealed class ActorId : ValueObjectBase<ActorId>
         Value = input;
     }
 
-    public static bool IsInput(string input) => input is not null
-        && input.Length == Length && input.All(Base32Id.Contains);
+    public static bool IsInput(string input) => 
+        Base32Id.IsInput(input, Length);
 
     public static ActorId Create(string input) =>
         DoCreate(input, IsInput);
