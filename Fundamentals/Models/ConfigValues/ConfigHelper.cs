@@ -4,6 +4,7 @@
 // ********************************************************
 
 using ErrorOr;
+using Microsoft.Extensions.Configuration;
 using static SquidEyes.Fundamentals.ConfigValueStatus;
 
 namespace SquidEyes.Fundamentals;
