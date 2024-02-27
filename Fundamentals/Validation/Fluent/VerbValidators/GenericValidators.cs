@@ -95,4 +95,12 @@ public static class GenericValidators
         return m.ThrowErrorIfNotIsValid(v => isValid(v),
             "Value does not fall within the expected range.");
     }
+
+    [DebuggerHidden]
+    public static T Literal<T>(this MustBe<T> m, T literal)
+        where T : IEquatable<T>
+    {
+        return m.ThrowErrorIfNotIsValid(v => v.Equals(literal),
+            v => $"be {literal} (Actual Value: {v}).");
+    }
 }
