@@ -154,13 +154,14 @@ public static class ConfigHelper
             return new ConfigValue<T>(tag, value);
     }
 
-    public static ConfigValue<T> Create<T>(Tag tag, string input, 
+    public static ConfigValue<T> Create<T>(Tag tag, string input,
         Func<string, T> convert, Func<T, bool> isValid = null!)
     {
         if (input is null)
             return new ConfigValue<T>(tag, input!, NullInput);
 
-        var converted = convert(input);
+        if (!Safe.TryGetValue(() => convert(input), out T converted))
+            return new ConfigValue<T>(tag, input, ParseError);
 
         if (isValid is not null && !isValid(converted))
             return new ConfigValue<T>(tag, input, NotValid);
