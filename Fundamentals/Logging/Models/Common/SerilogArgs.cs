@@ -24,7 +24,7 @@ public class SerilogArgs
 
         var key = ConfigHelper.CreateString(
             "SeqApiKey", config["Serilog:SeqApiKey"]!,
-            v => v.IsNullOrNonNullAndTrimmed());
+                v => v.IsNullOrNonNullAndTrimmed());
 
         var ms = ConfigHelper.CreateEnum<Severity>(
             "MinSeverity", config["Serilog:MinSeverity"]!);

@@ -20,10 +20,6 @@ public static class ConfigExtenders
         return value;
     }
 
-    public static bool IsBadInput(this string value) =>
-        string.IsNullOrWhiteSpace(value)
-            || value.Any(c => !char.IsAsciiLetterOrDigit(c));
-
     public static ErrorOr<Dictionary<string, string>> GetDict(
         this IConfiguration config, string key,
         string errorOrCode, bool mayBeEmpty = false,
