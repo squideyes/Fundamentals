@@ -176,4 +176,89 @@ public static class ConfigExtenders
 
         return new ConfigPhone(tag, phone);
     }
+
+    //////////////////////////
+
+    public static ConfigMultiTag ToConfigMultiTag(
+        this string input, Tag tag, Func<MultiTag, bool> isValid = null!)
+    {
+        return input.ToConfigMultiTag(tag, false, isValid);
+    }
+
+    public static ConfigMultiTag ToConfigMultiTag(this string input,
+        Tag tag, bool isOptional, Func<MultiTag, bool> isValid = null!)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            if (isOptional)
+                return new ConfigMultiTag(tag, null!);
+
+            return new ConfigMultiTag(tag, input!, NullOrEmpty);
+        }
+
+        if (!MultiTag.TryCreate(input, out MultiTag? multiTag))
+            return new ConfigMultiTag(tag, input, ParseError);
+
+        if (isValid is not null && !isValid(multiTag))
+            return new ConfigMultiTag(tag, input, NotValid);
+
+        return new ConfigMultiTag(tag, multiTag);
+    }
+
+    //////////////////////////
+
+    public static ConfigTag ToConfigTag(
+        this string input, Tag tag, Func<Tag, bool> isValid = null!)
+    {
+        return input.ToConfigTag(tag, false, isValid);
+    }
+
+    public static ConfigTag ToConfigTag(this string input,
+        Tag tag, bool isOptional, Func<Tag, bool> isValid = null!)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            if (isOptional)
+                return new ConfigTag(tag, null!);
+
+            return new ConfigTag(tag, input!, NullOrEmpty);
+        }
+
+        if (!Tag.TryCreate(input, out Tag? data))
+            return new ConfigTag(tag, input, ParseError);
+
+        if (isValid is not null && !isValid(data))
+            return new ConfigTag(tag, input, NotValid);
+
+        return new ConfigTag(tag, data);
+    }
+
+
+    //////////////////////////
+
+    public static ConfigActorId ToConfigActorId(
+        this string input, Tag tag, Func<ActorId, bool> isValid = null!)
+    {
+        return input.ToConfigActorId(tag, false, isValid);
+    }
+
+    public static ConfigActorId ToConfigActorId(this string input,
+        Tag tag, bool isOptional, Func<ActorId, bool> isValid = null!)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            if (isOptional)
+                return new ConfigActorId(tag, null!);
+
+            return new ConfigActorId(tag, input!, NullOrEmpty);
+        }
+
+        if (!ActorId.TryCreate(input, out ActorId? actorId))
+            return new ConfigActorId(tag, input, ParseError);
+
+        if (isValid is not null && !isValid(actorId))
+            return new ConfigActorId(tag, input, NotValid);
+
+        return new ConfigActorId(tag, actorId);
+    }
 }

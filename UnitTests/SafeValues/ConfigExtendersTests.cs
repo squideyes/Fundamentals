@@ -153,6 +153,36 @@ public class ConfigExtendersTests
         "Absolute".ToConfigEnum<UriKind>("X").Value.Should().Be(UriKind.Absolute);
     }
 
+    [Fact]
+    public void GoodTag_Should_ConvertToConfigTag()
+    {
+        const string TAG = "Tag1";
+
+        TAG.ToConfigTag("X").Value.Should().Be(Tag.Create(TAG));
+        "".ToConfigTag("X", true).Value.Should().BeNull();
+        TAG.ToConfigTag("X").Value.Should().Be(Tag.Create(TAG));
+    }
+
+    [Fact]
+    public void GoodMultiTag_Should_ConvertToConfigMultiTag()
+    {
+        const string MT = "Tag1:Tag2:Tag3";
+
+        MT.ToConfigMultiTag("X").Value.Should().Be(MultiTag.Create(MT));
+        "".ToConfigMultiTag("X", true).Value.Should().BeNull();
+        MT.ToConfigMultiTag("X").Value.Should().Be(MultiTag.Create(MT));
+    }
+
+    [Fact]
+    public void GoodActorId_Should_ConvertToConfigActorId()
+    {
+        const string ID = "ABCDEFGH";
+
+        ID.ToConfigActorId("X").Value.Should().Be(ActorId.Create(ID));
+        "".ToConfigActorId("X", true).Value.Should().BeNull();
+        ID.ToConfigActorId("X").Value.Should().Be(ActorId.Create(ID));
+    }
+
     private static void ConfigValueTest<T>(string input, T expected)
         where T : struct, IParsable<T>
     {
