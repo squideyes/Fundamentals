@@ -5,11 +5,10 @@
 
 namespace SquidEyes.Fundamentals
 {
-    public enum ConfigValueStatus
+    public enum SoftArgStatus
     {
         IsValid = 1,
-        NullInput,
-        BadInput,
+        NullOrEmpty,
         ParseError,
         NotValid
     }

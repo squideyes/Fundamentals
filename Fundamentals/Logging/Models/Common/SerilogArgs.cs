@@ -1,4 +1,9 @@
-﻿using ErrorOr;
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
+
+using ErrorOr;
 using Microsoft.Extensions.Configuration;
 
 namespace SquidEyes.Fundamentals;
@@ -19,23 +24,24 @@ public class SerilogArgs
 
     public static ErrorOr<SerilogArgs> Create(IConfiguration config)
     {
-        var uri = ConfigHelper.CreateUri(
-            "SeqApiUri", config["Serilog:SeqApiUri"]!);
+        //var uri = config["Serilog:SeqApiUri"]!
+        //    .ToSoftUri("SeqApiUri", UriKind.Absolute);
 
-        var key = ConfigHelper.CreateString(
-            "SeqApiKey", config["Serilog:SeqApiKey"]!,
-                v => v.IsNullOrNonNullAndTrimmed());
+        //var key = config["Serilog:SeqApiKey"]!.ToSoftString(
+        //    "SeqApiKey", v => v.IsNullOrNonNullAndTrimmed());
 
-        var ms = ConfigHelper.CreateEnum<Severity>(
-            "MinSeverity", config["Serilog:MinSeverity"]!);
+        //var ms = config["Serilog:MinSeverity"]!
+        //    .ToSoftEnum<Severity>("MinSeverity");
 
-        if (ConfigHelper.TryGetErrors("SerilogArgs.CreateError",
-            [uri, key, ms], out List<Error> errors))
-        {
-            return errors;
-        }
+        //if (SoftValueExtenders.TryGetErrors("SerilogArgs.CreateError",
+        //    [uri, key, ms], out List<Error> errors))
+        //{
+        //    return errors;
+        //}
 
-        return new SerilogArgs(
-            uri.Value!, key.Value.WhitespaceToNull(), ms.Value);
+        //return new SerilogArgs(
+        //    uri.Value!, key.Value.WhitespaceToNull(), ms.Value);
+
+        return default;
     }
 }

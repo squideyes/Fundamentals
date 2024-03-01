@@ -7,10 +7,10 @@ using ErrorOr;
 
 namespace SquidEyes.Fundamentals;
 
-public interface IConfigValue
+public interface ISoftArg
 {
     bool IsValid { get; }
-    ConfigValueStatus Status { get; }
+    SoftArgStatus Status { get; }
     Tag Tag { get; }
 
     Error ToError(string code = null!);

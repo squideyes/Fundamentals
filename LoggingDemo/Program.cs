@@ -118,30 +118,36 @@ void Customize(LoggerConfiguration config)
 static bool TryGetEnrichWiths(Serilog.ILogger logger,
     IConfiguration config, out TagValueSet enrichWiths)
 {
-    var validationResult = new ValidationResult();
+    //var validationResult = new ValidationResult();
 
-    var junketId = ConfigHelper.CreateInt32("JunketId",
-        config["Context:JunketId"]!, v => v > 0).Validate(validationResult);
+    //var junketId = config["Context:JunketId"]!
+    //    .ToSoftInt32("JunketId", v => v > 0)
+    //        .Validate(validationResult);
 
-    var userId = ConfigHelper.CreateString("UserId", config["Context:UserId"]!,
-        v => v.IsNonNullAndTrimmed()).Validate(validationResult);
+    //var userId = config["Context:UserId"]!.ToSoftString(
+    //    "UserId",v => v.IsNonNullAndTrimmed())
+    //        .Validate(validationResult);
 
-    if (!validationResult.IsValid)
-    {
-        enrichWiths = null!;
+    //if (!validationResult.IsValid)
+    //{
+    //    enrichWiths = null!;
 
-        foreach (var e in validationResult.Errors)
-            logger.Warning($"{e.PropertyName}: {e.ErrorMessage}");
+    //    foreach (var e in validationResult.Errors)
+    //        logger.Warning($"{e.PropertyName}: {e.ErrorMessage}");
 
-        return false;
-    }
+    //    return false;
+    //}
 
-    enrichWiths = new TagValueSet
-    {
-        { junketId.Tag, junketId.Value },
-        { userId.Tag, userId.Value! },
-        { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
-    };
+    //enrichWiths = new TagValueSet
+    //{
+    //    { junketId.Tag, junketId.Value },
+    //    { userId.Tag, userId.Value! },
+    //    { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
+    //};
 
-    return true;
+    //return true;
+
+    enrichWiths = new TagValueSet();
+
+    return false;
 }

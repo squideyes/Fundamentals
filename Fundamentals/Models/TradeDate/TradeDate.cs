@@ -1,4 +1,7 @@
-﻿//namespace SquidEyes.Fundamentals;
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
 //public readonly struct TradeDate : IEquatable<TradeDate>, IComparable<TradeDate>
 //{
