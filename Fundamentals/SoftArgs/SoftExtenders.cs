@@ -4,67 +4,14 @@
 // ********************************************************
 
 using ErrorOr;
-using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
-using System.Data.SqlTypes;
-using static SquidEyes.Fundamentals.SoftArgStatus;
+using static SquidEyes.Fundamentals.SoftStatus;
 
 namespace SquidEyes.Fundamentals;
 
-public static class SoftArgExtenders
+public static class SoftExtenders
 {
-    //public static SoftValue<T> Validate<T>(
-    //    this SoftValue<T> value, ValidationResult result)
-    //{
-    //    if (!value.IsValid)
-    //        result.Errors.Add(value.ToValidationFailure());
-
-    //    return value;
-    //}
-
-    //////////////////////////
-
-    public static ErrorOr<Dictionary<string, string>> GetDict(
-        this IConfiguration config, string key,
-        string errorOrCode, bool mayBeEmpty = false,
-        Func<KeyValuePair<string, string>, bool> isValid = null!)
-    {
-        Dictionary<string, string> GetDict(string key)
-        {
-            var dict = new Dictionary<string, string>();
-
-            config.GetSection(key).Bind(dict);
-
-            return dict;
-        }
-
-        Error AddBadKeyValueError(string suffix)
-        {
-            return Error.Validation(errorOrCode,
-                $"One or more \"{key}\" key/values {suffix}!");
-        }
-
-        var dict = GetDict(key);
-
-        if (dict.HasItems())
-        {
-            if (isValid is null || dict.All(kv => isValid(kv)))
-                return dict;
-            else
-                return AddBadKeyValueError("are invalid");
-        }
-        else
-        {
-            if (mayBeEmpty)
-                return dict;
-            else
-                return AddBadKeyValueError("must be supplied!");
-        }
-    }
-
-    //////////////////////////
-
-    public static SoftValue<T> ToSoftValue<T>(this string input, 
+    public static SoftValue<T> ToSoftValue<T>(this string input,
         Tag tag, bool isOptional = false, Func<T, bool> isValid = null!)
             where T : struct, IParsable<T>
     {
@@ -72,8 +19,8 @@ public static class SoftArgExtenders
         {
             if (isOptional)
                 return new SoftValue<T>(tag, null!);
-            else
-                return new SoftValue<T>(tag, input!, NullOrEmpty);
+
+            return new SoftValue<T>(tag, input!, NullOrEmpty);
         }
 
         if (!T.TryParse(input, null, out T value))
@@ -94,8 +41,8 @@ public static class SoftArgExtenders
         {
             if (isOptional)
                 return new SoftString(tag, null!);
-            else
-                return new SoftString(tag, input!, NullOrEmpty);
+
+            return new SoftString(tag, input!, NullOrEmpty);
         }
 
         if (isValid is not null && !isValid(input))
@@ -114,8 +61,8 @@ public static class SoftArgExtenders
         {
             if (isOptional)
                 return new SoftUri(tag, null!);
-            else
-                return new SoftUri(tag, input!, NullOrEmpty);
+
+            return new SoftUri(tag, input!, NullOrEmpty);
         }
 
         if (!Uri.TryCreate(input, uriKind, out Uri? uri))
@@ -137,8 +84,8 @@ public static class SoftArgExtenders
         {
             if (isOptional)
                 return new SoftEnum<T>(tag, null!);
-            else
-                return new SoftEnum<T>(tag, input!, NullOrEmpty);
+
+            return new SoftEnum<T>(tag, input!, NullOrEmpty);
         }
 
         if (!Enum.TryParse<T>(input, out var value))
@@ -153,7 +100,7 @@ public static class SoftArgExtenders
     //////////////////////////
 
     public static bool TryGetErrors(string code,
-        IEnumerable<ISoftArg> values, out List<Error> errors)
+        IEnumerable<SoftBase> values, out List<Error> errors)
     {
         errors = [];
 

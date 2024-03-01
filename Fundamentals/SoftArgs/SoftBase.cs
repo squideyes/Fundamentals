@@ -3,22 +3,22 @@ using FluentValidation.Results;
 
 namespace SquidEyes.Fundamentals;
 
-public abstract class SoftArgBase : ISoftArg
+public abstract class SoftBase
 {
     public Tag Tag { get; }
-    public SoftArgStatus Status { get; }
+    public SoftStatus Status { get; }
     public string? Message { get; }
 
-    public bool IsValid => Status == SoftArgStatus.IsValid;
+    public bool IsValid => Status == SoftStatus.IsValid;
 
-    protected SoftArgBase(Tag tag)
+    protected SoftBase(Tag tag)
     {
         Tag = tag;
-        Status = SoftArgStatus.IsValid;
+        Status = SoftStatus.IsValid;
         Message = null;
     }
 
-    protected SoftArgBase(Tag tag, string input, SoftArgStatus status)
+    protected SoftBase(Tag tag, string input, SoftStatus status)
     {
         Tag = tag;
 
@@ -26,11 +26,11 @@ public abstract class SoftArgBase : ISoftArg
 
         Message = status switch
         {
-            SoftArgStatus.NullOrEmpty =>
+            SoftStatus.NullOrEmpty =>
                 $"The '{tag}' input may not be null or empty",
-            SoftArgStatus.ParseError =>
+            SoftStatus.ParseError =>
                 $"The '{tag}' input could not be parsed (Input: {input})",
-            SoftArgStatus.NotValid =>
+            SoftStatus.NotValid =>
                 $"The '{tag}' value is an invalid string.",
             _ =>
                 throw new ArgumentOutOfRangeException(nameof(status))
@@ -39,7 +39,7 @@ public abstract class SoftArgBase : ISoftArg
 
     public Error ToError(string code = null!)
     {
-        if (Status == SoftArgStatus.IsValid)
+        if (Status == SoftStatus.IsValid)
             throw new InvalidOperationException("IsValid == false!");
 
         return Error.Validation(code, Message!);
@@ -50,7 +50,7 @@ public abstract class SoftArgBase : ISoftArg
 
     protected void ThrowWhenNotIsValid()
     {
-        if (Status != SoftArgStatus.IsValid)
+        if (Status != SoftStatus.IsValid)
         {
             throw new InvalidOperationException(
                 "A non-valid value may not be returned!");

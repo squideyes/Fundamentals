@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftEnum<T> : SoftArgBase
+public class SoftEnum<T> : SoftBase
     where T : struct, Enum
 {
     public SoftEnum(Tag tag, T? value)
@@ -14,7 +14,7 @@ public class SoftEnum<T> : SoftArgBase
         Value = value;
     }
 
-    public SoftEnum(Tag tag, string input, SoftArgStatus status)
+    public SoftEnum(Tag tag, string input, SoftStatus status)
         : base(tag, input, status)
     {
     }

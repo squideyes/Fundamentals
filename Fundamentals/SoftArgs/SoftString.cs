@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftString : SoftArgBase
+public class SoftString : SoftBase
 {
     public SoftString(Tag tag, string value)
         : base(tag)
@@ -13,7 +13,7 @@ public class SoftString : SoftArgBase
         Value = value;
     }
 
-    public SoftString(Tag tag, string input, SoftArgStatus status)
+    public SoftString(Tag tag, string input, SoftStatus status)
         : base(tag, input, status)
     {
     }

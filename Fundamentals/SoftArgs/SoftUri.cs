@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftUri : SoftArgBase
+public class SoftUri : SoftBase
 {
     public SoftUri(Tag tag, Uri value)
         : base(tag)
@@ -13,7 +13,7 @@ public class SoftUri : SoftArgBase
         Value = value;
     }
 
-    public SoftUri(Tag tag, string input, SoftArgStatus status)
+    public SoftUri(Tag tag, string input, SoftStatus status)
         : base(tag, input, status)
     {
     }
