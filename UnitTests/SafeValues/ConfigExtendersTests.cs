@@ -104,10 +104,8 @@ public class ConfigExtendersTests
     }
 
     [Fact]
-    public void GoodGuid_Should_ConvertToConfigValue()
-    {
+    public void GoodGuid_Should_ConvertToConfigValue() =>
         Guid.NewGuid().Do(v => ConfigValueTest(v.ToString(), v));
-    }
 
     [Fact]
     public void GoodString_Should_ConvertToConfigString()
@@ -125,6 +123,26 @@ public class ConfigExtendersTests
         URI.ToConfigUri("X").Value.Should().Be(new Uri(URI));
         "".ToConfigUri("X", UriKind.Absolute, true).Value.Should().BeNull();
         URI.ToConfigUri("X").Value.Should().Be(new Uri(URI));
+    }
+
+    [Fact]
+    public void GoodEmail_Should_ConvertToConfigEmail()
+    {
+        const string EMAIL = "dude@someco.com";
+
+        EMAIL.ToConfigEmail("X").Value.Should().Be(Email.Create(EMAIL));
+        "".ToConfigEmail("X", true).Value.Should().BeNull();
+        EMAIL.ToConfigEmail("X").Value.Should().Be(Email.Create(EMAIL));
+    }
+
+    [Fact]
+    public void GoodPhone_Should_ConvertToConfigPhone()
+    {
+        const string EMAIL = "+1 (234) 567-8901";
+
+        EMAIL.ToConfigPhone("X").Value.Should().Be(Phone.Create(EMAIL));
+        "".ToConfigPhone("X", true).Value.Should().BeNull();
+        EMAIL.ToConfigPhone("X").Value.Should().Be(Phone.Create(EMAIL));
     }
 
     [Fact]

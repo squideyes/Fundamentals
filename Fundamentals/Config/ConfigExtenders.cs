@@ -98,6 +98,50 @@ public static class ConfigExtenders
 
     //////////////////////////
 
+    public static ConfigEmail ToConfigEmail(this string input, Tag tag,
+        bool isOptional = false, Func<Email, bool> isValid = null!)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            if (isOptional)
+                return new ConfigEmail(tag, null!);
+
+            return new ConfigEmail(tag, input!, NullOrEmpty);
+        }
+
+        if (!Email.TryCreate(input, out Email? email))
+            return new ConfigEmail(tag, input, ParseError);
+
+        if (isValid is not null && !isValid(email))
+            return new ConfigEmail(tag, input, NotValid);
+
+        return new ConfigEmail(tag, email);
+    }
+
+    //////////////////////////
+
+    public static ConfigPhone ToConfigPhone(this string input, Tag tag,
+        bool isOptional = false, Func<Phone, bool> isValid = null!)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            if (isOptional)
+                return new ConfigPhone(tag, null!);
+
+            return new ConfigPhone(tag, input!, NullOrEmpty);
+        }
+
+        if (!Phone.TryCreate(input, out Phone? phone))
+            return new ConfigPhone(tag, input, ParseError);
+
+        if (isValid is not null && !isValid(phone))
+            return new ConfigPhone(tag, input, NotValid);
+
+        return new ConfigPhone(tag, phone);
+    }
+
+    //////////////////////////    
+
     public static bool TryGetErrors(
         this IEnumerable<ConfigBase> values, 
             string code, out List<Error> errors)
