@@ -139,21 +139,4 @@ public static class ConfigExtenders
 
         return new ConfigPhone(tag, phone);
     }
-
-    //////////////////////////    
-
-    public static bool TryGetErrors(
-        this IEnumerable<ConfigBase> values, 
-            string code, out List<Error> errors)
-    {
-        errors = [];
-
-        foreach (var value in values)
-        {
-            if (!value.IsValid)
-                errors.Add(value.ToError(code));
-        }
-
-        return errors.Count > 0;
-    }
 }
