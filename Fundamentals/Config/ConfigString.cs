@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftUri : SoftBase
+public class ConfigString : ConfigBase
 {
-    public SoftUri(Tag tag, Uri value)
+    public ConfigString(Tag tag, string value)
         : base(tag)
     {
         Value = value;
     }
 
-    public SoftUri(Tag tag, string input, SoftStatus status)
+    public ConfigString(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public Uri Value { get; } = null!;
+    public string Value { get; } = null!;
 }

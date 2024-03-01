@@ -5,16 +5,16 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftValue<T> : SoftBase
+public class ConfigValue<T> : ConfigBase
     where T : struct, IParsable<T>
 {
-    public SoftValue(Tag tag, T? value)
+    public ConfigValue(Tag tag, T? value)
         : base(tag)
     {
         Value = value;
     }
 
-    public SoftValue(Tag tag, string input, SoftStatus status)
+    public ConfigValue(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }

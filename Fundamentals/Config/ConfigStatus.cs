@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals
 {
-    public enum SoftStatus
+    public enum ConfigStatus
     {
         IsValid = 1,
         NullOrEmpty,

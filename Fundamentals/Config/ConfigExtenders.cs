@@ -4,103 +4,103 @@
 // ********************************************************
 
 using ErrorOr;
-using Microsoft.Extensions.Configuration;
-using static SquidEyes.Fundamentals.SoftStatus;
+using static SquidEyes.Fundamentals.ConfigStatus;
 
 namespace SquidEyes.Fundamentals;
 
-public static class SoftExtenders
+public static class ConfigExtenders
 {
-    public static SoftValue<T> ToSoftValue<T>(this string input,
+    public static ConfigValue<T> ToConfigValue<T>(this string input,
         Tag tag, bool isOptional = false, Func<T, bool> isValid = null!)
             where T : struct, IParsable<T>
     {
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional)
-                return new SoftValue<T>(tag, null!);
+                return new ConfigValue<T>(tag, null!);
 
-            return new SoftValue<T>(tag, input!, NullOrEmpty);
+            return new ConfigValue<T>(tag, input!, NullOrEmpty);
         }
 
         if (!T.TryParse(input, null, out T value))
-            return new SoftValue<T>(tag, input, ParseError);
+            return new ConfigValue<T>(tag, input, ParseError);
 
         if (isValid is not null && !isValid(value))
-            return new SoftValue<T>(tag, input, NotValid);
+            return new ConfigValue<T>(tag, input, NotValid);
 
-        return new SoftValue<T>(tag, value);
+        return new ConfigValue<T>(tag, value);
     }
 
     //////////////////////////
 
-    public static SoftString ToSoftString(this string input, Tag tag,
+    public static ConfigString ToConfigString(this string input, Tag tag,
         bool isOptional = false, Func<string, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional)
-                return new SoftString(tag, null!);
+                return new ConfigString(tag, null!);
 
-            return new SoftString(tag, input!, NullOrEmpty);
+            return new ConfigString(tag, input!, NullOrEmpty);
         }
 
         if (isValid is not null && !isValid(input))
-            return new SoftString(tag, input, NotValid);
+            return new ConfigString(tag, input, NotValid);
 
-        return new SoftString(tag, input);
+        return new ConfigString(tag, input);
     }
 
     //////////////////////////
 
-    public static SoftUri ToSoftUri(this string input, Tag tag,
+    public static ConfigUri ToConfigUri(this string input, Tag tag,
         UriKind uriKind = UriKind.Absolute,
         bool isOptional = false, Func<Uri, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional)
-                return new SoftUri(tag, null!);
+                return new ConfigUri(tag, null!);
 
-            return new SoftUri(tag, input!, NullOrEmpty);
+            return new ConfigUri(tag, input!, NullOrEmpty);
         }
 
         if (!Uri.TryCreate(input, uriKind, out Uri? uri))
-            return new SoftUri(tag, input, ParseError);
+            return new ConfigUri(tag, input, ParseError);
 
         if (isValid is not null && !isValid(uri))
-            return new SoftUri(tag, input, NotValid);
+            return new ConfigUri(tag, input, NotValid);
 
-        return new SoftUri(tag, uri);
+        return new ConfigUri(tag, uri);
     }
 
     //////////////////////////
 
-    public static SoftEnum<T> ToSoftEnum<T>(this string input,
+    public static ConfigEnum<T> ToConfigEnum<T>(this string input,
         Tag tag, bool isOptional = true, Func<T, bool> isValid = null!)
             where T : struct, Enum
     {
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional)
-                return new SoftEnum<T>(tag, null!);
+                return new ConfigEnum<T>(tag, null!);
 
-            return new SoftEnum<T>(tag, input!, NullOrEmpty);
+            return new ConfigEnum<T>(tag, input!, NullOrEmpty);
         }
 
         if (!Enum.TryParse<T>(input, out var value))
-            return new SoftEnum<T>(tag, input, ParseError);
+            return new ConfigEnum<T>(tag, input, ParseError);
 
         if (isValid is not null && !isValid(value))
-            return new SoftEnum<T>(tag, input, NotValid);
+            return new ConfigEnum<T>(tag, input, NotValid);
 
-        return new SoftEnum<T>(tag, value);
+        return new ConfigEnum<T>(tag, value);
     }
 
     //////////////////////////
 
-    public static bool TryGetErrors(string code,
-        IEnumerable<SoftBase> values, out List<Error> errors)
+    public static bool TryGetErrors(
+        this IEnumerable<ConfigBase> values, 
+            string code, out List<Error> errors)
     {
         errors = [];
 

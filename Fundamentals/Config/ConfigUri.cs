@@ -5,19 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class SoftEnum<T> : SoftBase
-    where T : struct, Enum
+public class ConfigUri : ConfigBase
 {
-    public SoftEnum(Tag tag, T? value)
+    public ConfigUri(Tag tag, Uri value)
         : base(tag)
     {
         Value = value;
     }
 
-    public SoftEnum(Tag tag, string input, SoftStatus status)
+    public ConfigUri(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public T? Value { get; } = null!;
+    public Uri Value { get; } = null!;
 }

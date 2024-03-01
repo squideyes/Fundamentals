@@ -3,22 +3,22 @@ using FluentValidation.Results;
 
 namespace SquidEyes.Fundamentals;
 
-public abstract class SoftBase
+public abstract class ConfigBase
 {
     public Tag Tag { get; }
-    public SoftStatus Status { get; }
+    public ConfigStatus Status { get; }
     public string? Message { get; }
 
-    public bool IsValid => Status == SoftStatus.IsValid;
+    public bool IsValid => Status == ConfigStatus.IsValid;
 
-    protected SoftBase(Tag tag)
+    protected ConfigBase(Tag tag)
     {
         Tag = tag;
-        Status = SoftStatus.IsValid;
+        Status = ConfigStatus.IsValid;
         Message = null;
     }
 
-    protected SoftBase(Tag tag, string input, SoftStatus status)
+    protected ConfigBase(Tag tag, string input, ConfigStatus status)
     {
         Tag = tag;
 
@@ -26,11 +26,11 @@ public abstract class SoftBase
 
         Message = status switch
         {
-            SoftStatus.NullOrEmpty =>
+            ConfigStatus.NullOrEmpty =>
                 $"The '{tag}' input may not be null or empty",
-            SoftStatus.ParseError =>
+            ConfigStatus.ParseError =>
                 $"The '{tag}' input could not be parsed (Input: {input})",
-            SoftStatus.NotValid =>
+            ConfigStatus.NotValid =>
                 $"The '{tag}' value is an invalid string.",
             _ =>
                 throw new ArgumentOutOfRangeException(nameof(status))
@@ -39,7 +39,7 @@ public abstract class SoftBase
 
     public Error ToError(string code = null!)
     {
-        if (Status == SoftStatus.IsValid)
+        if (Status == ConfigStatus.IsValid)
             throw new InvalidOperationException("IsValid == false!");
 
         return Error.Validation(code, Message!);
@@ -50,7 +50,7 @@ public abstract class SoftBase
 
     protected void ThrowWhenNotIsValid()
     {
-        if (Status != SoftStatus.IsValid)
+        if (Status != ConfigStatus.IsValid)
         {
             throw new InvalidOperationException(
                 "A non-valid value may not be returned!");
