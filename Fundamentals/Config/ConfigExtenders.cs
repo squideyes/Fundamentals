@@ -3,15 +3,21 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using ErrorOr;
 using static SquidEyes.Fundamentals.ConfigStatus;
 
 namespace SquidEyes.Fundamentals;
 
 public static class ConfigExtenders
 {
+    public static ConfigValue<T> ToConfigValue<T>(
+        this string input, Tag tag, Func<T, bool> isValid = null!)
+            where T : struct, IParsable<T>
+    {
+        return input.ToConfigValue(tag, false, isValid);
+    }
+
     public static ConfigValue<T> ToConfigValue<T>(this string input,
-        Tag tag, bool isOptional = false, Func<T, bool> isValid = null!)
+        Tag tag, bool isOptional, Func<T, bool> isValid = null!)
             where T : struct, IParsable<T>
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -33,8 +39,14 @@ public static class ConfigExtenders
 
     //////////////////////////
 
-    public static ConfigString ToConfigString(this string input, Tag tag,
-        bool isOptional = false, Func<string, bool> isValid = null!)
+    public static ConfigString ToConfigString(
+        this string input, Tag tag, Func<string, bool> isValid = null!)
+    {
+        return input.ToConfigString(tag, false, isValid);
+    }
+    
+    public static ConfigString ToConfigString(this string input, 
+        Tag tag, bool isOptional, Func<string, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
@@ -52,9 +64,15 @@ public static class ConfigExtenders
 
     //////////////////////////
 
+    public static ConfigUri ToConfigUri(
+        this string input, Tag tag, Func<Uri, bool> isValid = null!)
+    {
+        return input.ToConfigUri(tag, false, UriKind.Absolute, isValid);
+    }
+
     public static ConfigUri ToConfigUri(this string input, Tag tag,
-        UriKind uriKind = UriKind.Absolute,
-        bool isOptional = false, Func<Uri, bool> isValid = null!)
+        bool isOptional, UriKind uriKind = UriKind.Absolute,
+            Func<Uri, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
@@ -75,8 +93,15 @@ public static class ConfigExtenders
 
     //////////////////////////
 
+    public static ConfigEnum<T> ToConfigEnum<T>(
+        this string input, Tag tag, Func<T, bool> isValid = null!)
+            where T : struct, Enum
+    {
+        return input.ToConfigEnum(tag, false, isValid);
+    }
+
     public static ConfigEnum<T> ToConfigEnum<T>(this string input,
-        Tag tag, bool isOptional = true, Func<T, bool> isValid = null!)
+        Tag tag, bool isOptional, Func<T, bool> isValid = null!)
             where T : struct, Enum
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -98,8 +123,14 @@ public static class ConfigExtenders
 
     //////////////////////////
 
-    public static ConfigEmail ToConfigEmail(this string input, Tag tag,
-        bool isOptional = false, Func<Email, bool> isValid = null!)
+    public static ConfigEmail ToConfigEmail(
+        this string input, Tag tag, Func<Email, bool> isValid = null!)
+    {
+        return input.ToConfigEmail(tag, false, isValid);
+    }
+
+    public static ConfigEmail ToConfigEmail(this string input,
+        Tag tag, bool isOptional, Func<Email, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
@@ -120,8 +151,14 @@ public static class ConfigExtenders
 
     //////////////////////////
 
-    public static ConfigPhone ToConfigPhone(this string input, Tag tag,
-        bool isOptional = false, Func<Phone, bool> isValid = null!)
+    public static ConfigPhone ToConfigPhone(
+        this string input, Tag tag, Func<Phone, bool> isValid = null!)
+    {
+        return input.ToConfigPhone(tag, false, isValid);
+    }
+
+    public static ConfigPhone ToConfigPhone(this string input, 
+        Tag tag, bool isOptional, Func<Phone, bool> isValid = null!)
     {
         if (string.IsNullOrWhiteSpace(input))
         {

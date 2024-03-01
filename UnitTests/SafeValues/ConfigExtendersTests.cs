@@ -121,7 +121,7 @@ public class ConfigExtendersTests
         const string URI = "https://cnn.com";
 
         URI.ToConfigUri("X").Value.Should().Be(new Uri(URI));
-        "".ToConfigUri("X", UriKind.Absolute, true).Value.Should().BeNull();
+        "".ToConfigUri("X", true, UriKind.Absolute).Value.Should().BeNull();
         URI.ToConfigUri("X").Value.Should().Be(new Uri(URI));
     }
 
