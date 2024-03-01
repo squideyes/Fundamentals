@@ -48,31 +48,31 @@ public class ConfigExtendersTests
     [Fact]
     public void GoodFloat_Should_ConvertToConfigValue()
     {
-        ConfigValueTest("2.71828175", float.E);
-        ConfigValueTest("1.401298E-45", float.Epsilon);
-        ConfigValueTest("3.40282347E+38", float.MaxValue);
-        ConfigValueTest("-3.40282347E+38", float.MinValue);
-        ConfigValueTest("NaN", float.NaN);
-        ConfigValueTest("-∞", float.NegativeInfinity);
-        ConfigValueTest("-0", float.NegativeZero);
-        ConfigValueTest("3.14159274", float.Pi);
-        ConfigValueTest("∞", float.PositiveInfinity);
-        ConfigValueTest("6.28318548", float.Tau);
+        ConfigValueTest(float.E.ToString(), float.E);
+        ConfigValueTest(float.Epsilon.ToString(), float.Epsilon);
+        ConfigValueTest(float.MaxValue.ToString(), float.MaxValue);
+        ConfigValueTest(float.MinValue.ToString(), float.MinValue);
+        ConfigValueTest(float.NaN.ToString(), float.NaN);
+        ConfigValueTest(float.NegativeInfinity.ToString(), float.NegativeInfinity);
+        ConfigValueTest(float.NegativeZero.ToString(), float.NegativeZero);
+        ConfigValueTest(float.Pi.ToString(), float.Pi);
+        ConfigValueTest(float.PositiveInfinity.ToString(), float.PositiveInfinity);
+        ConfigValueTest(float.Tau.ToString(), float.Tau);
     }
 
     [Fact]
     public void GoodDouble_Should_ConvertToConfigValue()
     {
-        ConfigValueTest("2.7182818284590451", double.E);
-        ConfigValueTest("4.94065645841247E-324", double.Epsilon);
-        ConfigValueTest("1.7976931348623157E+308", double.MaxValue);
-        ConfigValueTest("-1.7976931348623157E+308", double.MinValue);
-        ConfigValueTest("NaN", double.NaN);
-        ConfigValueTest("-∞", double.NegativeInfinity);
-        ConfigValueTest("-0", double.NegativeZero);
-        ConfigValueTest("3.1415926535897931", double.Pi);
-        ConfigValueTest("∞", double.PositiveInfinity);
-        ConfigValueTest("6.2831853071795862", double.Tau);
+        ConfigValueTest(double.E.ToString(), double.E);
+        ConfigValueTest(double.Epsilon.ToString(), double.Epsilon);
+        ConfigValueTest(double.MaxValue.ToString(), double.MaxValue);
+        ConfigValueTest(double.MinValue.ToString(), double.MinValue);
+        ConfigValueTest(double.NaN.ToString(), double.NaN);
+        ConfigValueTest(double.NegativeInfinity.ToString(), double.NegativeInfinity);
+        ConfigValueTest(double.NegativeZero.ToString(), double.NegativeZero);
+        ConfigValueTest(double.Pi.ToString(), double.Pi);
+        ConfigValueTest(double.PositiveInfinity.ToString(), double.PositiveInfinity);
+        ConfigValueTest(double.Tau.ToString(), double.Tau);
     }
 
     [Fact]
