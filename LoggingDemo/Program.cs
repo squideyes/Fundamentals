@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using ErrorOr;
 using FluentValidation.Results;
 using LoggingDemo;
 using Serilog;
@@ -64,9 +65,11 @@ Log.Logger.Log(new MiscLogItem(
         { Tag.Create("Session"), new DateOnly(2023, 1, 1) }
     }));
 
+const int BAD_ID = 123;
+
 // Log individual FluentValidation ValidationFailures
 Log.Logger.Log(new ValidationFailed(Tag.Create("StartupValidation"),
-    new ValidationFailure("Id", "'{Id}' must be a valid Id.")));
+    new ValidationFailure("Id", $"\"{BAD_ID}\" is an invalid ID.")));
 
 await host.RunAsync();
 
@@ -118,36 +121,29 @@ void Customize(LoggerConfiguration config)
 static bool TryGetEnrichWiths(Serilog.ILogger logger,
     IConfiguration config, out TagValueSet enrichWiths)
 {
-    //var validationResult = new ValidationResult();
+    var junketId = config["Context:JunketId"]!
+        .ToConfigValue<int>("JunketId", v => v > 0);
 
-    //var junketId = config["Context:JunketId"]!
-    //    .ToSoftInt32("JunketId", v => v > 0)
-    //        .Validate(validationResult);
+    var userId = config["Context:UserId"]!
+        .ToConfigString("UserId", v => v.IsNonNullAndTrimmed());
 
-    //var userId = config["Context:UserId"]!.ToSoftString(
-    //    "UserId",v => v.IsNonNullAndTrimmed())
-    //        .Validate(validationResult);
+    if (ConfigHelper.TryGetErrors("",
+        [junketId, userId], out List<Error> errors))
+    {
+        enrichWiths = null!;
 
-    //if (!validationResult.IsValid)
-    //{
-    //    enrichWiths = null!;
+        foreach (var error in errors)
+            logger.Warning($"{error.Code}: {error.Description}");
 
-    //    foreach (var e in validationResult.Errors)
-    //        logger.Warning($"{e.PropertyName}: {e.ErrorMessage}");
+        return false;
+    }
 
-    //    return false;
-    //}
+    enrichWiths = new TagValueSet
+    {
+        { junketId.Tag, junketId.Value! },
+        { userId.Tag, userId.Value! },
+        { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
+    };
 
-    //enrichWiths = new TagValueSet
-    //{
-    //    { junketId.Tag, junketId.Value },
-    //    { userId.Tag, userId.Value! },
-    //    { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
-    //};
-
-    //return true;
-
-    enrichWiths = new TagValueSet();
-
-    return false;
+    return true;
 }

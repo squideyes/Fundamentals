@@ -24,24 +24,21 @@ public class SerilogArgs
 
     public static ErrorOr<SerilogArgs> Create(IConfiguration config)
     {
-        //var uri = config["Serilog:SeqApiUri"]!
-        //    .ToSoftUri("SeqApiUri", UriKind.Absolute);
+        var uri = config["Serilog:SeqApiUri"]!.ToConfigUri("SeqApiUri");
 
-        //var key = config["Serilog:SeqApiKey"]!.ToSoftString(
-        //    "SeqApiKey", v => v.IsNullOrNonNullAndTrimmed());
+        var key = config["Serilog:SeqApiKey"]!.ToConfigString(
+            "SeqApiKey", true, v => v.IsNullOrNonNullAndTrimmed());
 
-        //var ms = config["Serilog:MinSeverity"]!
-        //    .ToSoftEnum<Severity>("MinSeverity");
+        var ms = config["Serilog:MinSeverity"]!
+            .ToConfigEnum<Severity>("MinSeverity");
 
-        //if (SoftValueExtenders.TryGetErrors("SerilogArgs.CreateError",
-        //    [uri, key, ms], out List<Error> errors))
-        //{
-        //    return errors;
-        //}
+        if (ConfigHelper.TryGetErrors("SerilogArgs.CreateError",
+            [uri, key, ms], out List<Error> errors))
+        {
+            return errors;
+        }
 
-        //return new SerilogArgs(
-        //    uri.Value!, key.Value.WhitespaceToNull(), ms.Value);
-
-        return default;
+        return new SerilogArgs(uri.Value!, 
+            key.Value.WhitespaceToNull(), ms.Value!.Value);
     }
 }

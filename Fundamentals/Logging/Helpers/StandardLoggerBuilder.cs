@@ -12,8 +12,11 @@ namespace SquidEyes.Fundamentals;
 
 public static class StandardLoggerBuilder
 {
-    public static bool TrySetStandardLogger(ILogger logger, IConfiguration config,  
-        TagValueSet enrichWiths = null!, Action<LoggerConfiguration> configure = null!)
+    public static bool TrySetStandardLogger(
+        ILogger logger,
+        IConfiguration config, 
+        TagValueSet enrichWiths = null!, 
+        Action<LoggerConfiguration> configure = null!)
     {
         var ee = SerilogArgs.Create(config);
 
