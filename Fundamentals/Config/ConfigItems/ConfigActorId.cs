@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigPhone : ConfigBase
+public class ConfigActorId : ConfigItemBase
 {
-    public ConfigPhone(Tag tag, Phone value)
+    public ConfigActorId(Tag tag, ActorId value)
         : base(tag)
     {
         Value = value;
     }
 
-    public ConfigPhone(Tag tag, string input, ConfigStatus status)
+    public ConfigActorId(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public Phone Value { get; } = null!;
+    public ActorId Value { get; } = null!;
 }

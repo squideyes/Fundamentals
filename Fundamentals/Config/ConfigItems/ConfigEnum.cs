@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigEnum<T> : ConfigBase
+public class ConfigEnum<T> : ConfigItemBase
     where T : struct, Enum
 {
     public ConfigEnum(Tag tag, T? value)

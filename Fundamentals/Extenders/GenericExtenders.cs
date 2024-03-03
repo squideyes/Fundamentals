@@ -24,7 +24,7 @@ public static class GenericExtenders
         (value & mask) == mask;
 
     public static List<T> ToListOf<T>(this T value) =>
-        new(new List<T> { value });
+        new([value]);
 
     public static HashSet<T> ToHashSetOf<T>(this T value) =>
         new(new List<T> { value });
@@ -55,4 +55,11 @@ public static class GenericExtenders
     public static R Convert<T, R>(this T value, Func<T, R> getValue) => getValue(value);
 
     public static void Do<T>(this T value, Action<T> action) => action(value);
+
+    public static T DoThenReturn<T>(this T value, Action action)
+    {
+        action();
+
+        return value;
+    }
 }

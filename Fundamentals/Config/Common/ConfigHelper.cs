@@ -5,7 +5,7 @@ namespace SquidEyes.Fundamentals;
 public static class ConfigHelper
 {
     public static bool TryGetErrors(string code, 
-        IEnumerable<ConfigBase> values, out List<Error> errors)
+        IEnumerable<ConfigItemBase> values, out List<Error> errors)
     {
         errors = [];
 

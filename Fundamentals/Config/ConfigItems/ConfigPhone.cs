@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigMultiTag : ConfigBase
+public class ConfigPhone : ConfigItemBase
 {
-    public ConfigMultiTag(Tag tag, MultiTag value)
+    public ConfigPhone(Tag tag, Phone value)
         : base(tag)
     {
         Value = value;
     }
 
-    public ConfigMultiTag(Tag tag, string input, ConfigStatus status)
+    public ConfigPhone(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public MultiTag Value { get; } = null!;
+    public Phone Value { get; } = null!;
 }

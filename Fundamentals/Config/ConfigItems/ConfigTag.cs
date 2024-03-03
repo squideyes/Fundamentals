@@ -5,19 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigValue<T> : ConfigBase
-    where T : struct, IParsable<T>
+public class ConfigTag : ConfigItemBase
 {
-    public ConfigValue(Tag tag, T? value)
+    public ConfigTag(Tag tag, Tag value)
         : base(tag)
     {
         Value = value;
     }
 
-    public ConfigValue(Tag tag, string input, ConfigStatus status)
+    public ConfigTag(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public T? Value { get; } = null!;
+    public Tag Value { get; } = null!;
 }

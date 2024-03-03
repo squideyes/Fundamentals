@@ -8,7 +8,7 @@ using FluentValidation.Results;
 
 namespace SquidEyes.Fundamentals;
 
-public abstract class ConfigBase
+public abstract class ConfigItemBase : IConfigItem
 {
     public Tag Tag { get; }
     public ConfigStatus Status { get; }
@@ -16,14 +16,14 @@ public abstract class ConfigBase
 
     public bool IsValid => Status == ConfigStatus.IsValid;
 
-    protected ConfigBase(Tag tag)
+    protected ConfigItemBase(Tag tag)
     {
         Tag = tag;
         Status = ConfigStatus.IsValid;
         Message = null;
     }
 
-    protected ConfigBase(Tag tag, string input, ConfigStatus status)
+    protected ConfigItemBase(Tag tag, string input, ConfigStatus status)
     {
         Tag = tag;
 

@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigEmail : ConfigBase
+public class ConfigString : ConfigItemBase
 {
-    public ConfigEmail(Tag tag, Email value)
+    public ConfigString(Tag tag, string value)
         : base(tag)
     {
         Value = value;
     }
 
-    public ConfigEmail(Tag tag, string input, ConfigStatus status)
+    public ConfigString(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public Email Value { get; } = null!;
+    public string Value { get; } = null!;
 }

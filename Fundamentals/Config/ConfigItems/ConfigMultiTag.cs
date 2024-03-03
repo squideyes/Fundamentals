@@ -5,18 +5,18 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class ConfigUri : ConfigBase
+public class ConfigMultiTag : ConfigItemBase
 {
-    public ConfigUri(Tag tag, Uri value)
+    public ConfigMultiTag(Tag tag, MultiTag value)
         : base(tag)
     {
         Value = value;
     }
 
-    public ConfigUri(Tag tag, string input, ConfigStatus status)
+    public ConfigMultiTag(Tag tag, string input, ConfigStatus status)
         : base(tag, input, status)
     {
     }
 
-    public Uri Value { get; } = null!;
+    public MultiTag Value { get; } = null!;
 }
