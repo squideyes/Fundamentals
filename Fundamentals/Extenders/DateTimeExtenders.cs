@@ -53,6 +53,33 @@ public static class DateTimeExtenders
         return TimeZoneInfo.ConvertTimeFromUtc(value, tzi);
     }
 
+    public static string Format(this DateTime value, 
+        bool includeDate = true, bool withMillisends = true)
+    {
+        var format = (includeDate, withMillisends) switch
+        {
+            (true, true) => "MM/dd/yyyy HH:mm:ss.fff",
+            (false, true) => "HH:mm:ss.fff",
+            (true, false) => "MM/dd/yyyy HH:mm:ss",
+            (false, false) => "HH:mm:ss",
+        };
+
+        return value.ToString(format);
+    }
+
+
+    public static string Format(
+        this TimeSpan value, bool includeDays = true)
+    {
+        var format = (includeDays) switch
+        {
+            true => "0\\.dd\\:mm\\:ss\\.fff",
+            false => "dd\\:mm\\:ss\\.fff"
+        };
+
+        return value.ToString(format);
+    }
+
     public static string ToDayName(this DateTime date)
     {
         return date.Day switch
