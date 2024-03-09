@@ -303,7 +303,7 @@ public static partial class ValidationExtenders
     public static bool IsDnsName(this string value) =>
         dnsNameValidator.IsMatch(value);
 
-    public static bool IsComosName(this string value) =>
+    public static bool IsCosmosName(this string value) =>
         cosmosNameValidator.IsMatch(value);
 
     public static bool IsBlobName(this string value)

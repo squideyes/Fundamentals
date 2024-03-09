@@ -71,7 +71,7 @@ public static class DateTimeExtenders
     public static string Format(
         this TimeSpan value, bool includeDays = true)
     {
-        var format = (includeDays) switch
+        var format = includeDays switch
         {
             true => "0\\.dd\\:mm\\:ss\\.fff",
             false => "dd\\:mm\\:ss\\.fff"
