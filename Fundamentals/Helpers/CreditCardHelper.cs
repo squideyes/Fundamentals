@@ -18,23 +18,28 @@ public static partial class CreditCardHelper
     public static string DigitsOnly(string value) =>
         new(value.Where(char.IsDigit).ToArray());
 
-    public static CreditCardBrand GetBrand(string value)
+    public static bool TryGetBrand(string value, out CreditCardBrand? brand)
     {
-        if (!CreditCardValidator.IsNumber(value))
-            throw new ArgumentOutOfRangeException(nameof(value));
+        brand = null;
+
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        if (!value.All(c => char.IsDigit(c) || c == ' '))
+            return false;
 
         var cardNumber = value.Where(char.IsDigit).ToArray();
 
         if (isAmex.IsMatch(cardNumber))
-            return CreditCardBrand.Amex;
+            brand = CreditCardBrand.Amex;
         else if (isDiscover.IsMatch(cardNumber))
-            return CreditCardBrand.Discover;
-        else if (isMastercard.IsMatch(cardNumber))
-            return CreditCardBrand.MasterCard;
+            brand = CreditCardBrand.Discover;
         else if (isVisa.IsMatch(cardNumber))
-            return CreditCardBrand.Visa;
-        else
-            return CreditCardBrand.Unknown;
+            brand = CreditCardBrand.Visa;
+        else if (isMastercard.IsMatch(cardNumber))
+            brand = CreditCardBrand.MasterCard;
+
+        return brand.HasValue;
     }
 
     public static string Format(string value, bool withSpaces = true)
@@ -43,6 +48,9 @@ public static partial class CreditCardHelper
             throw new ArgumentOutOfRangeException(nameof(value));
 
         var digitsOnly = DigitsOnly(value);
+
+        if (!TryGetBrand(value, out var brand))
+            return digitsOnly;
 
         if (!withSpaces)
             return digitsOnly;
@@ -66,9 +74,8 @@ public static partial class CreditCardHelper
             return sb.ToString();
         }
 
-        return GetBrand(digitsOnly) switch
+        return brand switch
         {
-            CreditCardBrand.Unknown => digitsOnly,
             CreditCardBrand.Amex => Format(4, 6, 5),
             _ => Format(4, 4, 4, 4)
         };

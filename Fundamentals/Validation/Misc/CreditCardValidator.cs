@@ -3,29 +3,19 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Text.RegularExpressions;
-
 namespace SquidEyes.Fundamentals;
 
-public static partial class CreditCardValidator
+public static class CreditCardValidator
 {
-    private static readonly Regex mmyyValidator = GetMMYYValidator();
-
-    public static bool IsMMYY(string value) =>
-        value is not null && mmyyValidator.IsMatch(value);
-
-    public static bool IsCVV(string value, CreditCardBrand brand)
+    public static bool IsCVC(int value, CreditCardBrand brand)
     {
-        if (!int.TryParse(value, out int number))
-            return false;
-
-        if (number < 0)
+        if (value < 0)
             return false;
 
         if (brand == CreditCardBrand.Amex)
-            return number <= 9999;
+            return value <= 9999;
         else
-            return number <= 999;
+            return value <= 999;
     }
 
     public static bool IsNumber(string value)
@@ -54,7 +44,4 @@ public static partial class CreditCardValidator
 
         return (checkSum % 10) == 0;
     }
-
-    [GeneratedRegex("^(0[1-9]|1[012])(2[3-9]|3[0-9])$")]
-    private static partial Regex GetMMYYValidator();
 }

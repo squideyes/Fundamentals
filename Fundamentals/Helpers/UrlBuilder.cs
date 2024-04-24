@@ -9,7 +9,7 @@ namespace SquidEyes.Fundamentals;
 
 public class UrlBuilder
 {
-    private readonly List<string> segments = new();
+    private readonly List<string> segments = [];
     private readonly Dictionary<string, string?> queryParams = new();
 
     private readonly Uri baseUri;
