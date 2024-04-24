@@ -44,7 +44,7 @@ public static class ConfigExtenders
     {
         return input.ToConfigString(tag, false, isValid);
     }
-    
+
     public static ConfigString ToConfigString(this string input, 
         Tag tag, bool isOptional, Func<string, bool> isValid = null!)
     {
