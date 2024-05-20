@@ -42,8 +42,8 @@ public class Address
                 .NotEmpty()
                 .MaximumLength(MaxLengths.Address)
                 .Must(v => v!.IsNonNullAndTrimmed())
-                .WithMessage("'{PropertyName}' must be non-empty and trimmed.")
-                .When(v => v is not null, ApplyConditionTo.AllValidators);
+                .WithMessage("'{PropertyName}' must be null or non-empty and trimmed.")
+                .When(v => v.Address2 is not null, ApplyConditionTo.AllValidators);
 
             RuleFor(x => x.Locality)
                 .Cascade(CascadeMode.Stop)
@@ -62,14 +62,14 @@ public class Address
             RuleFor(x => x)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Must(v => IsPostalCode(v.Country, v.PostalCode))
+                .Must(v => IsPostalCode(v.PostalCode, v.Country))
                 .WithMessage(v => $"'{{PropertyName}}' must be valid for {v.Country}.");
         }
     }
 
     public required string Country { get; init; }
     public required string Address1 { get; init; }
-    public string Address2 { get; init; } = "";
+    public string? Address2 { get; init; }
     public required string Locality { get; init; }
     public required string Region { get; init; }
     public required string PostalCode { get; init; }

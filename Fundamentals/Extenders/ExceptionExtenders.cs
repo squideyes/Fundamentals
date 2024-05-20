@@ -10,8 +10,7 @@ namespace SquidEyes.Fundamentals;
 
 public static class ExceptionExtenders
 {
-    public static string[] GetStackTrace(
-        this Exception error, bool withFileInfo)
+    public static string[] GetStackTrace(this Exception error, bool withFileInfo)
     {
         var result = new List<string>();
 
