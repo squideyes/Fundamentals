@@ -1,4 +1,4 @@
-﻿namespace SquidEyes.Fundamentals.Models;
+﻿namespace SquidEyes.Fundamentals;
 
 public enum CardKind
 {
