@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public enum CreditCardBrand
+public enum CardBrand
 {
     Amex = 1,
     Discover,

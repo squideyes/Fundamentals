@@ -5,14 +5,14 @@
 
 namespace SquidEyes.Fundamentals;
 
-public static class CreditCardValidator
+public static class CardValidator
 {
-    public static bool IsCVC(int value, CreditCardBrand brand)
+    public static bool IsCVC(int value, CardBrand brand)
     {
         if (value < 0)
             return false;
 
-        if (brand == CreditCardBrand.Amex)
+        if (brand == CardBrand.Amex)
             return value <= 9999;
         else
             return value <= 999;
@@ -23,7 +23,7 @@ public static class CreditCardValidator
         if (string.IsNullOrEmpty(value))
             return false;
 
-        var digitsOnly = CreditCardHelper.DigitsOnly(value);
+        var digitsOnly = CardHelper.DigitsOnly(value);
 
         int checkSum = 0;
 

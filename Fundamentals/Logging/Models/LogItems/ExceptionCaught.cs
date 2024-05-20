@@ -14,7 +14,7 @@ public class ExceptionCaught : LogItemBase
 
     public ExceptionCaught(Exception error,
         bool? withFileInfo = null, TagValueSet tagValues = null!)
-        : base(Severity.Error)
+            : base(Severity.Error)
     {
         error.MayNotBe().Null();
 

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace SquidEyes.Fundamentals;
 
-public static partial class CreditCardHelper
+public static partial class CardHelper
 {
     private static readonly Regex isAmex = GetIsAmex();
     private static readonly Regex isDiscover = GetIsDiscover();
@@ -18,7 +18,7 @@ public static partial class CreditCardHelper
     public static string DigitsOnly(string value) =>
         new(value.Where(char.IsDigit).ToArray());
 
-    public static bool TryGetBrand(string value, out CreditCardBrand? brand)
+    public static bool TryGetBrand(string value, out CardBrand? brand)
     {
         brand = null;
 
@@ -31,20 +31,20 @@ public static partial class CreditCardHelper
         var cardNumber = value.Where(char.IsDigit).ToArray();
 
         if (isAmex.IsMatch(cardNumber))
-            brand = CreditCardBrand.Amex;
+            brand = CardBrand.Amex;
         else if (isDiscover.IsMatch(cardNumber))
-            brand = CreditCardBrand.Discover;
+            brand = CardBrand.Discover;
         else if (isVisa.IsMatch(cardNumber))
-            brand = CreditCardBrand.Visa;
+            brand = CardBrand.Visa;
         else if (isMastercard.IsMatch(cardNumber))
-            brand = CreditCardBrand.MasterCard;
+            brand = CardBrand.MasterCard;
 
         return brand.HasValue;
     }
 
     public static string Format(string value, bool withSpaces = true)
     {
-        if (!CreditCardValidator.IsNumber(value))
+        if (!CardValidator.IsNumber(value))
             throw new ArgumentOutOfRangeException(nameof(value));
 
         var digitsOnly = DigitsOnly(value);
@@ -76,7 +76,7 @@ public static partial class CreditCardHelper
 
         return brand switch
         {
-            CreditCardBrand.Amex => Format(4, 6, 5),
+            CardBrand.Amex => Format(4, 6, 5),
             _ => Format(4, 4, 4, 4)
         };
     }

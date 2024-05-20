@@ -7,9 +7,9 @@ using FluentValidation;
 
 namespace SquidEyes.Fundamentals;
 
-public class CreditCard
+public class Card
 {
-    public class Validator : AbstractValidator<CreditCard>
+    public class Validator : AbstractValidator<Card>
     {
         private const string MUST_BE = "'{PropertyName}' must be ";
 
@@ -18,8 +18,8 @@ public class CreditCard
             RuleFor(x => x.Number)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Must(CreditCardValidator.IsNumber)
-                .WithMessage(MUST_BE + "a valid credit-card number.");
+                .Must(CardValidator.IsNumber)
+                .WithMessage(MUST_BE + "a valid card number.");
 
             RuleFor(x => x.ExpirationMonth)
                 .InclusiveBetween(1, 12);
@@ -31,9 +31,9 @@ public class CreditCard
                 .NotEmpty();
 
             RuleFor(x => x)
-                .Must(v => CreditCardValidator.IsCVC(v.Cvc, v.GetBrand()))
-                .WithMessage(MUST_BE + "a valid credit-card CVC.")
-                .When(v => CreditCardValidator.IsNumber(v.Number));
+                .Must(v => CardValidator.IsCVC(v.Cvc, v.GetBrand()))
+                .WithMessage(MUST_BE + "a valid card CVC.")
+                .When(v => CardValidator.IsNumber(v.Number));
         }
     }
 
@@ -42,9 +42,9 @@ public class CreditCard
     public required int ExpirationYear { get; init; }
     public required int Cvc { get; init; }
 
-    public CreditCardBrand GetBrand()
+    public CardBrand GetBrand()
     {
-        if (!CreditCardHelper.TryGetBrand(Number, out var brand))
+        if (!CardHelper.TryGetBrand(Number, out var brand))
         {
             throw new InvalidOperationException(
                 "The \"Number\" property must be set before calling GetBrand().");
