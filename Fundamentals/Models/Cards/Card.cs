@@ -21,6 +21,9 @@ public class Card
                 .Must(CardValidator.IsNumber)
                 .WithMessage(MUST_BE + "a valid card number.");
 
+            RuleFor(x => x.Name)
+                .IsNonNullAndTrimmed();
+
             RuleFor(x => x.ExpirationMonth)
                 .InclusiveBetween(1, 12);
 
@@ -38,6 +41,7 @@ public class Card
     }
 
     public required string Number { get; init; }
+    public required string Name { get; init; }
     public required int ExpirationMonth { get; init; }
     public required int ExpirationYear { get; init; }
     public required int Cvc { get; init; }
