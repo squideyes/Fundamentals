@@ -122,13 +122,13 @@ static bool TryGetEnrichWiths(Serilog.ILogger logger,
     IConfiguration config, out TagValueSet enrichWiths)
 {
     var junketId = config["Context:JunketId"]!
-        .ToConfigValue<int>("JunketId", v => v > 0);
+        .ToParseableArg<int>("JunketId", true, v => v > 0);
 
     var userId = config["Context:UserId"]!
-        .ToConfigString("UserId", v => v.IsNonNullAndTrimmed());
+        .ToStringArg("UserId", true, v => v.IsNonNullAndTrimmed());
 
-    if (ConfigHelper.TryGetErrors("",
-        [junketId, userId], out List<Error> errors))
+    if (TagArgHelper.TryGetErrors(
+        "TryGetEnrichWithsError", [junketId, userId], out List<Error> errors))
     {
         enrichWiths = null!;
 
