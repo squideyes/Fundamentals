@@ -7,18 +7,19 @@ using FluentValidation.Results;
 
 namespace SquidEyes.Fundamentals;
 
-public class ValidationFailed(Tag activity, ValidationFailure failure) 
-    : LogItemBase(Severity.Warn, activity)
+public class ValidationFailed(Tag activity, ValidationFailure failure, TagValueSet metadata = null!)
+    : LogItemBase(Severity.Warn, activity, metadata)
 {
     private readonly ValidationFailure failure = failure.MayNotBe().Null();
 
-    public override (Tag, object)[] GetTagValues()
+    protected override TagValueSet GetCustomTagValues()
     {
-        return
-        [
-            (Tag.Create("PropertyName"), failure.PropertyName),
-            (Tag.Create("ErrorCode"), failure.ErrorCode),
-            (Tag.Create("ErrorMessage"), failure.ErrorMessage)
-        ];
+        var tagValues = new TagValueSet();
+
+        tagValues.Upsert("PropertyName", failure.PropertyName);
+        tagValues.Upsert("ErrorCode", failure.ErrorCode);
+        tagValues.Upsert("ErrorMessage", failure.ErrorMessage);
+
+        return tagValues;
     }
 }

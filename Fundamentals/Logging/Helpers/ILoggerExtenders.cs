@@ -16,8 +16,6 @@ public static class ILoggerExtenders
         logger!.MayNotBe().Null();
         logItem.MayNotBe().Null();
 
-        logItem.Validate();
-
         var sb = new StringBuilder();
 
         var datas = new List<object>();
@@ -32,19 +30,13 @@ public static class ILoggerExtenders
             datas!.Add(value!);
         }
 
-        Append("Ordinal", logItem.Ordinal);
-
         Append("Activity", logItem.Activity);
 
-        foreach (var (tag, value) in logItem.GetTagValues())
-        {
-            tag.MayNotBe().Default();
-
-            Append(tag.ToString(), value);
-        }
+        foreach (var tagValue in logItem.GetTagValues())
+            Append(tagValue.Tag.ToString(), tagValue.Value!);
 
         logger.Log(logItem.Severity.ToLogLevel(),
-            sb.ToString(), datas.ToArray());
+            sb.ToString(), [.. datas]);
     }
 
     public static void Log<T>(this Serilog.ILogger logger, T logItem)
@@ -53,8 +45,6 @@ public static class ILoggerExtenders
         logger!.MayNotBe().Null();
         logItem.MayNotBe().Null();
 
-        logItem.Validate();
-
         var sb = new StringBuilder();
 
         var datas = new List<object>();
@@ -69,18 +59,12 @@ public static class ILoggerExtenders
             datas!.Add(value!);
         }
 
-        Append("Ordinal", logItem.Ordinal);
-
         Append("Activity", logItem.Activity);
 
-        foreach (var (tag, value) in logItem.GetTagValues())
-        {
-            tag.MayNotBe().Default();
-
-            Append(tag.ToString(), value);
-        }
+        foreach (var tagValue in logItem.GetTagValues())
+            Append(tagValue.Tag.ToString(), tagValue.Value!);
 
         logger.Write(logItem.Severity.ToLogEventLevel(),
-            sb.ToString(), datas.ToArray());
+            sb.ToString(), [.. datas]);
     }
 }

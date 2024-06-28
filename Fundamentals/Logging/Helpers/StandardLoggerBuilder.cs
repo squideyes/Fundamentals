@@ -20,10 +20,10 @@ public static class StandardLoggerBuilder
     {
         var ee = SerilogArgs.Create(config);
 
-        if (ee.IsError)
+        if (ee.IsFailure)
         {
             foreach (var e in ee.Errors)
-                logger.Warning($"TrySetStandardLogger Error: {e.Description}");
+                logger.Warning($"TrySetStandardLogger Error: {e.Message}");
 
             return true;
         }
@@ -32,10 +32,7 @@ public static class StandardLoggerBuilder
 
         var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Is(minLogEventLevel)
-            .Destructure.ByTransforming<AccountId>(v => v.ToString())
-            .Destructure.ByTransforming<ActorId>(v => v.ToString())
             .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
-            .Destructure.ByTransforming<Delta>(v => v.ToString())
             .Destructure.ByTransforming<Email>(v => v.ToString())
             .Destructure.ByTransforming<Enum>(v => v.ToString())
             .Destructure.ByTransforming<Guid>(v => v.ToString("D"))
@@ -49,7 +46,7 @@ public static class StandardLoggerBuilder
         if (enrichWiths is not null)
         {
             foreach (var tv in enrichWiths)
-                loggerConfig.Enrich.WithProperty(tv.Key.ToString(), tv.Value);
+                loggerConfig.Enrich.WithProperty(tv.Tag.ToString(), tv.Value.ToString());
         }
 
         loggerConfig.Enrich.FromLogContext();

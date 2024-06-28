@@ -18,20 +18,11 @@ public class ArgSet : IEquatable<ArgSet>
     public void Set(MultiTag key, bool value) =>
         PrivateSet(key, value, ArgKind.Boolean);
 
-    public void Set(MultiTag key, AccountId value) =>
-        PrivateSet(key, value, ArgKind.AccountId);
-
-    public void Set(MultiTag key, ActorId value) =>
-        PrivateSet(key, value, ArgKind.ActorId);
-
     public void Set(MultiTag key, DateOnly value) =>
         PrivateSet(key, value, ArgKind.DateOnly);
 
     public void Set(MultiTag key, DateTime value) =>
         PrivateSet(key, value, ArgKind.DateTime);
-
-    public void Set(MultiTag key, Delta value) =>
-        PrivateSet(key, value, ArgKind.Delta);
 
     public void Set(MultiTag key, double value) =>
         PrivateSet(key, value, ArgKind.Double);

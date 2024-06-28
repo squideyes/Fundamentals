@@ -5,27 +5,28 @@
 
 namespace SquidEyes.Fundamentals;
 
-public abstract class LogItemBase
+public abstract class LogItemBase(
+    Severity severity, Tag activity, TagValueSet? metadata)
 {
-    private static int ordinal = -1;
+    public Severity Severity { get; } = severity.MustBe().EnumValue();
+    public Tag Activity { get; } = activity.MayNotBe().Null();
+    public TagValueSet? Metadata { get; } =
+        metadata?.MustBe(v => v is not null).True(v => !v!.IsEmpty);
 
-    public LogItemBase(Severity severity, Tag? activity = null)
+    public TagValueSet GetTagValues()
     {
-        Ordinal = Interlocked.Increment(ref ordinal);
+        var tagValues = Metadata ?? [];
 
-        Severity = severity.MustBe().EnumValue();
+        var customTagValues = GetCustomTagValues();
 
-        Activity = activity == null ? 
-            Tag.Create(GetType().Name) : activity!.Value!;
+        if (customTagValues is not null)
+            tagValues!.UpsertRange(customTagValues);
+
+        return tagValues;
     }
 
-    public int Ordinal { get; }
-    public Severity Severity { get; }
-    public Tag Activity { get; }
-
-    public virtual void Validate()
+    protected virtual TagValueSet GetCustomTagValues()
     {
+        return null!;
     }
-
-    public abstract (Tag, object)[] GetTagValues();
 }

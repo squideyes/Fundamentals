@@ -149,7 +149,7 @@ public class TagArgExtendersTests
     public void GoodEnum_Should_ConvertToConfigEnum()
     {
         "Absolute".ToEnumArg<UriKind>("X").Value.Should().Be(UriKind.Absolute);
-        "".ToEnumArg<UriKind>("X", true).Value.Should().BeNull();
+        "".ToEnumArg<UriKind>("X", true).Value.Should().Be(default);
         "Absolute".ToEnumArg<UriKind>("X").Value.Should().Be(UriKind.Absolute);
     }
 

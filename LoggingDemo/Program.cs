@@ -3,7 +3,6 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using ErrorOr;
 using FluentValidation.Results;
 using LoggingDemo;
 using Serilog;
@@ -44,11 +43,11 @@ var host = Host.CreateDefaultBuilder()
 
 // Log "LogonSuccess" (a custom log-item)
 Log.Logger.Log(new LogonSucess(
-    Brokerage.CanonTrading, [Gateway.Chicago, Gateway.UsWest]));
+    "AttemptingToLogin", Brokerage.CanonTrading, Gateway.Chicago));
 
 // Log "MiscLogItem" with a simple "Message" Context
-Log.Logger.Log(new MiscLogItem(Severity.Warn,
-    Tag.Create("MiscWarning"), TagValueSet.From("Up != Down")));
+//Log.Logger.Log(new MiscLogItem(Severity.Warn,
+//    Tag.Create("MiscWarning"), TagValueSet.From("Up != Down")));
 
 // Free-form messages can be intermingled with LogItems
 Log.Logger.Debug("Who let the dogs out?");
@@ -58,11 +57,11 @@ Log.Logger.Log(new MiscLogItem(
     Severity.Debug, Tag.Create("GotSettings"),
     new TagValueSet()
     {
-        { Tag.Create("Border"), 2 },
-        { Tag.Create("Background"), ConsoleColor.Yellow },
-        { Tag.Create("Foreground"), ConsoleColor.Black },
-        { Tag.Create("ShowHelp"), true },
-        { Tag.Create("Session"), new DateOnly(2023, 1, 1) }
+        { "Border", 2 },
+        { "Background", ConsoleColor.Yellow },
+        { "Foreground", ConsoleColor.Black },
+        { "ShowHelp", true },
+        { "Session", new DateOnly(2023, 1, 1) }
     }));
 
 const int BAD_ID = 123;
@@ -121,22 +120,20 @@ void Customize(LoggerConfiguration config)
 static bool TryGetEnrichWiths(Serilog.ILogger logger,
     IConfiguration config, out TagValueSet enrichWiths)
 {
+    const string ERROR_CODE = "TryGetEnrichWiths";
+
     var junketId = config["Context:JunketId"]!
         .ToParseableArg<int>("JunketId", true, v => v > 0);
 
+    if (!junketId.IsValid)
+    {
+        var x = new ErrorReturned("", default);
+    }
+    
+    //junketId.LogFailure(logger, ERROR_CODE);
+
     var userId = config["Context:UserId"]!
         .ToStringArg("UserId", true, v => v.IsNonNullAndTrimmed());
-
-    if (TagArgHelper.TryGetErrors(
-        "TryGetEnrichWithsError", [junketId, userId], out List<Error> errors))
-    {
-        enrichWiths = null!;
-
-        foreach (var error in errors)
-            logger.Warning($"{error.Code}: {error.Description}");
-
-        return false;
-    }
 
     enrichWiths = new TagValueSet
     {

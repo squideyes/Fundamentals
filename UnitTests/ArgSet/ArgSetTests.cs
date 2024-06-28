@@ -127,12 +127,9 @@ public class ArgSetTests
         void Validate<T>(MultiTag multiTag, Func<ArgSet, MultiTag, T> getValue) =>
             getValue(target, multiTag).Should().Be(getValue(source, multiTag));
 
-        Validate(Create("AccountId"), (a, k) => a.Get<AccountId>(k));
         Validate(Create("Boolean"), (a, k) => a.Get<bool>(k));
-        Validate(Create("ActorId"), (a, k) => a.Get<ActorId>(k));
         Validate(Create("DateOnly"), (a, k) => a.Get<DateOnly>(k));
         Validate(Create("DateTime"), (a, k) => a.Get<DateTime>(k));
-        Validate(Create("Delta"), (a, k) => a.Get<Delta>(k));
         Validate(Create("Double"), (a, k) => a.Get<double>(k));
         Validate(Create("Email"), (a, k) => a.Get<Email>(k));
         Validate(Create("Enum"), (a, k) => a.Get<ArgKind>(k));
@@ -166,12 +163,9 @@ public class ArgSetTests
     {
         var argSet = new ArgSet();
 
-        argSet.Set(Create("AccountId"), AccountId.Create("ABCDEFGHT001"));
         argSet.Set(Create("Boolean"), true);
-        argSet.Set(Create("ActorId"), ActorId.Create("ABCDEFGH"));
         argSet.Set(Create("DateOnly"), DateOnly.MaxValue);
         argSet.Set(Create("DateTime"), new DateTime(2023, 1, 2, 3, 4, 5, 6));
-        argSet.Set(Create("Delta"), Delta.Create("Gain=3.5"));
         argSet.Set(Create("Double"), double.MaxValue);
         argSet.Set(Create("Email"), Email.Create("louis@squideyes.com"));
         argSet.Set(Create("Enum"), ArgKind.TimeSpan);

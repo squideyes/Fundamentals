@@ -4,40 +4,23 @@
 // ********************************************************
 
 using System.Diagnostics;
-using System.Text;
 
 namespace SquidEyes.Fundamentals;
 
 public static class ExceptionExtenders
 {
-    public static string[] GetStackTrace(this Exception error, bool withFileInfo)
+    public static string[] GetStackTrace(this Exception error)
     {
         var result = new List<string>();
 
-        var stackTrace = new StackTrace(error, withFileInfo);
+        var stackTrace = new StackTrace(error);
 
         foreach (var f in stackTrace.GetFrames())
         {
-            var sb = new StringBuilder();
-
             var method = f.GetMethod();
 
-            if (method is null)
-                continue;
-
-            sb.Append(method);
-
-            var fileName = f.GetFileName();
-
-            if (withFileInfo && !string.IsNullOrWhiteSpace(fileName))
-            {
-                var line = f.GetFileLineNumber();
-                var column = f.GetFileColumnNumber();
-
-                sb.Append($", {fileName} (Line {line}, Column {column})");
-            }
-
-            result.Add(sb.ToString());
+            if (method is not null)
+                result.Add(method.ToString()!);
         }
 
         return [.. result];

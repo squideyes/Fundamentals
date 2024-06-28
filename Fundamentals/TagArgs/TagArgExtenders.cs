@@ -42,18 +42,18 @@ public static class TagArgExtenders
             return new TagArg<Email>(tag, value);
     }
 
-    public static TagArg<Enum> ToEnumArg<T>(this string input, Tag tag, 
-        bool ignoreCase = false, bool isOptional = false, Func<Enum, bool> isValid = null!)
+    public static TagArg<T> ToEnumArg<T>(this string input, Tag tag, 
+        bool ignoreCase = false, bool isOptional = false, Func<T, bool> isValid = null!)
             where T : struct, Enum
     {
-        if (TagArg<Enum>.IsNullOrEmpty(input, tag, isOptional, out var arg))
+        if (TagArg<T>.IsNullOrEmpty(input, tag, isOptional, out var arg))
             return arg;
         else if (!Enum.TryParse(input, ignoreCase, out T value))
-            return new TagArg<Enum>(tag, input, ParseError);
+            return new TagArg<T>(tag, input, ParseError);
         else if (isValid is not null && !isValid(value))
-            return new TagArg<Enum>(tag, input, NotValid);
+            return new TagArg<T>(tag, input, NotValid);
         else
-            return new TagArg<Enum>(tag, value);
+            return new TagArg<T>(tag, value);
     }
 
     public static TagArg<Uri> ToUriArg(this string input, Tag tag, 

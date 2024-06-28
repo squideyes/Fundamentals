@@ -32,7 +32,7 @@ internal class Worker(ILogger<Worker> logger,
         catch (Exception outer)
         {
             // Log "ErrorCaught" (a standard log-item)
-            logger.Log(new ExceptionCaught(outer, true));
+            logger.Log(new ExceptionCaught("ExecuteAsyncDemo", outer));
         }
 
         lifeTime.StopApplication();

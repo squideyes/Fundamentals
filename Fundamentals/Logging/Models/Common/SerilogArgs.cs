@@ -3,15 +3,14 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using ErrorOr;
 using Microsoft.Extensions.Configuration;
+using SquidEyes.Fundamentals.Results;
 
 namespace SquidEyes.Fundamentals;
 
 public class SerilogArgs
 {
-    private SerilogArgs(
-        Uri seqApiUri, string seqApiKey, Severity minSeverity)
+    private SerilogArgs(Uri seqApiUri, string seqApiKey, Severity minSeverity)
     {
         SeqApiUri = seqApiUri;
         SeqApiKey = seqApiKey;
@@ -22,25 +21,26 @@ public class SerilogArgs
     public string SeqApiKey { get; }
     public Severity MinSeverity { get; }
 
-    public static ErrorOr<SerilogArgs> Create(IConfiguration config)
+    public static Result<SerilogArgs> Create(IConfiguration config)
     {
+        const string ERROR_CODE = "SerilogArgsCreateError";
+
         var uri = config["Serilog:SeqApiUri"]!.ToUriArg("SeqApiUri");
+
+        if (!uri.IsValid)
+            return uri.ToFailureResult<SerilogArgs>(ERROR_CODE);
 
         var key = config["Serilog:SeqApiKey"]!.ToStringArg(
             "SeqApiKey", true, v => v.IsNullOrNonNullAndTrimmed());
 
-        var ms = config["Serilog:MinSeverity"]!
-            .ToEnumArg<Severity>("MinSeverity");
+        if (!key.IsValid)
+            return key.ToFailureResult<SerilogArgs>(ERROR_CODE);
 
-        //if (TagArgHelper.TryGetErrors(
-        //    "SerilogArgs.CreateError", [uri, key, ms], out List<Error> errors))
-        //{
-        //    return errors;
-        //}
+        var ms = config["Serilog:MinSeverity"]!.ToEnumArg<Severity>("MinSeverity");
 
-        //return new SerilogArgs(uri.Value!, 
-        //    key.Value.WhitespaceToNull(), ms.Value!.Value);
+        if (!ms.IsValid)
+            return uri.ToFailureResult<SerilogArgs>(ERROR_CODE);
 
-        return default;
+        return new SerilogArgs(uri.Value!, key.Value.WhitespaceToNull(), ms.Value!);
     }
 }

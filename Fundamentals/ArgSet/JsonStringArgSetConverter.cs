@@ -151,9 +151,7 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
 
         return kind switch
         {
-            ArgKind.AccountId => GetArg(AccountId.Create(reader.GetString()!)),
             ArgKind.Boolean => GetArg(reader.GetBoolean()),
-            ArgKind.ActorId => GetArg(ActorId.Create(reader.GetString()!)),
             ArgKind.DateOnly => GetArg(DateOnly.Parse(reader.GetString()!)),
             ArgKind.DateTime => GetArg(DateTime.Parse(reader.GetString()!)),
             ArgKind.Double => GetArg(reader.GetDouble()),
@@ -163,7 +161,6 @@ public class JsonStringArgSetConverter : JsonConverter<ArgSet>
             ArgKind.Guid => GetArg(Guid.Parse(reader.GetString()!)),
             ArgKind.Int32 => GetArg(reader.GetInt32()),
             ArgKind.Int64 => GetArg(reader.GetInt64()),
-            ArgKind.Delta => GetArg(Delta.Create(reader.GetString()!)),
             ArgKind.MultiTag => GetArg(MultiTag.Create(reader.GetString()!)),
             ArgKind.Phone => GetArg(Phone.Create(reader.GetString()!)),
             ArgKind.String => GetArg(reader.GetString()!),

@@ -3,27 +3,22 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using ErrorOr;
+using SquidEyes.Fundamentals.Results;
 
 namespace SquidEyes.Fundamentals;
 
-public class ErrorReturned(Tag activity, Error error) 
-    : LogItemBase(Severity.Warn, activity)
+public class ErrorReturned(Tag activity, Error error, TagValueSet metadata = null!)
+    : LogItemBase(Severity.Warn, activity, metadata!)
 {
-    private readonly Error error = error.MayNotBe().Default();
+    private readonly Error error = error.MayNotBe().Null();
 
-    public override (Tag, object)[] GetTagValues()
+    protected override TagValueSet GetCustomTagValues()
     {
-        var result = new List<(Tag, object)>()
-        {
-            (Tag.Create("Type"), error.Type),
-            (Tag.Create("Code"), error.Code),
-            (Tag.Create("Message"), error.Description)
-        };
+        var tagValues = new TagValueSet();
 
-        if (error.Metadata is not null && error.Metadata.Count > 0)
-            result.Add((Tag.Create("Metadata"), error.Metadata));
+        tagValues.Upsert("Code", error.Code);
+        tagValues.Upsert("Message", error.Message);
 
-        return [.. result];
+        return tagValues;
     }
 }

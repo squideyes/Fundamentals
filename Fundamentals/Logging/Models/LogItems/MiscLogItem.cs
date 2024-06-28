@@ -5,21 +5,8 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class MiscLogItem : LogItemBase
+public class MiscLogItem(Severity severity, Tag activity, TagValueSet metadata = null!)
+    : LogItemBase(severity, activity, metadata)
 {
-    private readonly TagValueSet? tagValues;
-
-    public MiscLogItem(Severity severity, Tag activity, TagValueSet tagValues = null!)
-        : base(severity, activity)
-    {
-        this.tagValues = tagValues.MustBe().True(v => v is null || !v.IsEmpty);
-    }
-
-    public override (Tag, object)[] GetTagValues()
-    {
-        if (tagValues == null)
-            return Array.Empty<(Tag, object)>();
-        else
-            return tagValues!.Select(kv => (kv.Key, kv.Value)).ToArray();
-    }
+    protected override TagValueSet GetCustomTagValues() => null!;
 }

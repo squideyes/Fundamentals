@@ -7,12 +7,9 @@ namespace SquidEyes.Fundamentals;
 
 public enum ArgKind
 {
-    AccountId = 1,
     Boolean,
-    ActorId,
     DateOnly,
     DateTime,
-    Delta,
     Double,
     Email,
     Enum,

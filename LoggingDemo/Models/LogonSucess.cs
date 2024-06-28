@@ -5,23 +5,19 @@
 
 namespace SquidEyes.Fundamentals.LoggingDemo;
 
-public class LogonSucess(Brokerage brokerage, Gateway[] endpoints) 
-    : LogItemBase(Severity.Info)
+public class LogonSucess(Tag activity, Brokerage brokerage, Gateway gateway, TagValueSet metadata = null!) 
+    : LogItemBase(Severity.Info, activity, metadata)
 {
     public Brokerage Brokerage { get; } = brokerage.MustBe().EnumValue();
+    public Gateway Gateway { get; } = gateway.MustBe().EnumValue();
 
-    public Gateway[] Endpoints { get; } = endpoints.MustBe()
-        .True(v => v.Length > 0 && v.All(e => Enum.IsDefined(e)));
-
-    public string? Gateway { get; init; }
-
-    public override (Tag, object)[] GetTagValues()
+    protected override TagValueSet GetCustomTagValues()
     {
-        return
-        [
-            (Tag.Create(nameof(Brokerage)), Brokerage),
-            (Tag.Create(nameof(Endpoints)), Endpoints),
-            (Tag.Create(nameof(Gateway)), Gateway!)
-        ];
+        var tagValues = new TagValueSet();
+
+        tagValues.Upsert(nameof(Brokerage), Brokerage);
+        tagValues.Upsert(nameof(Gateway), Gateway!);
+
+        return tagValues;
     }
 }

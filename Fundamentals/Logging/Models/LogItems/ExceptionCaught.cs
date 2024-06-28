@@ -3,46 +3,44 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SquidEyes.Fundamentals;
 
 public class ExceptionCaught : LogItemBase
 {
-    private readonly ErrorInfo errorInfos;
-    private readonly TagValueSet tagValues;
+    private static readonly JsonSerializerOptions jso = GetJsonSerializerOptions();
 
-    public ExceptionCaught(Exception error,
-        bool? withFileInfo = null, TagValueSet tagValues = null!)
-            : base(Severity.Error)
+    private readonly ExceptionInfo exceptionInfo;
+
+    public ExceptionCaught(Tag activity, Exception error, TagValueSet? metadata = null!)
+        : base(Severity.Error, activity, metadata)
     {
         error.MayNotBe().Null();
+        metadata = metadata?.MustBe().True(v => !v!.IsEmpty);
 
-        if (!withFileInfo.HasValue)
-            withFileInfo = Debugger.IsAttached;
-
-        this.tagValues = tagValues.MustBe()
-            .True(v => v is null || !v.IsEmpty);
-
-        errorInfos = new ErrorInfo(error, withFileInfo.Value);
+        exceptionInfo = new ExceptionInfo(error);
     }
 
-    public override (Tag, object)[] GetTagValues()
+    protected override TagValueSet GetCustomTagValues()
     {
-        var tagValues = new List<(Tag, object)> {
-            (Tag.Create("Type"), errorInfos.Type.ToString()) };
+        var tagValues = new TagValueSet();
 
-        foreach (var message in errorInfos.Messages)
-            tagValues.Add((Tag.Create("Message"), message));
+        tagValues.Upsert("ErrorType", exceptionInfo.ErrorType);
+        tagValues.Upsert("Message", exceptionInfo.Message);
+        tagValues.Upsert("Exception", 
+            JsonSerializer.Serialize(exceptionInfo.Message, jso));
 
-        tagValues.Add((Tag.Create("Details"), errorInfos));
+        return tagValues;
+    }
 
-        if (this.tagValues != null)
-        {
-            tagValues.AddRange(this.tagValues!
-                .Select(kv => (kv.Key, kv.Value)));
-        }
+    private static JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        var jso = new JsonSerializerOptions { WriteIndented = false };
 
-        return [.. tagValues];
+        jso.Converters.Add(new JsonStringEnumConverter());
+
+        return jso;
     }
 }
