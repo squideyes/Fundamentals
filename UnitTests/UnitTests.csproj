@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Fundamentals\Fundamentals.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Results\" />
+  </ItemGroup>
+
 </Project>

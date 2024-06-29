@@ -2,33 +2,30 @@
 
 public class Error : IEquatable<Error>
 {
-    public Error(MultiTag code, string message, TagValueSet? metadata = null!)
+    public Error(Tag code, string message, TagArgSet? metadata = null!)
     {
-        Code = code;
-
+        Code = code.MayNotBe().Null();
         Message = message.MustBe().NonNullAndTrimmed();
 
-        if (metadata is not null && !metadata.IsEmpty)
-            Metadata = metadata;
+        if (metadata is not null)
+            Metadata = metadata.MustBe().True(v => v.HasItems());
     }
 
-    public MultiTag Code { get; }
+    public Tag Code { get; }
     public string Message { get; }
-    public TagValueSet? Metadata { get; }
+    public TagArgSet? Metadata { get; }
 
     public static readonly Error None = new(string.Empty, string.Empty);
 
     public static readonly Error NullValue =
         new("Error.NullValue", "The specified result value is NULL.");
 
-
     public virtual bool Equals(Error? other)
     {
         if (other is null)
             return false;
 
-        return Code == other.Code
-            && Message == other.Message
+        return Code == other.Code && Message == other.Message
             && Equals(Metadata, other.Metadata);
     }
 

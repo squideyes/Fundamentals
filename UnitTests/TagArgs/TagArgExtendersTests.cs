@@ -108,21 +108,13 @@ public class TagArgExtendersTests
         Guid.NewGuid().Do(v => ParseableArgTest(v.ToString(), v));
 
     [Fact]
-    public void GoodString_Should_ConvertToConfigString()
-    {
-        "A".ToStringArg("X").Value.Should().Be("A");
-        "".ToStringArg("X", true).Value.Should().BeNull();
-        "A".ToStringArg("X").Value.Should().Be("A");
-    }
-
-    [Fact]
     public void GoodUri_Should_ConvertToConfigUri()
     {
         const string URI = "https://cnn.com";
 
-        URI.ToUriArg("X").Value.Should().Be(new Uri(URI));
-        "".ToUriArg("X", UriKind.Absolute, true).Value.Should().BeNull();
-        URI.ToUriArg("X").Value.Should().Be(new Uri(URI));
+        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
+        "".ToUriArg("X", UriKind.Absolute, true).Arg.Should().BeNull();
+        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
     }
 
     [Fact]
@@ -130,9 +122,9 @@ public class TagArgExtendersTests
     {
         const string EMAIL = "dude@someco.com";
 
-        EMAIL.ToEmailArg("X").Value.Should().Be(Email.Create(EMAIL));
-        "".ToEmailArg("X", true).Value.Should().BeNull();
-        EMAIL.ToEmailArg("X").Value.Should().Be(Email.Create(EMAIL));
+        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
+        "".ToEmailArg("X", true).Arg.Should().BeNull();
+        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
     }
 
     [Fact]
@@ -140,17 +132,17 @@ public class TagArgExtendersTests
     {
         const string PHONE = "+1 (234) 567-8901";
 
-        PHONE.ToPhoneArg("X").Value.Should().Be(Phone.Create(PHONE));
-        "".ToPhoneArg("X", true).Value.Should().BeNull();
-        PHONE.ToPhoneArg("X").Value.Should().Be(Phone.Create(PHONE));
+        PHONE.ToPhoneArg("X").Arg.Should().Be(Phone.Create(PHONE));
+        "".ToPhoneArg("X", true).Arg.Should().BeNull();
+        PHONE.ToPhoneArg("X").Arg.Should().Be(Phone.Create(PHONE));
     }
 
     [Fact]
     public void GoodEnum_Should_ConvertToConfigEnum()
     {
-        "Absolute".ToEnumArg<UriKind>("X").Value.Should().Be(UriKind.Absolute);
-        "".ToEnumArg<UriKind>("X", true).Value.Should().Be(default);
-        "Absolute".ToEnumArg<UriKind>("X").Value.Should().Be(UriKind.Absolute);
+        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
+        "".ToEnumArg<UriKind>("X", true).Arg.Should().Be(default);
+        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
     }
 
     [Fact]
@@ -158,9 +150,9 @@ public class TagArgExtendersTests
     {
         const string TAG = "Tag1";
 
-        TAG.ToTagArg("X").Value.Should().Be(Tag.Create(TAG));
-        "".ToTagArg("X", true).Value.Should().BeNull();
-        TAG.ToTagArg("X").Value.Should().Be(Tag.Create(TAG));
+        TAG.ToTagArg("X").Arg.Should().Be(Tag.Create(TAG));
+        "".ToTagArg("X", true).Arg.Should().BeNull();
+        TAG.ToTagArg("X").Arg.Should().Be(Tag.Create(TAG));
     }
 
     [Fact]
@@ -168,17 +160,17 @@ public class TagArgExtendersTests
     {
         const string MT = "Tag1:Tag2:Tag3";
 
-        MT.ToMultiTagArg("X").Value.Should().Be(MultiTag.Create(MT));
-        "".ToMultiTagArg("X", true).Value.Should().BeNull();
-        MT.ToMultiTagArg("X").Value.Should().Be(MultiTag.Create(MT));
+        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
+        "".ToMultiTagArg("X", true).Arg.Should().BeNull();
+        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
     }
 
     private static void ParseableArgTest<T>(string input, T expected)
         where T : struct, IParsable<T>
     {
-        var requiredArg = input!.ToParseableArg<T>("X");
-        var nullArg = "".ToParseableArg<T>("X", true);
-        var nonNullArg = input!.ToParseableArg<T>("X", true);
+        var requiredArg = input!.ToParseableTagArg<T>("X");
+        var nullArg = "".ToParseableTagArg<T>("X", true);
+        var nonNullArg = input!.ToParseableTagArg<T>("X", true);
 
         requiredArg.Tag.Should().Be(Tag.Create("X"));
         nullArg.Tag.Should().Be(Tag.Create("X"));
@@ -192,8 +184,8 @@ public class TagArgExtendersTests
         nullArg.Message.Should().BeNull();
         nonNullArg.Message.Should().BeNull();
 
-        requiredArg.Value.Should().Be(expected);
-        nullArg.Value.Should().Be(default(T));
-        nonNullArg.Value.Should().Be(expected);
+        requiredArg.Arg.Should().Be(expected);
+        nullArg.Arg.Should().Be(default(T));
+        nonNullArg.Arg.Should().Be(expected);
     }
 }

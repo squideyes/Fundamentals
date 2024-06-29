@@ -5,10 +5,16 @@ public class Result
     protected internal Result(bool isSuccess, Error error)
     {
         if (isSuccess && error != Error.None)
-            throw new InvalidOperationException();
+        {
+            throw new InvalidOperationException(
+                "When \"IsSuccess\" is true, Error must be Error.None!");
+        }
 
         if (!isSuccess && error == Error.None)
-            throw new InvalidOperationException();
+        {
+            throw new InvalidOperationException(
+                "When \"IsFailure\" is true, Error may not be Error.None!");
+        }
 
         IsSuccess = isSuccess;
         Errors = [error];
@@ -31,11 +37,9 @@ public class Result
     public static Result<TValue> Success<TValue>(TValue value) =>
         new(value, true, Error.None);
 
-    public static Result Failure(Error error) =>
-        new(false, error);
+    public static Result Failure(Error error) => new(false, error);
 
-    public static Result Failure(Error[] errors) =>
-        new(false, errors);
+    public static Result Failure(Error[] errors) => new(false, errors);
 
     public static Result<TValue> Failure<TValue>(Error error) =>
         new(default, false, error);

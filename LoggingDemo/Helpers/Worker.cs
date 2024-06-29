@@ -13,8 +13,7 @@ internal class Worker(ILogger<Worker> logger,
     private readonly ILogger<Worker> logger = logger;
     private readonly IHostApplicationLifetime lifeTime = lifeTime;
 
-    protected override async Task ExecuteAsync(
-        CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {
@@ -31,8 +30,7 @@ internal class Worker(ILogger<Worker> logger,
         }
         catch (Exception outer)
         {
-            // Log "ErrorCaught" (a standard log-item)
-            logger.Log(new ExceptionCaught("ExecuteAsyncDemo", outer));
+            logger.LogExceptionCaught("RunningExecAsync", outer, true);
         }
 
         lifeTime.StopApplication();

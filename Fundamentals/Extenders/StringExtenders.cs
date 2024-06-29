@@ -10,6 +10,12 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class StringExtenders
 {
+    public static bool IsBase64String(this string value) =>
+        Convert.TryFromBase64String(value, new Span<byte>(), out _);
+
+    public static bool IsSingleLine(this string value) =>
+        !value.Any(c => c == '\r' || c == '\n');
+
     public static string WhitespaceToNull(this string? value) =>
         string.IsNullOrWhiteSpace(value) ? null! : value;
 

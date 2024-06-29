@@ -3,36 +3,51 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using FluentValidation.Results;
 using LoggingDemo;
 using Serilog;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
-using System.Diagnostics;
-using static SquidEyes.Fundamentals.StandardLoggerBuilder;
+using static SquidEyes.Fundamentals.AsciiFilter;
+using static SquidEyes.Fundamentals.InitLoggerBuilder;
+using MEL = Microsoft.Extensions.Logging;
 
-// Use SelfLog to catch internal Serilog errors
-Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+// Gets IConfiguration used to configure the program
+var config = GetConfig(args, "LoggingDemo__");
+
+// Used for Serilog.Log.Logger initialization
+var (junketId, userId, seqApiUri, seqApiKey, logLevel) = GetInitTagArgs();
+
+// Only used to log initialization failures
+var initLogger = GetInitLogger();
+
+// If one or more of the TagArgs are invalid, exit early
+if (!initLogger.IsValid([junketId, userId, seqApiUri, seqApiKey, logLevel]))
+    return ExitCode.InitFailure;
 
 // The filename to write custom log-items to
 var logFileName = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
 
-// Gets IConfiguration used by the program
-var config = GetConfig(args, "LoggingDemo__");
+// Instantiate and configure a new Serilog.Log.Logger
+InitSerilogLogger(LogLevel.Debug, configure =>
+{
+    configure.Enrich.WithProperty(junketId.Tag.Value!, junketId.Arg);
+    configure.Enrich.WithProperty(userId.Tag.Value!, userId.Arg);
+    configure.Enrich.WithProperty("RunDate", DateOnly.FromDateTime(DateTime.Today));
 
-// Only used to log boostrap failures
-var logger = GetBootstrapLogger();
+    configure.Destructure.ByTransforming<Broker>(v => v.ToCode());
 
-// Gets enrichment data to include with EVERY log-item
-if (!TryGetEnrichWiths(logger, config, out TagValueSet enrichWiths))
-    return;
+    configure.WriteTo.File(logFileName, rollingInterval: RollingInterval.Day);
 
-// Try to instantiate a new "standard" Serilog.Log.Logger
-if (!TrySetStandardLogger(logger, config, enrichWiths, Customize))
-    return;
+    var logEventLevel = logLevel.Arg.ToLogEventLevel();
 
-// "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging
+    configure.WriteTo.Seq(seqApiUri.Arg.AbsoluteUri,
+        apiKey: seqApiKey.Arg, restrictedToMinimumLevel: logEventLevel);
+});
+
+// Get a Microsoft.Extensions.Logging.ILogger 
+var logger = GetLogger();
+
+// "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging DI
 var host = Host.CreateDefaultBuilder()
     .ConfigureServices((context, services) =>
     {
@@ -41,44 +56,46 @@ var host = Host.CreateDefaultBuilder()
     .UseSerilog()
     .Build();
 
-// Log "LogonSuccess" (a custom log-item)
-Log.Logger.Log(new LogonSucess(
-    "AttemptingToLogin", Brokerage.CanonTrading, Gateway.Chicago));
+// Log a custom log-item
+logger.LogLogonSucceeded("LogonTest", Broker.DiscountTrading, Gateway.UsWest);
 
-// Log "MiscLogItem" with a simple "Message" Context
-//Log.Logger.Log(new MiscLogItem(Severity.Warn,
-//    Tag.Create("MiscWarning"), TagValueSet.From("Up != Down")));
+// Ad-hoc log-items can be intermingled with standard log-items
+Log.Logger.Debug("This is an ad-hoc log item");
 
-// Free-form messages can be intermingled with LogItems
-Log.Logger.Debug("Who let the dogs out?");
+// Log a miscellaneous warning event 
+logger.LogMiscEvent("MiscEventTest1",
+    "Oopsie!!", "Something Went Wrong", MiscEventKind.Warning);
 
-// Log "MiscLogItem" with a multiple tag-value Context
-Log.Logger.Log(new MiscLogItem(
-    Severity.Debug, Tag.Create("GotSettings"),
-    new TagValueSet()
-    {
-        { "Border", 2 },
-        { "Background", ConsoleColor.Yellow },
-        { "Foreground", ConsoleColor.Black },
-        { "ShowHelp", true },
-        { "Session", new DateOnly(2023, 1, 1) }
-    }));
+// Log a miscellaneous information event
+logger.LogMiscEvent("MiscEventTest2", "Oh goodie!!", "Something Went Right");
 
-const int BAD_ID = 123;
+// Create a default Person
+var person = new Person();
 
-// Log individual FluentValidation ValidationFailures
-Log.Logger.Log(new ValidationFailed(Tag.Create("StartupValidation"),
-    new ValidationFailure("Id", $"\"{BAD_ID}\" is an invalid ID.")));
+// Create a Person validator
+var validator = new Person.Validator();
 
+// Should log a ValidationFailure
+logger.LogIfValidationFailure("ValidationTest", validator.Validate(person));
+
+// Update Person properties with valid values
+person.FirstName = "Some";
+person.LastName = "Dude";
+
+// If ValidationResult.IsValid is true, don't write out log-item 
+logger.LogIfValidationFailure("ValidationTest", validator.Validate(person));
+
+// Run the Worker
 await host.RunAsync();
 
 // Always close and flush before terminating your app
 Log.CloseAndFlush();
 
+// Program ends
 Console.WriteLine();
+Console.WriteLine($"For info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
 
-Console.WriteLine(
-    $"For info, see: {config["Serilog:SeqApiUri"]} or {logFileName}");
+return ExitCode.Success;
 
 // Loads (but doesn't validate!) configuration values
 static IConfiguration GetConfig(string[] args, string envVarPrefix)
@@ -89,7 +106,7 @@ static IConfiguration GetConfig(string[] args, string envVarPrefix)
         { "--UserId", "Context:UserId" },
         { "--SeqApiUri", "Serilog:SeqApiUri" },
         { "--SeqApiKey", "Serilog:SeqApiKey" },
-        { "--MinSeverity", "Serilog:MinSeverity" }
+        { "--LogLevel", "Serilog:LogLevel" }
     };
 
     return new ConfigurationBuilder()
@@ -98,49 +115,31 @@ static IConfiguration GetConfig(string[] args, string envVarPrefix)
         .Build();
 }
 
-// Customizes the standard logger
-void Customize(LoggerConfiguration config)
+// Gets a Microsoft.Extensions.Logging.ILogger
+static MEL.ILogger GetLogger()
 {
-    config.WriteTo.File(logFileName, rollingInterval: RollingInterval.Day);
+    using var loggerFactory = LoggerFactory.Create(
+        builder => { builder.AddSerilog(); });
 
-    config.Destructure.ByTransforming<Brokerage>(v =>
-    {
-        return v switch
-        {
-            Brokerage.CanonTrading => "Canon Trading",
-            Brokerage.DiscountTrading => "Discount Trading",
-            Brokerage.AmpFutures => "Amp Trading",
-            Brokerage.OptimusFutures => "Optimus Futures",
-            _ => throw new ArgumentOutOfRangeException(nameof(v))
-        };
-    });
+    return loggerFactory.CreateLogger<Program>();
 }
 
-// Tries to get a TagValueSet to enrich log-items with
-static bool TryGetEnrichWiths(Serilog.ILogger logger,
-    IConfiguration config, out TagValueSet enrichWiths)
+// Gets TagArgs used for logger initialization
+(TagArg<int>, TagArg<string>, TagArg<Uri>, TagArg<string>, TagArg<LogLevel>) GetInitTagArgs()
 {
-    const string ERROR_CODE = "TryGetEnrichWiths";
-
     var junketId = config["Context:JunketId"]!
-        .ToParseableArg<int>("JunketId", true, v => v > 0);
+        .ToParseableTagArg<int>("JunketId", true, v => v > 0);
 
-    if (!junketId.IsValid)
-    {
-        var x = new ErrorReturned("", default);
-    }
-    
-    //junketId.LogFailure(logger, ERROR_CODE);
+    var userId = config["Context:UserId"]!.ToAsciiTagArg("UserId");
 
-    var userId = config["Context:UserId"]!
-        .ToStringArg("UserId", true, v => v.IsNonNullAndTrimmed());
+    var seqApiUri = config["Serilog:SeqApiUri"]!.ToUriArg("SeqApiUri");
 
-    enrichWiths = new TagValueSet
-    {
-        { junketId.Tag, junketId.Value! },
-        { userId.Tag, userId.Value! },
-        { "RunDate", DateOnly.FromDateTime(DateTime.Today) }
-    };
+    var seqApiKey = config["Serilog:SeqApiKey"]!
+        .ToAsciiTagArg("SeqApiKey", true, true, 1, 50, AllChars, null!,
+            v => string.IsNullOrWhiteSpace(v) ? null! : v);
 
-    return true;
+    var logLevel = config["Serilog:LogLevel"]!
+        .ToEnumArg<LogLevel>("LogLevel");
+
+    return (junketId, userId, seqApiUri, seqApiKey, logLevel);
 }

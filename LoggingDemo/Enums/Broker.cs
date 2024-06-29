@@ -3,12 +3,12 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-namespace SquidEyes.Fundamentals;
+namespace SquidEyes.Fundamentals.LoggingDemo;
 
-public enum Severity
+public enum Broker
 {
-    Debug = 1,
-    Info,
-    Warn,
-    Error
+    OptimusFutures = 1,
+    CanonTrading,
+    AmpFutures,
+    DiscountTrading
 }

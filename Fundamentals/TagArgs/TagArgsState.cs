@@ -2,8 +2,12 @@
 
 public enum TagArgState
 {
-    IsValid = 1,
-    NotValid,
-    ParseError,
-    NullOrEmpty
+    Valid = 1,
+    Invalid,
+    ParseFailed,
+    NotTrimmed,
+    TooShort,
+    TooLong,
+    BadChars,
+    NullOrWhitespace
 }

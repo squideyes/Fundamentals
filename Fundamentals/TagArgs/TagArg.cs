@@ -1,71 +1,56 @@
-﻿using Microsoft.Extensions.Logging;
-using SquidEyes.Fundamentals.Results;
-using static SquidEyes.Fundamentals.TagArgState;
+﻿using static SquidEyes.Fundamentals.TagArgState;
 
 namespace SquidEyes.Fundamentals;
 
 public class TagArg<T> : ITagArg
 {
-    internal TagArg(Tag tag, T value)
+    internal TagArg(Tag tag, T arg)
     {
         Tag = tag;
-        Value = value;
-        State = TagArgState.IsValid;
+        Arg = arg;
+        State = Valid;
         Message = null!;
     }
 
-    internal TagArg(Tag tag, string input, TagArgState state)
+    internal TagArg(Tag tag, string input, TagArgState state, int? length = null)
     {
         Tag = tag;
         State = state;
-        Value = default!;
+        Arg = default!;
 
         Message = state switch
         {
-            NullOrEmpty => $"The \"{tag}\" input may not be null or empty",
-            ParseError => $"The \"{tag}\" input could not be parsed (Input: {input})",
-            NotValid => $"The \"{tag}\" value is an invalid string.",
+            NullOrWhitespace => $"The \"{tag}\" input may not be null, empty or whitespace,",
+            ParseFailed => $"The \"{tag}\" input could not be parsed (Input: {input}, Type: {typeof(T)}).",
+            Invalid => $"The \"{tag}\" arg failed validation.",
+            TooShort => $"The \"{tag}\" arg is less than {length} characters long.",
+            TooLong => $"The \"{tag}\" arg is greater than {length} characters long.",
+            NotTrimmed => $"The \"{tag}\" arg has not been trimmed.",
+            BadChars => $"The \"{tag}\" arg contains one or more invalid characters.",
             _ => throw new ArgumentOutOfRangeException(nameof(state))
         };
     }
 
     public Tag Tag { get; }
-    public T Value { get; }
+    public T Arg { get; }
     public string Message { get; }
     public TagArgState State { get; }
 
-    public bool IsValid => State == TagArgState.IsValid;
+    public bool IsValid => State == Valid;
 
-    public Result<R> ToFailureResult<R>(string code)
+    internal static bool IsNullOrWhiteSpace(
+        string input, Tag tag, bool isOptional, out TagArg<T> tagArg)
     {
-        if (State != TagArgState.IsValid)
-        {
-            throw new InvalidOperationException(
-                "The \"ToFailureResult\" method may only be called on invalid TagArgs!");
-        }
-
-        return Result.Failure<R>(new Error(code, Message));
-    }
-
-    public void LogIfFailure(ILogger logger, string code)
-    {
-        if (State != TagArgState.IsValid)
-            logger.LogWarning(new Error(code, Message));
-    }
-
-    internal static bool IsNullOrEmpty(
-        string input, Tag tag, bool isOptional, out TagArg<T> arg)
-    {
-        arg = default!;
+        tagArg = default!;
 
         if (string.IsNullOrWhiteSpace(input))
         {
             if (isOptional)
-                arg = new TagArg<T>(tag, default!);
+                tagArg = new TagArg<T>(tag, default!);
             else
-                arg = new TagArg<T>(tag, input!, NullOrEmpty);
+                tagArg = new TagArg<T>(tag, input!, NullOrWhitespace);
         }
 
-        return !arg.IsDefault();
+        return !tagArg.IsDefault();
     }
 }

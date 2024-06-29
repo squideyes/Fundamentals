@@ -3,7 +3,6 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using Loyc.Geometry;
 using System.Collections;
 
 namespace SquidEyes.Fundamentals;

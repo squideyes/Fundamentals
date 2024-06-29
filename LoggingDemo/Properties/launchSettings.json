@@ -9,7 +9,7 @@
         "LoggingDemo__Context__UserId": "ABC123",
         "LoggingDemo__Serilog__SeqApiUri": "http://localhost:5341",
         "LoggingDemo__Serilog__SeqApiKey": "",
-        "LoggingDemo__Serilog__MinSeverity": "Debug"
+        "LoggingDemo__Serilog__LogLevel": "Debug"
       },
       "applicationUrl": "https://localhost:61211;http://localhost:61212"
     }
