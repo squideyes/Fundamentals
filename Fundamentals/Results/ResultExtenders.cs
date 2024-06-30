@@ -1,4 +1,4 @@
-﻿namespace SquidEyes.Fundamentals.Results;
+﻿namespace SquidEyes.Fundamentals;
 
 public static class ResultExtenders
 {

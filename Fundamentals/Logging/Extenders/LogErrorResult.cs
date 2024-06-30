@@ -4,7 +4,6 @@
 //// ********************************************************
 
 using Microsoft.Extensions.Logging;
-using SquidEyes.Fundamentals.Results;
 using System.Runtime.CompilerServices;
 
 namespace SquidEyes.Fundamentals;
