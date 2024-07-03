@@ -55,6 +55,8 @@ public class TagArg<T> : ITagArg
             return Result.Failure<T>(new Error(code, Message));
     }
 
+    public Error ToError(string code) => ToResult(code).Errors.First();
+
     public static bool TryGetNonAsciiArgKind(out TagArgArgKind kind)
     {
         kind = typeof(T) switch
