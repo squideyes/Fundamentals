@@ -1,21 +1,26 @@
 ﻿namespace SquidEyes.Fundamentals;
 
-public enum TagValueKind
+public enum TagArgArgKind
 {
-    Bool = 1,
-    DateOnly,
+    Base64 = 1,
+    Bool,
+    Byte,
+    Char,
     DateTime,
+    DateOnly,
     Double,
     Email,
     Enum,
+    Float,
     Guid,
     Int32,
     Int64,
     MultiTag,
     Phone,
-    String,
-    Tag,
-    TimeOnly,
+    Int16,
+    TextLine,
+    TimeOnly, 
     TimeSpan,
+    Tag,
     Uri
 }

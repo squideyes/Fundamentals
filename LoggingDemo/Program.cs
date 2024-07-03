@@ -7,7 +7,6 @@ using LoggingDemo;
 using Serilog;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
-using static SquidEyes.Fundamentals.AsciiFilter;
 using static SquidEyes.Fundamentals.InitLoggerBuilder;
 using MEL = Microsoft.Extensions.Logging;
 
@@ -125,21 +124,18 @@ static MEL.ILogger GetLogger()
 }
 
 // Gets TagArgs used for logger initialization
-(TagArg<int>, TagArg<string>, TagArg<Uri>, TagArg<string>, TagArg<LogLevel>) GetInitTagArgs()
+InitTagArgs GetInitTagArgs()
 {
-    var junketId = config["Context:JunketId"]!
-        .ToParseableTagArg<int>("JunketId", true, v => v > 0);
+    var junketId = config["Context:JunketId"]!.ToInt32TagArg("JunketId", v => v > 0);
+    var userId = config["Context:UserId"]!.ToTextLineTagArg("UserId");
+    var seqApiUri = config["Serilog:SeqApiUri"]!.ToUriTagArg("SeqApiUri");
+    var seqApiKey = config["Serilog:SeqApiKey"]!.ToTextLineTagArg("SeqApiKey", false);
+    var logLevel = config["Serilog:LogLevel"]!.ToEnumTagArg<LogLevel>("LogLevel");
 
-    var userId = config["Context:UserId"]!.ToAsciiTagArg("UserId");
-
-    var seqApiUri = config["Serilog:SeqApiUri"]!.ToUriArg("SeqApiUri");
-
-    var seqApiKey = config["Serilog:SeqApiKey"]!
-        .ToAsciiTagArg("SeqApiKey", true, true, 1, 50, AllChars, null!,
-            v => string.IsNullOrWhiteSpace(v) ? null! : v);
-
-    var logLevel = config["Serilog:LogLevel"]!
-        .ToEnumArg<LogLevel>("LogLevel");
-
-    return (junketId, userId, seqApiUri, seqApiKey, logLevel);
+    return new InitTagArgs(junketId, userId, seqApiUri, seqApiKey, logLevel);
 }
+
+// Properties loaded by GetInitTagArgs()
+record InitTagArgs(TagArg<int> JunketId, TagArg<string> UserId, 
+    TagArg<Uri> SeqApiUri, TagArg<string> SeqApiKey, TagArg<LogLevel> LogLevel);
+

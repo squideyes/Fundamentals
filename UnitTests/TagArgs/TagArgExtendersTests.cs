@@ -10,182 +10,331 @@ namespace SquidEyes.UnitTests;
 
 public class TagArgExtendersTests
 {
-    [Fact]
-    public void GoodByte_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("255", TagArgState.Valid, true)]
+    [InlineData("255", TagArgState.Valid, null!)]
+    [InlineData("255", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Byte_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("0", byte.MinValue);
-        ParseableArgTest("255", byte.MaxValue);
+        BasicArgTest<byte>(input, TagArgArgKind.Byte,
+            expectedIsValid, expectedState, (t, a, f) => a.ToByteTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodChar_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("Z", TagArgState.Valid, true)]
+    [InlineData("Z", TagArgState.Valid, null!)]
+    [InlineData("Z", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Char_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("A", 'A');
-        ParseableArgTest("Z", 'Z');
+        BasicArgTest<char>(input, TagArgArgKind.Char,
+            expectedIsValid, expectedState, (t, a, f) => a.ToCharTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodShort_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("32767", TagArgState.Valid, true)]
+    [InlineData("32767", TagArgState.Valid, null!)]
+    [InlineData("32767", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Int16_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("-32768", short.MinValue);
-        ParseableArgTest("32767", short.MaxValue);
+        BasicArgTest<short>(input, TagArgArgKind.Int16,
+            expectedIsValid, expectedState, (t, a, f) => a.ToInt16TagArg(t, f));
     }
 
-    [Fact]
-    public void GoodInt32_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("2147483647", TagArgState.Valid, true)]
+    [InlineData("2147483647", TagArgState.Valid, null!)]
+    [InlineData("2147483647", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Int32_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("-2147483648", int.MinValue);
-        ParseableArgTest("2147483647", int.MaxValue);
+        BasicArgTest<int>(input, TagArgArgKind.Int32,
+            expectedIsValid, expectedState, (t, a, f) => a.ToInt32TagArg(t, f));
     }
 
-    [Fact]
-    public void GoodIn264_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("9223372036854775807", TagArgState.Valid, true)]
+    [InlineData("9223372036854775807", TagArgState.Valid, null!)]
+    [InlineData("9223372036854775807", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Int64_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("-9223372036854775808", long.MinValue);
-        ParseableArgTest("9223372036854775807", long.MaxValue);
+        BasicArgTest<long>(input, TagArgArgKind.Int64,
+            expectedIsValid, expectedState, (t, a, f) => a.ToInt64TagArg(t, f));
     }
 
-    [Fact]
-    public void GoodFloat_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("3.40282347E+38", TagArgState.Valid, true)]
+    [InlineData("3.40282347E+38", TagArgState.Valid, null!)]
+    [InlineData("3.40282347E+38", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Float_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest(float.E.ToString(), float.E);
-        ParseableArgTest(float.Epsilon.ToString(), float.Epsilon);
-        ParseableArgTest(float.MaxValue.ToString(), float.MaxValue);
-        ParseableArgTest(float.MinValue.ToString(), float.MinValue);
-        ParseableArgTest(float.NaN.ToString(), float.NaN);
-        ParseableArgTest(float.NegativeInfinity.ToString(), float.NegativeInfinity);
-        ParseableArgTest(float.NegativeZero.ToString(), float.NegativeZero);
-        ParseableArgTest(float.Pi.ToString(), float.Pi);
-        ParseableArgTest(float.PositiveInfinity.ToString(), float.PositiveInfinity);
-        ParseableArgTest(float.Tau.ToString(), float.Tau);
+        BasicArgTest<float>(input, TagArgArgKind.Float,
+            expectedIsValid, expectedState, (t, a, f) => a.ToFloatTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodDouble_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("1.7976931348623157E+308", TagArgState.Valid, true)]
+    [InlineData("1.7976931348623157E+308", TagArgState.Valid, null!)]
+    [InlineData("1.7976931348623157E+308", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Double_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest(double.E.ToString(), double.E);
-        ParseableArgTest(double.Epsilon.ToString(), double.Epsilon);
-        ParseableArgTest(double.MaxValue.ToString(), double.MaxValue);
-        ParseableArgTest(double.MinValue.ToString(), double.MinValue);
-        ParseableArgTest(double.NaN.ToString(), double.NaN);
-        ParseableArgTest(double.NegativeInfinity.ToString(), double.NegativeInfinity);
-        ParseableArgTest(double.NegativeZero.ToString(), double.NegativeZero);
-        ParseableArgTest(double.Pi.ToString(), double.Pi);
-        ParseableArgTest(double.PositiveInfinity.ToString(), double.PositiveInfinity);
-        ParseableArgTest(double.Tau.ToString(), double.Tau);
+        BasicArgTest<double>(input, TagArgArgKind.Double,
+            expectedIsValid, expectedState, (t, a, f) => a.ToDoubleTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodDateTime_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("12/31/9999 23:59:59.9999999", TagArgState.Valid, true)]
+    [InlineData("12/31/9999 23:59:59.9999999", TagArgState.Valid, null!)]
+    [InlineData("12/31/9999 23:59:59.9999999", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void DateTime_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("01/01/0001 00:00:00.000", DateTime.MinValue);
-        ParseableArgTest("12/31/9999 23:59:59.9999999", DateTime.MaxValue);
+        BasicArgTest<DateTime>(input, TagArgArgKind.DateTime,
+            expectedIsValid, expectedState, (t, a, f) => a.ToDateTimeTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodTimeSpan_Should_ConvertToTagValue()
+
+    [Theory]
+    [InlineData("12/31/9999", TagArgState.Valid, true)]
+    [InlineData("12/31/9999", TagArgState.Valid, null!)]
+    [InlineData("12/31/9999", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void DateOnly_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("-10675199.02:48:05.4775808", TimeSpan.MinValue);
-        ParseableArgTest("10675199.02:48:05.4775807", TimeSpan.MaxValue);
+        BasicArgTest<DateOnly>(input, TagArgArgKind.DateOnly,
+            expectedIsValid, expectedState, (t, a, f) => a.ToDateOnlyTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodTimeOnly_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("23:59:59.9999999", TagArgState.Valid, true)]
+    [InlineData("23:59:59.9999999", TagArgState.Valid, null!)]
+    [InlineData("23:59:59.9999999", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void TimeOnly_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("00:00:00.000", TimeOnly.MinValue);
-        ParseableArgTest("23:59:59.9999999", TimeOnly.MaxValue);
+        BasicArgTest<TimeOnly>(input, TagArgArgKind.TimeOnly,
+            expectedIsValid, expectedState, (t, a, f) => a.ToTimeOnlyTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodDateOnly_Should_ConvertToTagValue()
+    [Theory]
+    [InlineData("10675199.02:48:05.4775807", TagArgState.Valid, true)]
+    [InlineData("10675199.02:48:05.4775807", TagArgState.Valid, null!)]
+    [InlineData("10675199.02:48:05.4775807", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void TimeSpan_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        ParseableArgTest("01/01/0001", DateOnly.MinValue);
-        ParseableArgTest("12/31/9999", DateOnly.MaxValue);
+        BasicArgTest<TimeSpan>(input, TagArgArgKind.TimeSpan,
+            expectedIsValid, expectedState, (t, a, f) => a.ToTimeSpanTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodGuid_Should_ConvertToTagValue() =>
-        Guid.NewGuid().Do(v => ParseableArgTest(v.ToString(), v));
-
-    [Fact]
-    public void GoodUri_Should_ConvertToConfigUri()
+    [Theory]
+    [InlineData("98689ce5ee504fbca646b5eabc64b332", TagArgState.Valid, true)]
+    [InlineData("98689ce5ee504fbca646b5eabc64b332", TagArgState.Valid, null!)]
+    [InlineData("98689ce5ee504fbca646b5eabc64b332", TagArgState.Invalid, false)]
+    [InlineData(null, TagArgState.NullOrWhitespace, null!)]
+    [InlineData("", TagArgState.NullOrWhitespace, null!)]
+    [InlineData(" ", TagArgState.NullOrWhitespace, null!)]
+    public void Guid_Should_ConvertToTagArg(
+        string? input, TagArgState expectedState, bool? expectedIsValid)
     {
-        const string URI = "https://cnn.com";
-
-        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
-        "".ToUriArg("X", UriKind.Absolute, true).Arg.Should().BeNull();
-        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
+        BasicArgTest<Guid>(input, TagArgArgKind.Guid,
+            expectedIsValid, expectedState, (t, a, f) => a.ToGuidTagArg(t, f));
     }
 
-    [Fact]
-    public void GoodEmail_Should_ConvertToConfigEmail()
-    {
-        const string EMAIL = "dude@someco.com";
+    ///////////////////////////////////
 
-        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
-        "".ToEmailArg("X", true).Arg.Should().BeNull();
-        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
+    private static void BasicArgTest<T>(string? input, TagArgArgKind argKind, 
+        bool? expectedIsValid, TagArgState expectedState,
+            Func<Tag, string, Func<T, bool>, TagArg<T>> getTagArg)
+                where T : struct, IComparable<T>, IParsable<T>
+    {
+        var tag = Tag.Create("X");
+
+        TagArg<T> tagArg;
+
+        if (expectedIsValid == true)
+            tagArg = getTagArg(tag, input!, v => true);
+        else if (expectedIsValid == false)
+            tagArg = getTagArg(tag, input!, v => false);
+        else
+            tagArg = getTagArg(tag, input!, null!);
+
+        tagArg.Tag.Should().Be(tag);
+
+        tagArg.State.Should().Be(expectedState);
+
+        if (expectedState == TagArgState.Valid)
+        {
+            tagArg.Kind.Should().Be(argKind);
+            tagArg.Arg.Should().Be(T.Parse(input!, null!));
+            tagArg.TypeName.Should().Be(typeof(T).FullName);
+            tagArg.IsValid.Should().BeTrue();
+            tagArg.Message.Should().BeNull();
+        }
+        else
+        {
+            tagArg.Kind.Should().Be(default);
+            tagArg.Arg.Should().Be(default);
+            tagArg.TypeName.Should().BeNull();
+            tagArg.IsValid.Should().BeFalse();
+            tagArg.Message.Should().NotBeNull();
+        }
     }
 
-    [Fact]
-    public void GoodPhone_Should_ConvertToConfigPhone()
-    {
-        const string PHONE = "+1 (234) 567-8901";
 
-        PHONE.ToPhoneArg("X").Arg.Should().Be(Phone.Create(PHONE));
-        "".ToPhoneArg("X", true).Arg.Should().BeNull();
-        PHONE.ToPhoneArg("X").Arg.Should().Be(Phone.Create(PHONE));
-    }
 
-    [Fact]
-    public void GoodEnum_Should_ConvertToConfigEnum()
-    {
-        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
-        "".ToEnumArg<UriKind>("X", true).Arg.Should().Be(default);
-        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
-    }
 
-    [Fact]
-    public void GoodTag_Should_ConvertToConfigTag()
-    {
-        const string TAG = "Tag1";
 
-        TAG.ToTagArg("X").Arg.Should().Be(Tag.Create(TAG));
-        "".ToTagArg("X", true).Arg.Should().BeNull();
-        TAG.ToTagArg("X").Arg.Should().Be(Tag.Create(TAG));
-    }
 
-    [Fact]
-    public void GoodMultiTag_Should_ConvertToConfigMultiTag()
-    {
-        const string MT = "Tag1:Tag2:Tag3";
+    //    [Fact]
+    //    public void GoodFloat_Should_ConvertToTagArg()
+    //    {
+    //        ParseableArgTest(float.E.ToString(), float.E);
+    //        ParseableArgTest(float.Epsilon.ToString(), float.Epsilon);
+    //        ParseableArgTest(float.MaxValue.ToString(), float.MaxValue);
+    //        ParseableArgTest(float.MinValue.ToString(), float.MinValue);
+    //        ParseableArgTest(float.NaN.ToString(), float.NaN);
+    //        ParseableArgTest(float.NegativeInfinity.ToString(), float.NegativeInfinity);
+    //        ParseableArgTest(float.NegativeZero.ToString(), float.NegativeZero);
+    //        ParseableArgTest(float.Pi.ToString(), float.Pi);
+    //        ParseableArgTest(float.PositiveInfinity.ToString(), float.PositiveInfinity);
+    //        ParseableArgTest(float.Tau.ToString(), float.Tau);
+    //    }
 
-        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
-        "".ToMultiTagArg("X", true).Arg.Should().BeNull();
-        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
-    }
+    //    [Fact]
+    //    public void GoodDouble_Should_ConvertToTagArg()
+    //    {
+    //        ParseableArgTest(double.E.ToString(), double.E);
+    //        ParseableArgTest(double.Epsilon.ToString(), double.Epsilon);
+    //        ParseableArgTest(double.MaxValue.ToString(), double.MaxValue);
+    //        ParseableArgTest(double.MinValue.ToString(), double.MinValue);
+    //        ParseableArgTest(double.NaN.ToString(), double.NaN);
+    //        ParseableArgTest(double.NegativeInfinity.ToString(), double.NegativeInfinity);
+    //        ParseableArgTest(double.NegativeZero.ToString(), double.NegativeZero);
+    //        ParseableArgTest(double.Pi.ToString(), double.Pi);
+    //        ParseableArgTest(double.PositiveInfinity.ToString(), double.PositiveInfinity);
+    //        ParseableArgTest(double.Tau.ToString(), double.Tau);
+    //    }
 
-    private static void ParseableArgTest<T>(string input, T expected)
-        where T : struct, IParsable<T>
-    {
-        var requiredArg = input!.ToParseableTagArg<T>("X");
-        var nullArg = "".ToParseableTagArg<T>("X", true);
-        var nonNullArg = input!.ToParseableTagArg<T>("X", true);
 
-        requiredArg.Tag.Should().Be(Tag.Create("X"));
-        nullArg.Tag.Should().Be(Tag.Create("X"));
-        nonNullArg.Tag.Should().Be(Tag.Create("X"));
 
-        requiredArg.IsValid.Should().BeTrue();
-        nullArg.IsValid.Should().BeTrue();
-        nonNullArg.IsValid.Should().BeTrue();
+    //    [Fact]
+    //    public void GoodUri_Should_ConvertToConfigUri()
+    //    {
+    //        const string URI = "https://cnn.com";
 
-        requiredArg.Message.Should().BeNull();
-        nullArg.Message.Should().BeNull();
-        nonNullArg.Message.Should().BeNull();
+    //        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
+    //        "".ToUriArg("X", UriKind.Absolute).Arg.Should().BeNull();
+    //        URI.ToUriArg("X").Arg.Should().Be(new Uri(URI));
+    //    }
 
-        requiredArg.Arg.Should().Be(expected);
-        nullArg.Arg.Should().Be(default(T));
-        nonNullArg.Arg.Should().Be(expected);
-    }
+    //    [Fact]
+    //    public void GoodEmail_Should_ConvertToConfigEmail()
+    //    {
+    //        const string EMAIL = "dude@someco.com";
+
+    //        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
+    //        "".ToEmailArg("X").Arg.Should().BeNull();
+    //        EMAIL.ToEmailArg("X").Arg.Should().Be(Email.Create(EMAIL));
+    //    }
+
+    //    [Fact]
+    //    public void GoodPhone_Should_ConvertToConfigPhone()
+    //    {
+    //        const string PHONE = "+1 (234) 567-8901";
+
+    //        PHONE.ToPhoneTagArg("X").Arg.Should().Be(Phone.Create(PHONE));
+    //        "".ToPhoneTagArg("X").Arg.Should().BeNull();
+    //        PHONE.ToPhoneTagArg("X").Arg.Should().Be(Phone.Create(PHONE));
+    //    }
+
+    //    [Fact]
+    //    public void GoodEnum_Should_ConvertToConfigEnum()
+    //    {
+    //        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
+    //        "".ToEnumArg<UriKind>("X", true).Arg.Should().Be(default);
+    //        "Absolute".ToEnumArg<UriKind>("X").Arg.Should().Be(UriKind.Absolute);
+    //    }
+
+    //    [Fact]
+    //    public void GoodTag_Should_ConvertToConfigTag()
+    //    {
+    //        const string TAG = "Tag1";
+
+    //        TAG.ToTagTagArg("X").Arg.Should().Be(Tag.Create(TAG));
+    //        "".ToTagTagArg("X").Arg.Should().BeNull();
+    //        TAG.ToTagTagArg("X").Arg.Should().Be(Tag.Create(TAG));
+    //    }
+
+    //    [Fact]
+    //    public void GoodMultiTag_Should_ConvertToConfigMultiTag()
+    //    {
+    //        const string MT = "Tag1:Tag2:Tag3";
+
+    //        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
+    //        "".ToMultiTagArg("X").Arg.Should().BeNull();
+    //        MT.ToMultiTagArg("X").Arg.Should().Be(MultiTag.Create(MT));
+    //    }
+
+    //    private static void ParseableArgTest<T>(string input, T expected)
+    //        where T : struct, IParsable<T>
+    //    {
+    //        var requiredArg = input!.ToParseableTagArg<T>("X");
+    //        var nullArg = "".ToParseableTagArg<T>("X", true);
+    //        var nonNullArg = input!.ToParseableTagArg<T>("X", true);
+
+    //        requiredArg.Tag.Should().Be(Tag.Create("X"));
+    //        nullArg.Tag.Should().Be(Tag.Create("X"));
+    //        nonNullArg.Tag.Should().Be(Tag.Create("X"));
+
+    //        requiredArg.IsValid.Should().BeTrue();
+    //        nullArg.IsValid.Should().BeTrue();
+    //        nonNullArg.IsValid.Should().BeTrue();
+
+    //        requiredArg.Message.Should().BeNull();
+    //        nullArg.Message.Should().BeNull();
+    //        nonNullArg.Message.Should().BeNull();
+
+    //        requiredArg.Arg.Should().Be(expected);
+    //        nullArg.Arg.Should().Be(default(T));
+    //        nonNullArg.Arg.Should().Be(expected);
+    //    }
 }

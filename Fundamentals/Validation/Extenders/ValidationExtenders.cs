@@ -144,13 +144,11 @@ public static partial class ValidationExtenders
         return value.IsNonEmptyAndTrimmed();
     }
 
-    private static bool IsNonEmptyAndTrimmed(this string value)
-    {
-        return value is not null
-            && value.Length >= 1
-            && !char.IsWhiteSpace(value[0])
-            && !char.IsWhiteSpace(value[^1]);
-    }
+    private static bool IsNonEmptyAndTrimmed(this string value) =>
+        value is not null && value.Length >= 1 && value.IsTrimmed();
+
+    public static bool IsTrimmed(this string value) =>
+        !char.IsWhiteSpace(value[0]) && !char.IsWhiteSpace(value[^1]);
 
     public static bool IsDate(this DateTime value) =>
         value.TimeOfDay == TimeSpan.Zero;

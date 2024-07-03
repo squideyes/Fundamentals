@@ -2,7 +2,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class TagArgSet : IEnumerable<KeyValuePair<Tag, ITagArg>>
+public class TagArgSet : IEnumerable<ITagArg>
 {
     private readonly Dictionary<Tag, ITagArg> dict = [];
 
@@ -20,5 +20,5 @@ public class TagArgSet : IEnumerable<KeyValuePair<Tag, ITagArg>>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerator<KeyValuePair<Tag, ITagArg>> GetEnumerator() => dict.GetEnumerator();
+    public IEnumerator<ITagArg> GetEnumerator() => dict.Values.GetEnumerator();
 }

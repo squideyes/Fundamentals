@@ -5,11 +5,39 @@
 
 using System.Text;
 using System.Text.RegularExpressions;
+using static SquidEyes.Fundamentals.AsciiFilter;
 
 namespace SquidEyes.Fundamentals;
 
 public static partial class StringExtenders
 {
+    private static readonly HashSet<char> keyboardSymbols = new(
+        "`~!@#$%^&*()_-+=[]{}\\|:;'?/.<>,'".ToCharArray());
+
+    public static bool IsNonEmptyAndAscii(this string value, AsciiFilter filter)
+    {
+        if (string.IsNullOrEmpty(value))
+            return false;
+
+        bool IsValid(char c)
+        {
+            bool isValid = false;
+
+            if (char.IsAsciiLetterLower(c) && (filter & Lowers) == Lowers)
+                isValid = true;
+            else if (char.IsAsciiLetterUpper(c) && (filter & Uppers) == Uppers)
+                isValid = true;
+            else if (char.IsDigit(c) && (filter & Digits) == Digits)
+                isValid = true;
+            else if (keyboardSymbols.Contains(c) && (filter & Symbols) == Symbols)
+                isValid = true;
+
+            return isValid;
+        }
+
+        return value.All(IsValid);
+    }
+
     public static bool IsBase64String(this string value) =>
         Convert.TryFromBase64String(value, new Span<byte>(), out _);
 
