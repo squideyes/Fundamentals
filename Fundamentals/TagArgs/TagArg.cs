@@ -1,4 +1,5 @@
-﻿using static SquidEyes.Fundamentals.TagArgState;
+﻿using System.Globalization;
+using static SquidEyes.Fundamentals.TagArgState;
 
 namespace SquidEyes.Fundamentals;
 
@@ -45,6 +46,14 @@ public class TagArg<T> : ITagArg
     public bool IsValid => State == Valid;
 
     public V GetArgAs<V>() => (V)Convert.ChangeType(Arg, typeof(V))!;
+
+    public Result ToResult(string code)
+    {
+        if (IsValid)
+            return Result.Success(Arg);
+        else
+            return Result.Failure<T>(new Error(code, Message));
+    }
 
     public static bool TryGetNonAsciiArgKind(out TagArgArgKind kind)
     {
