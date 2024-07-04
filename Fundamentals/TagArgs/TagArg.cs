@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using static SquidEyes.Fundamentals.TagArgState;
+﻿using static SquidEyes.Fundamentals.TagArgState;
 
 namespace SquidEyes.Fundamentals;
 
@@ -46,6 +45,17 @@ public class TagArg<T> : ITagArg
     public bool IsValid => State == Valid;
 
     public V GetArgAs<V>() => (V)Convert.ChangeType(Arg, typeof(V))!;
+
+    public Result<V> ToFailure<V>(string code)
+    {
+        if (IsValid)
+        {
+            throw new InvalidOperationException(
+                "A Failure<R> may only be returned when IsValid is false.");
+        }
+
+        return Result.Failure<V>(new Error(code, Message));
+    }
 
     public Result ToResult(string code)
     {
