@@ -32,5 +32,5 @@ public class Error
     internal static readonly Error Empty = new();
 
     internal static readonly Error NullValue =
-        new("Error.NullValue", "The specified Result.Value is NULL.");
+        new("Error:NullValue", "The specified Result.Value is NULL.");
 }
