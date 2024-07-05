@@ -10,13 +10,14 @@ namespace SquidEyes.Fundamentals;
 
 public class JsonStringTagArgSetConverter : JsonConverter<TagArgSet>
 {
-    public override TagArgSet? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override TagArgSet? Read(
+        ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer,
-        TagArgSet value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer, TagArgSet value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
 
@@ -30,14 +31,25 @@ public class JsonStringTagArgSetConverter : JsonConverter<TagArgSet>
 
             if (tagArg.Kind == TagArgArgKind.Enum)
                 writer.WriteString("Type", tagArg.TypeName);
+            else if (tagArg.Kind == TagArgArgKind.TextLine)
+                writer.WriteString("Filter", tagArg.Filter.ToString());
 
             switch (tagArg.Kind)
             {
                 case TagArgArgKind.Bool:
                     writer.WriteBoolean("Value", tagArg.GetArgAs<bool>());
                     break;
+                case TagArgArgKind.Byte:
+                    writer.WriteNumber("Value", tagArg.GetArgAs<byte>());
+                    break;
                 case TagArgArgKind.Double:
                     writer.WriteNumber("Value", tagArg.GetArgAs<double>());
+                    break;
+                case TagArgArgKind.Float:
+                    writer.WriteNumber("Value", tagArg.GetArgAs<float>());
+                    break;
+                case TagArgArgKind.Int16:
+                    writer.WriteNumber("Value", tagArg.GetArgAs<short>());
                     break;
                 case TagArgArgKind.Int32:
                     writer.WriteNumber("Value", tagArg.GetArgAs<int>());
@@ -55,122 +67,4 @@ public class JsonStringTagArgSetConverter : JsonConverter<TagArgSet>
 
         writer.WriteEndObject();
     }
-
-    //public override ArgSet? Read(ref Utf8JsonReader reader,
-    //    Type typeToConvert, JsonSerializerOptions options)
-    //{
-    //    var argSet = new ArgSet();
-
-    //    static void ReadAndCheck(
-    //        ref Utf8JsonReader reader, JsonTokenType expected)
-    //    {
-    //        var wasRead = reader.Read();
-
-    //        if (!wasRead || reader.TokenType != expected)
-    //            throw new JsonException();
-    //    }
-
-    //    static void ReadAndCheckProperty(
-    //        ref Utf8JsonReader reader, string propertyName)
-    //    {
-    //        var wasRead = reader.Read();
-
-    //        if (!wasRead || reader.TokenType != JsonTokenType.PropertyName)
-    //            throw new JsonException();
-
-    //        if (reader.GetString() != propertyName)
-    //            throw new Exception();
-    //    }
-
-
-    //    static void ThrowIfNotExpected(
-    //        ref Utf8JsonReader reader, JsonTokenType expected)
-    //    {
-    //        if (reader.TokenType != expected)
-    //            throw new JsonException();
-    //    }
-
-    //    void ParseAndUpsert(ref Utf8JsonReader reader)
-    //    {
-    //        ThrowIfNotExpected(ref reader, JsonTokenType.PropertyName);
-
-    //        var key = MultiTag.Create(reader.GetString()!);
-
-    //        ReadAndCheck(ref reader, JsonTokenType.StartObject);
-
-    //        ReadAndCheckProperty(ref reader, "Kind");
-
-    //        reader.Read();
-
-    //        var kind = reader.GetString()!.ToEnumValue<ArgKind>();
-
-    //        Type type = null!;
-
-    //        if (kind == ArgKind.Enum)
-    //        {
-    //            reader.Read();
-
-    //            if (reader.GetString() != "Type")
-    //                throw new JsonException();
-
-    //            reader.Read();
-
-    //            var typeText = reader.GetString()!;
-
-    //            type = Type.GetType(typeText)!;
-    //        }
-
-    //        ReadAndCheckProperty(ref reader, "Value");
-
-    //        reader.Read();
-
-    //        argSet.Set(key, GetArg(ref reader, kind, type));
-
-    //        reader.Read();
-
-    //        ThrowIfNotExpected(ref reader, JsonTokenType.EndObject);
-    //    }
-
-    //    ThrowIfNotExpected(ref reader, JsonTokenType.StartObject);
-
-    //    while (reader.Read())
-    //    {
-    //        if (reader.TokenType == JsonTokenType.EndObject)
-    //            break;
-
-    //        ParseAndUpsert(ref reader);
-    //    }
-
-    //    if (reader.TokenType != JsonTokenType.EndObject)
-    //        throw new JsonException();
-
-    //    return argSet;
-    //}
-
-    //private static Arg GetArg(ref Utf8JsonReader reader, ArgKind kind, Type type)
-    //{
-    //    Arg GetArg<T>(T value) => Arg.Create<T>(value, kind);
-
-    //    return kind switch
-    //    {
-    //        ArgKind.Boolean => GetArg(reader.GetBoolean()),
-    //        ArgKind.DateOnly => GetArg(DateOnly.Parse(reader.GetString()!)),
-    //        ArgKind.DateTime => GetArg(DateTime.Parse(reader.GetString()!)),
-    //        ArgKind.Double => GetArg(reader.GetDouble()),
-    //        ArgKind.Email => GetArg(Email.Create(reader.GetString()!)),
-    //        ArgKind.Enum => GetArg((Enum)Enum.Parse(type, reader.GetString()!)),
-    //        ArgKind.Float => GetArg(reader.GetSingle()),
-    //        ArgKind.Guid => GetArg(Guid.Parse(reader.GetString()!)),
-    //        ArgKind.Int32 => GetArg(reader.GetInt32()),
-    //        ArgKind.Int64 => GetArg(reader.GetInt64()),
-    //        ArgKind.MultiTag => GetArg(MultiTag.Create(reader.GetString()!)),
-    //        ArgKind.Phone => GetArg(Phone.Create(reader.GetString()!)),
-    //        ArgKind.String => GetArg(reader.GetString()!),
-    //        ArgKind.TimeOnly => GetArg(TimeOnly.Parse(reader.GetString()!)),
-    //        ArgKind.TimeSpan => GetArg(TimeSpan.Parse(reader.GetString()!)),
-    //        ArgKind.Tag => GetArg(Tag.Create(reader.GetString()!)),
-    //        ArgKind.Uri => GetArg(new Uri(reader.GetString()!)),
-    //        _ => throw new JsonException()
-    //    };
-    //}
 }

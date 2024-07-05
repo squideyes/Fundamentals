@@ -25,14 +25,6 @@ public static class MiscValidators
             v => suffix);
     }
 
-    //[DebuggerHidden]
-    //public static ArgSet NullOrEmpty(this MayNotBe<ArgSet> m)
-    //{
-    //    return m.ThrowErrorIfNotIsValid(
-    //        v => v is not null && !v.IsEmpty,
-    //        v => $"be an empty ArgSet");
-    //}
-
     [DebuggerHidden]
     public static List<V> Empty<V>(this MayNotBe<List<V>> m)
     {

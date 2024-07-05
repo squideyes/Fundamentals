@@ -6,6 +6,7 @@ public enum AsciiFilter
     Uppers = 1,
     Lowers = 2,
     Digits = 4,
-    Symbols = 8,
-    AllChars = Uppers | Lowers | Digits | Symbols
+    Spaces = 8,
+    Symbols = 16,
+    AllChars = Uppers | Lowers | Digits | Spaces | Symbols
 }

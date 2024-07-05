@@ -29,6 +29,8 @@ public static partial class StringExtenders
                 isValid = true;
             else if (char.IsDigit(c) && (filter & Digits) == Digits)
                 isValid = true;
+            else if(c == ' ' && (filter & Digits) == Spaces)
+                isValid = true;
             else if (keyboardSymbols.Contains(c) && (filter & Symbols) == Symbols)
                 isValid = true;
 

@@ -4,35 +4,60 @@ namespace SquidEyes.Fundamentals;
 
 public class TagArg<T> : ITagArg
 {
-    internal TagArg(Tag tag, T arg, TagArgArgKind kind)
+    private const int MAX_TEXTLINE_LENGTH = 100;
+
+    private readonly string formatted;
+
+    internal TagArg(Tag tag, T arg, TagArgArgKind kind, AsciiFilter filter = default!)
     {
-        Kind = kind;
-        Tag = tag;
+        string GetFormatedString()
+        {
+            return typeof(T) switch
+            {
+                Type t when t == typeof(DateOnly) => GetArgAs<DateOnly>().Formatted(),
+                Type t when t == typeof(DateTime) => GetArgAs<DateTime>().Formatted(),
+                Type t when t == typeof(TimeOnly) => GetArgAs<TimeOnly>().Formatted(),
+                Type t when t == typeof(TimeSpan) => GetArgAs<TimeSpan>().Formatted(),
+                _ => arg!.ToString()!
+            };
+        }
+
         Arg = arg;
-        State = Valid;
-        TypeName = typeof(T).FullName!;
+        Filter = filter;
+        Kind = kind;
         Message = null!;
+        State = Valid;
+        Tag = tag;
+        TypeName = typeof(T).FullName!;
+
+        formatted = GetFormatedString();
     }
 
     internal TagArg(Tag tag, string input, TagArgState state, int? length = null)
     {
-        Kind = default;
-        Tag = tag;
+        string GetMessage()
+        {
+            return state switch
+            {
+                BadChars => $"The \"{tag}\" arg contains one or more invalid characters.",
+                Invalid => $"The \"{tag}\" arg failed validation.",
+                NotTrimmed => $"The \"{tag}\" arg has not been trimmed.",
+                NullOrWhitespace => $"The \"{tag}\" input may not be null, empty or whitespace,",
+                ParseFailed => $"The \"{tag}\" input could not be parsed (Input: \"{input}\", Type: {typeof(T)}).",
+                TooLong => $"The \"{tag}\" arg is greater than {length} characters long.",
+                _ => throw new ArgumentOutOfRangeException(nameof(state))
+            };
+        };
+
         Arg = default!;
+        Filter = default;
+        Kind = default;
+        Message = GetMessage();
         State = state;
+        Tag = tag;
         TypeName = null!;
 
-        Message = state switch
-        {
-            BadChars => $"The \"{tag}\" arg contains one or more invalid characters.",
-            Invalid => $"The \"{tag}\" arg failed validation.",
-            NotTrimmed => $"The \"{tag}\" arg has not been trimmed.",
-            NullOrWhitespace => $"The \"{tag}\" input may not be null, empty or whitespace,",
-            ParseFailed => $"The \"{tag}\" input could not be parsed (Input: \"{input}\", Type: {typeof(T)}).",
-            TooShort => $"The \"{tag}\" arg is less than {length} characters long.",
-            TooLong => $"The \"{tag}\" arg is greater than {length} characters long.",
-            _ => throw new ArgumentOutOfRangeException(nameof(state))
-        };
+        formatted = "{Invalid}";
     }
 
     public Tag Tag { get; }
@@ -41,10 +66,13 @@ public class TagArg<T> : ITagArg
     public string TypeName { get; }
     public string Message { get; }
     public TagArgState State { get; }
+    public AsciiFilter Filter { get; }
 
     public bool IsValid => State == Valid;
 
     public V GetArgAs<V>() => (V)Convert.ChangeType(Arg, typeof(V))!;
+
+    public object GetArgAsObject() => Arg!;
 
     public Result<V> ToFailure<V>(string code)
     {
@@ -67,8 +95,17 @@ public class TagArg<T> : ITagArg
 
     public Error ToError(string code) => ToResult(code).Errors.First();
 
-    public static bool TryGetNonAsciiArgKind(out TagArgArgKind kind)
+    public static bool TryGetNonTexLineKind(out TagArgArgKind kind)
     {
+        var type = typeof(T);
+
+        if (type.IsEnum)
+        {
+            kind = TagArgArgKind.Enum;
+
+            return true;
+        }
+
         kind = typeof(T) switch
         {
             Type t when t == typeof(bool) => TagArgArgKind.Bool,
@@ -78,14 +115,13 @@ public class TagArg<T> : ITagArg
             Type t when t == typeof(DateTime) => TagArgArgKind.DateTime,
             Type t when t == typeof(double) => TagArgArgKind.Double,
             Type t when t == typeof(Email) => TagArgArgKind.Email,
-            Type t when t == typeof(Enum) => TagArgArgKind.Enum,
             Type t when t == typeof(float) => TagArgArgKind.Float,
             Type t when t == typeof(Guid) => TagArgArgKind.Guid,
+            Type t when t == typeof(short) => TagArgArgKind.Int16,
             Type t when t == typeof(int) => TagArgArgKind.Int32,
             Type t when t == typeof(long) => TagArgArgKind.Int64,
             Type t when t == typeof(MultiTag) => TagArgArgKind.MultiTag,
             Type t when t == typeof(Phone) => TagArgArgKind.Phone,
-            Type t when t == typeof(short) => TagArgArgKind.Int16,
             Type t when t == typeof(Tag) => TagArgArgKind.Tag,
             Type t when t == typeof(TimeOnly) => TagArgArgKind.TimeOnly,
             Type t when t == typeof(TimeSpan) => TagArgArgKind.TimeSpan,
@@ -96,50 +132,45 @@ public class TagArg<T> : ITagArg
         return !kind.IsDefault();
     }
 
-    public static TagArg<string> Create(Tag tag, string input)
+    public override string ToString() => formatted;
+
+    public static TagArg<string> Create(Tag tag, string input, bool isRequired = true,
+        AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)
     {
         tag.MayNotBe().Null();
+        filter.MayNotBe().Default();
+
+        if (!isRequired && string.IsNullOrEmpty(input))
+            return new TagArg<string>(tag, null!, TagArgArgKind.TextLine);
 
         if (TagArg<string>.IsNullOrWhiteSpace(input, tag, out var tagArg))
             return tagArg;
-        else if (!input.IsBase64String())
-            return new TagArg<string>(tag, input, NotBase64);
-        else
-            return new TagArg<string>(tag, input, TagArgArgKind.Base64);
-    }
 
-    public static TagArg<string> Create(Tag tag, string arg, bool isRequired = true,
-        bool mustBeTrimmed = true, int minLength = 1, int maxLength = 100,
-            AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)
-    {
-        tag.MayNotBe().Null();
-        minLength.MustBe().Positive();
-        maxLength.MustBe().GreaterThanOrEqualTo(minLength);
-        filter.MustBe().EnumValue();
+        if (!input.IsNonEmptyAndAscii(filter))
+            return new TagArg<string>(tag, input, BadChars);
 
-        if (!isRequired && string.IsNullOrEmpty(arg))
-            return new TagArg<string>(tag, null!, TagArgArgKind.TextLine);
-        else if (TagArg<string>.IsNullOrWhiteSpace(arg, tag, out var tagArg))
-            return tagArg;
-        else if (arg.Length < minLength)
-            return new TagArg<string>(tag, arg, TooShort, minLength);
-        else if (arg.Length > maxLength)
-            return new TagArg<string>(tag, arg, TooShort, maxLength);
-        else if (mustBeTrimmed && !arg.IsTrimmed())
-            return new TagArg<string>(tag, arg, NotTrimmed);
-        else if (!arg.IsNonEmptyAndAscii(filter))
-            return new TagArg<string>(tag, arg, BadChars);
-        else if (isValid is not null && !isValid(arg))
-            return new TagArg<string>(tag, arg, Invalid);
+        if (isValid is null)
+        {
+            if (input.Length > MAX_TEXTLINE_LENGTH)
+                return new TagArg<string>(tag, input, TooLong, MAX_TEXTLINE_LENGTH);
+
+            if (!input.IsTrimmed())
+                return new TagArg<string>(tag, input, NotTrimmed);
+        }
         else
-            return new TagArg<string>(tag, arg, TagArgArgKind.TextLine);
+        {
+            if (!isValid(input))
+                return new TagArg<string>(tag, input, Invalid);
+        }
+
+        return new TagArg<string>(tag, input, TagArgArgKind.TextLine, filter);
     }
 
     public static TagArg<T> Create(Tag tag, T arg, Func<T, bool> isValid = null!)
     {
         tag.MayNotBe().Null();
 
-        if (!TryGetNonAsciiArgKind(out TagArgArgKind kind))
+        if (!TryGetNonTexLineKind(out TagArgArgKind kind))
             throw new ArgumentOutOfRangeException(nameof(arg));
 
         if (isValid is not null && !isValid(arg))

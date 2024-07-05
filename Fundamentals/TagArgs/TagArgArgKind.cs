@@ -2,8 +2,7 @@
 
 public enum TagArgArgKind
 {
-    Base64 = 1,
-    Bool,
+    Bool = 1,
     Byte,
     Char,
     DateTime,

@@ -4,7 +4,7 @@ using TAAK = SquidEyes.Fundamentals.TagArgArgKind;
 
 namespace SquidEyes.Fundamentals;
 
-public static class TagArgExtenders
+public static class TagArgCreateExtenders
 {
     public static TagArg<char> ToCharTagArg(
         this string input, Tag tag, Func<char, bool> isValid = null!)
@@ -78,26 +78,10 @@ public static class TagArgExtenders
         return input.ToParseableTagArg(tag, TAAK.TimeSpan, isValid);
     }
 
-    public static TagArg<string> ToBase64TagArg(
-        this string input, Tag tag, Func<string, bool> isValid = null!)
-    {
-        if (TagArg<string>.IsNullOrWhiteSpace(input, tag, out var tagArg))
-            return tagArg;
-        else if (!input.IsBase64String())
-            return new TagArg<string>(tag, input, ParseFailed);
-        else if (isValid is not null && !isValid(input))
-            return new TagArg<string>(tag, input, Invalid);
-        else
-            return new TagArg<string>(tag, input, TAAK.Base64);
-    }
-
     public static TagArg<string> ToTextLineTagArg(this string input, Tag tag, 
-        bool isRequired = true, bool mustBeTrimmed = true, int minLength = 1,
-            int maxLength = 100, AsciiFilter filter = AllChars,
-                Func<string, bool> isValid = null!)
+        bool isRequired = true, AsciiFilter filter = AllChars, Func<string, bool> isValid = null!)
     {
-        return TagArg<string>.Create(tag, input!, isRequired, 
-            mustBeTrimmed, minLength, maxLength, filter, isValid);
+        return TagArg<string>.Create(tag, input!, isRequired, filter, isValid);
     }
 
     public static TagArg<Email> ToEmailTagArg(
