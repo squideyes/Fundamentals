@@ -127,7 +127,7 @@ static MEL.ILogger GetLogger()
 InitTagArgs GetInitTagArgs()
 {
     var junketId = config["Context:JunketId"]!.ToInt32TagArg("JunketId", v => v > 0);
-    var userId = config["Context:UserId"]!.ToTextLineTagArg("UserId");
+    var userId = config["Context:UserId"]!.ToTextLineTagArg("UserId", true);
     var seqApiUri = config["Serilog:SeqApiUri"]!.ToUriTagArg("SeqApiUri");
     var seqApiKey = config["Serilog:SeqApiKey"]!.ToTextLineTagArg("SeqApiKey", false);
     var logLevel = config["Serilog:LogLevel"]!.ToEnumTagArg<LogLevel>("LogLevel");
