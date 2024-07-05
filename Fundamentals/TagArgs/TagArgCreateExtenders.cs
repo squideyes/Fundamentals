@@ -79,7 +79,7 @@ public static class TagArgCreateExtenders
     }
 
     public static TagArg<string> ToTextLineTagArg(this string input, Tag tag, 
-        bool isRequired = true, AsciiFilter filter = AllChars, Func<string, bool> isValid = null!)
+        bool isRequired, AsciiFilter filter = AllChars, Func<string, bool> isValid = null!)
     {
         return TagArg<string>.Create(tag, input!, isRequired, filter, isValid);
     }

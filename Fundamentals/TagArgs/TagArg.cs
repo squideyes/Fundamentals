@@ -134,7 +134,7 @@ public class TagArg<T> : ITagArg
 
     public override string ToString() => formatted;
 
-    public static TagArg<string> Create(Tag tag, string input, bool isRequired = true,
+    public static TagArg<string> Create(Tag tag, string input, bool isRequired,
         AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)
     {
         tag.MayNotBe().Null();
