@@ -1,8 +1,9 @@
-﻿namespace LoggingDemo;
+﻿using SquidEyes.Fundamentals;
 
-// By convention, custom EventIds should start at 1000
+namespace LoggingDemo;
+
 internal static class CustomEventIds
 {
-    public const int LogonSucceeded = 1000;
-    public const int LogonFailed = 1001;
+    public const int LogonSucceeded = EventIds.CustomEvent;
+    public const int LogonFailed = EventIds.CustomEvent + 1;
 }

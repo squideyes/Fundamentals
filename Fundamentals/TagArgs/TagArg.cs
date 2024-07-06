@@ -1,4 +1,5 @@
-﻿using static SquidEyes.Fundamentals.TagArgState;
+﻿using System.Text.Json;
+using static SquidEyes.Fundamentals.TagArgState;
 
 namespace SquidEyes.Fundamentals;
 
@@ -31,6 +32,19 @@ public class TagArg<T> : ITagArg
         TypeName = typeof(T).FullName!;
 
         formatted = GetFormatedString();
+    }
+
+    internal TagArg(Tag tag, TagArgState state)
+    {
+        Arg = default!;
+        Filter = default;
+        Kind = default;
+        Message = $"The \"{tag}\" arg failed validation.";
+        State = state;
+        Tag = tag;
+        TypeName = null!;
+
+        formatted = "{Invalid}";
     }
 
     internal TagArg(Tag tag, string input, TagArgState state, int? length = null)
@@ -133,6 +147,17 @@ public class TagArg<T> : ITagArg
     }
 
     public override string ToString() => formatted;
+
+    public static TagArg<JsonElement> Create(
+        Tag tag, JsonElement element, Func<JsonElement, bool> isValid = null!)
+    {
+        tag.MayNotBe().Null();
+
+        if (isValid is not null && !isValid(element))
+            return new TagArg<JsonElement>(tag, Invalid);
+
+        return new TagArg<JsonElement>(tag, element, TagArgArgKind.Json);
+    }
 
     public static TagArg<string> Create(Tag tag, string input, bool isRequired,
         AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)

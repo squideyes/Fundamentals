@@ -14,6 +14,7 @@ public enum TagArgArgKind
     Guid,
     Int32,
     Int64,
+    Json,
     MultiTag,
     Phone,
     Int16,
