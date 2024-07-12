@@ -199,7 +199,7 @@ public class TagArg<T> : ITagArg
             throw new ArgumentOutOfRangeException(nameof(arg));
 
         if (isValid is not null && !isValid(arg))
-            return new TagArg<T>(tag, arg, TagArgArgKind.TextLine);
+            return new TagArg<T>(tag, Invalid);
 
         return new TagArg<T>(tag, arg, kind);
     }
