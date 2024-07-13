@@ -11,25 +11,54 @@ public static class FluentValidationExtenders
 {
     private const string MUST_BE = "'{PropertyName}' must be ";
 
-    public static IRuleBuilderOptions<T, string?> IsNonNullAndTrimmed<T>(
-        this IRuleBuilder<T, string?> rule, bool mayBeEmpty = false)
-    {
-        string message;
+    private static readonly HashSet<char> punctuation = 
+        new(@"^[!#$%&()*+,\-./:;<=>?@[\\\]^_{|}~]$".ToCharArray());
 
-        if (mayBeEmpty)
-            message = MUST_BE + "empty or non-empty and trimmed.";
-        else
-            message = MUST_BE + "non-empty and trimmed.";
-
-        return rule.Must(v => v!.IsNonNullAndTrimmed(mayBeEmpty))
-            .WithMessage(message);
-    }
-
-    public static IRuleBuilderOptions<T, string?> IsNullOrTrimmed<T>(
+    public static IRuleBuilderOptions<T, string?> IsCountryCode<T>(
         this IRuleBuilder<T, string?> rule)
     {
-        return rule.Must(v => v!.IsNullOrTrimmed())
-            .WithMessage(MUST_BE + "null or non-empty and trimmed.");
+        return rule.Must(CountryValidator.IsCountryCode)
+            .WithMessage(MUST_BE + "a valid ISO country code.");
+    }
+
+    public static IRuleBuilderOptions<T, string?> IsNonNullTextLine<T>(
+        this IRuleBuilder<T, string?> rule, int maxLength, Func<string, bool> isValid = null!)
+    {
+        var valid = isValid is null ? " " : "valid ";
+
+        bool IsValid(string? value)
+        {
+            if (!value!.IsNonNullAndTrimmed())
+                return false;
+
+            if (value!.Length > maxLength)
+                return false;
+
+            if (!value.All(c => char.IsAsciiLetterOrDigit(c) || punctuation.Contains(c)))
+                return false;
+
+            if (isValid is not null && !isValid(value))
+                return false;
+
+            return true;
+        }
+
+        return rule.Must(IsValid)
+            .WithMessage(MUST_BE + $"a {valid}non-empty text-line ({maxLength} characters).");
+    }
+
+    public static IRuleBuilderOptions<T, char?> IsNullOrInitial<T>(
+        this IRuleBuilder<T, char?> rule)
+    {
+        return rule.Must(v => v is null || char.IsAsciiLetterUpper(v.Value))
+            .WithMessage(MUST_BE + "null or an uppercase initial.");
+    }
+
+    public static IRuleBuilderOptions<T, string?> IsPersonName<T>(
+        this IRuleBuilder<T, string?> rule, int maxLength = int.MaxValue)
+    {
+        return rule.Must(v => v!.IsPersonName(maxLength))
+            .WithMessage(MUST_BE + $"a valid person name ({maxLength} letters, spaces and/or dashes, max).");
     }
 
     public static IRuleBuilderOptions<T, IEnumerable<TElement>> IsNonNullAndHasItems<T, TElement>(

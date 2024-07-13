@@ -20,9 +20,12 @@ public class Card
                 .NotEmpty()
                 .Must(CardValidator.IsNumber)
                 .WithMessage(MUST_BE + "a valid card number.");
-
+            
             RuleFor(x => x.Name)
-                .IsNonNullAndTrimmed();
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .Must(v => v.IsNonNullAndTrimmed()) // Improve this!!!!!!!!!!!
+                .WithMessage(MUST_BE + "a valid credit-card name.");
 
             RuleFor(x => x.ExpirationMonth)
                 .InclusiveBetween(1, 12);

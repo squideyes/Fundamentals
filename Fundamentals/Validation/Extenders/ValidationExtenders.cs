@@ -14,25 +14,27 @@ public static partial class ValidationExtenders
     private static readonly PhoneNumbers.PhoneNumberUtil pnu =
         PhoneNumbers.PhoneNumberUtil.GetInstance();
 
+    private static readonly Regex cosmosNameValidator = GetCosmosNameValidator();
     private static readonly Regex dnsNameValidator = GetDnsNameValidator();
-
-    private static readonly Regex cosmosNameValidator =
-        GetCosmosNameValidator();
+    private static readonly Regex personNameValidator = GetPersonNameValidator();
 
     private static readonly Dictionary<string, Regex> regexes = [];
+
+    public static bool IsPersonName(this string value, int maxLength = int.MaxValue)
+    {
+        maxLength.MustBe().Positive();
+
+        return value.Length <= maxLength && personNameValidator.IsMatch(value);
+    }
 
     public static bool HasItems<T>(
         this IEnumerable<T> items, bool nonDefault = true)
     {
-        return items.HasItems(1, int.MaxValue,
-            v => !nonDefault || !Equals(v, default(T)));
+        return items.HasItems(1, int.MaxValue, v => !nonDefault || !Equals(v, default(T)));
     }
 
-    public static bool HasItems<T>(
-        this IEnumerable<T> items, Func<T, bool>? isValid)
-    {
-        return items.HasItems(1, int.MaxValue, isValid);
-    }
+    public static bool HasItems<T>(this IEnumerable<T> items, Func<T, bool>? isValid)=>
+        items.HasItems(1, int.MaxValue, isValid);
 
     public static bool HasItems<T>(this IEnumerable<T> items,
         int minItems, int maxItems, bool nonDefault = true)
@@ -326,6 +328,9 @@ public static partial class ValidationExtenders
 
         return true;
     }
+
+    [GeneratedRegex("^(?!.*--)(?!.*  )(?!.*-$)(?!.* -)(?!^-)(?!^- )([A-Za-z]+([ -][A-Za-z]+)*)$")]
+    private static partial Regex GetPersonNameValidator();
 
     [GeneratedRegex("^[a-z0-9](?!.*--)[a-z0-9-]{1,61}[a-z0-9]$")]
     private static partial Regex GetDnsNameValidator();
