@@ -11,15 +11,17 @@ public static class FluentValidationExtenders
 {
     private const string MUST_BE = "'{PropertyName}' must be ";
 
-    private static readonly HashSet<char> punctuation = 
+    private static readonly HashSet<char> punctuation =
         new(@"^[!#$%&()*+,\-./:;<=>?@[\\\]^_{|}~]$".ToCharArray());
 
-    public static IRuleBuilderOptions<T, string?> IsCountryCode<T>(
-        this IRuleBuilder<T, string?> rule)
-    {
-        return rule.Must(CountryValidator.IsCountryCode)
-            .WithMessage(MUST_BE + "a valid ISO country code.");
-    }
+    public static IRuleBuilderOptions<T, string?> IsCountryCode<T>(this IRuleBuilder<T, string?> rule) =>
+        rule.Must(CountryValidator.IsCountryCode).WithMessage(MUST_BE + "a valid ISO country code.");
+
+    public static IRuleBuilderOptions<T, string?> IsEmail<T>(this IRuleBuilder<T, string?> rule) =>
+        rule.Must(Email.IsInput).WithMessage(MUST_BE + "a valid email address.");
+
+    public static IRuleBuilderOptions<T, string?> IsPhone<T>(this IRuleBuilder<T, string?> rule) =>
+        rule.Must(Phone.IsInput).WithMessage(MUST_BE + "a valid E164 phone number.");
 
     public static IRuleBuilderOptions<T, string?> IsNonNullTextLine<T>(
         this IRuleBuilder<T, string?> rule, int maxLength, Func<string, bool> isValid = null!)

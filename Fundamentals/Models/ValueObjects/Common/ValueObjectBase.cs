@@ -24,9 +24,9 @@ public abstract class ValueObjectBase<T>
     public int CompareTo(ValueObjectBase<T>? other) =>
         Input!.CompareTo(other?.Input);
 
-    protected abstract void SetProperties(string input);
+    protected abstract void SetProperties(string? input);
 
-    protected static T DoCreate(string input, Func<string, bool> isInput)
+    protected static T DoCreate(string? input, Func<string, bool> isInput)
     {
         if (!DoTryCreate(input, isInput, out T result))
         {
@@ -38,7 +38,7 @@ public abstract class ValueObjectBase<T>
     }
 
     protected static bool DoTryCreate(
-        string input, Func<string, bool> isInput, out T result)
+        string? input, Func<string, bool> isInput, out T result)
     {
         result = null!;
 

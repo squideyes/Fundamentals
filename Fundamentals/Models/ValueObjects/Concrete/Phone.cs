@@ -10,30 +10,40 @@ namespace SquidEyes.Fundamentals;
 
 public sealed class Phone : ValueObjectBase<Phone>
 {
-    public const int MaxLength = 20;
+    public const int MaxLength = 15;
 
     private static readonly PhoneNumberUtil pnu = PhoneNumberUtil.GetInstance();
 
     public string? Value { get; private set; }
 
-    protected override void SetProperties(string input) =>
+    protected override void SetProperties(string? input) =>
         Value = pnu.Format(pnu.Parse(input, "US"), E164);
 
-    public static bool IsInput(string input)
+    public static bool IsInput(string? input)
     {
         if (input is null)
             return false;
 
-        if (input.Length > MaxLength)
-            return false;
+        try
+        {
+            var number = pnu.Parse(input, "US");
 
-        return Safe.GetValueOrDefault(
-            () => pnu.IsValidNumber(pnu.Parse(input, "US")));
+            if (!pnu.IsValidNumber(number))
+                return false;
+
+            var formatted = pnu.Format(number, E164);
+
+            return formatted.Length <= MaxLength;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public static Phone Create(string input) =>
+    public static Phone Create(string? input) =>
         DoCreate(input, IsInput);
 
-    public static bool TryCreate(string input, out Phone result) =>
+    public static bool TryCreate(string? input, out Phone result) =>
         DoTryCreate(input, IsInput, out result);
 }

@@ -22,28 +22,25 @@ internal class EmailValidator
         topLevelDomains = Parse(Domains.TopLevel, "#");
     }
 
-    public bool IsValid(string value, int maxLength)
+    public bool IsValid(string? value, int maxLength)
     {
         if (!IsEmailAddress(value, maxLength))
             return false;
 
-        var domain = value.Split('@')[1];
+        var domain = value!.Split('@')[1];
 
         return !blockedDomains.Contains(
             domain, StringComparer.OrdinalIgnoreCase);
     }
 
-    private static HashSet<string> Parse(
-        string text, string commentPrefix)
+    private static HashSet<string> Parse(string input, string commentPrefix)
     {
-        var lines = text.Split(new[] { "\r\n", "\r", "\n" },
-            RemoveEmptyEntries | TrimEntries).Where(
-                l => !l.StartsWith(commentPrefix));
-
-        return new HashSet<string>(lines);
+        return new HashSet<string>(input!.Split(["\r\n", "\r", "\n"], 
+            RemoveEmptyEntries | TrimEntries)
+                .Where(l => !l.StartsWith(commentPrefix)));
     }
 
-    private bool IsEmailAddress(string value, int maxLength)
+    private bool IsEmailAddress(string? value, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))
             return false;
@@ -92,7 +89,7 @@ internal class EmailValidator
 
             if (lastIsTld)
             {
-                return topLevelDomains.Contains(parts[^1], 
+                return topLevelDomains.Contains(parts[^1],
                     StringComparer.OrdinalIgnoreCase);
             }
             else

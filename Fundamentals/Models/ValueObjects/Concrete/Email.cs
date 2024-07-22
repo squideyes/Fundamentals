@@ -13,15 +13,15 @@ public sealed class Email : ValueObjectBase<Email>
 
     public string? Value { get; private set; }
 
-    protected override void SetProperties(string input)
+    protected override void SetProperties(string? input)
     {
         Value = input;
     }
 
-    public static bool IsInput(string input) =>
+    public static bool IsInput(string? input) =>
         validator.IsValid(input, MaxLength);
 
-    public static Email Create(string input) =>
+    public static Email Create(string input) => 
         DoCreate(input, IsInput);
 
     public static bool TryCreate(string input, out Email result) =>
