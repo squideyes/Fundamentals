@@ -4,6 +4,8 @@
 // ********************************************************
 
 using FluentValidation;
+using System.Text;
+using static SquidEyes.Fundamentals.Address.Validator;
 
 namespace SquidEyes.Fundamentals;
 
@@ -23,30 +25,18 @@ public static class FluentValidationExtenders
     public static IRuleBuilderOptions<T, string?> IsPhone<T>(this IRuleBuilder<T, string?> rule) =>
         rule.Must(Phone.IsInput).WithMessage(MUST_BE + "a valid E164 phone number.");
 
+    public static IRuleBuilderOptions<T, string?> IsNullOrTextLine<T>(
+        this IRuleBuilder<T, string?> rule, int maxLength = int.MaxValue, Func<string, bool> isValid = null!)
+    {
+        return rule.Must(v => v is null || (IsTextLine(v, isValid!) && v.Length <= maxLength))
+            .WithMessage(GetIsTextLineMessage(maxLength, isValid is not null));
+    }
+
     public static IRuleBuilderOptions<T, string?> IsNonNullTextLine<T>(
         this IRuleBuilder<T, string?> rule, int maxLength, Func<string, bool> isValid = null!)
     {
-        var valid = isValid is null ? " " : "valid ";
-
-        bool IsValid(string? value)
-        {
-            if (!value!.IsNonNullAndTrimmed())
-                return false;
-
-            if (value!.Length > maxLength)
-                return false;
-
-            if (!value.All(c => char.IsAsciiLetterOrDigit(c) || punctuation.Contains(c)))
-                return false;
-
-            if (isValid is not null && !isValid(value))
-                return false;
-
-            return true;
-        }
-
-        return rule.Must(IsValid)
-            .WithMessage(MUST_BE + $"a {valid}non-empty text-line ({maxLength} characters).");
+        return rule.Must(v => v is not null && IsTextLine(v, isValid!))
+            .WithMessage(GetIsTextLineMessage(maxLength, isValid is not null));
     }
 
     public static IRuleBuilderOptions<T, char?> IsNullOrInitial<T>(
@@ -68,5 +58,45 @@ public static class FluentValidationExtenders
     {
         return ruleBuilder.Must(v => v is not null && v.HasItems())
             .WithMessage(MUST_BE + "non-null a contain one or more non-default items.");
+    }
+
+
+    private static string GetIsTextLineMessage(int maxLength, bool hasIsValid)
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(MUST_BE);
+
+        sb.Append("a");
+
+        if (hasIsValid)
+            sb.Append(" valid");
+
+        sb.Append(" non-empty text-line");
+
+        if (maxLength != int.MaxValue)
+        {
+            sb.Append(" (");
+            sb.Append(maxLength);
+            sb.Append(" characters)");
+        }
+
+        sb.Append('.');
+
+        return sb.ToString();
+    }
+
+    private static bool IsTextLine(string? value, Func<string?, bool> isValid)
+    {
+        if (!value!.IsTrimmed())
+            return false;
+
+        if (!value!.All(c => char.IsAsciiLetterOrDigit(c) || punctuation.Contains(c)))
+            return false;
+
+        if (isValid is not null && !isValid(value))
+            return false;
+
+        return true;
     }
 }
