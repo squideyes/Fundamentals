@@ -34,7 +34,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = EventIds.BadTagArg,
         EventName = nameof(BadTagArg),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Tag};State={State};Message={Message}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Tag};State={State};Message={Message}")]
     private static partial void BadTagArg(
         this ILogger logger,
         LogLevel logLevel,

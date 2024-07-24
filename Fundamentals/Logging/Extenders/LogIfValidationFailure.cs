@@ -36,7 +36,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = EventIds.ValidationFailure,
         EventName = nameof(ValidationFailure),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Property={PropertyName};ErrorCode={ErrorCode};ErrorMessage={ErrorMessage}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Property={PropertyName};ErrorCode={ErrorCode};ErrorMessage={ErrorMessage}")]
     private static partial void ValidationFailure(
         this ILogger logger,
         LogLevel logLevel,

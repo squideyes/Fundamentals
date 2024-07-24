@@ -32,7 +32,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = EventIds.MiscEvent,
         EventName = nameof(MiscEvent),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Code};Message={Message}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Code};Message={Message}")]
     private static partial void MiscEvent(
         this ILogger logger,
         LogLevel logLevel,

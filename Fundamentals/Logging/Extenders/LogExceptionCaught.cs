@@ -56,7 +56,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = EventIds.ExceptionCaught,
         EventName = nameof(ExceptionCaught),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Level={Level};ErrorType={ErrorType};TargetSite={TargetSite};Message={ErrorMessage};StackTrace={StackTrace}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Level={Level};ErrorType={ErrorType};TargetSite={TargetSite};Message={ErrorMessage};StackTrace={StackTrace}")]
     private static partial void ExceptionCaught(
         this ILogger logger,
         LogLevel logLevel,

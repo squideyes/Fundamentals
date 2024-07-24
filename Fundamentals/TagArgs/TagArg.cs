@@ -19,7 +19,7 @@ public class TagArg<T> : ITagArg
                 Type t when t == typeof(DateTime) => GetArgAs<DateTime>().Formatted(),
                 Type t when t == typeof(TimeOnly) => GetArgAs<TimeOnly>().Formatted(),
                 Type t when t == typeof(TimeSpan) => GetArgAs<TimeSpan>().Formatted(),
-                _ => arg!.ToString()!
+                _ => arg?.ToString()!
             };
         }
 
