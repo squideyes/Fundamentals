@@ -18,6 +18,10 @@ public class TagArgSet : IEnumerable<ITagArg>
 
     public void AddRange(IEnumerable<ITagArg> tagArgs) => tagArgs.ForEach(Add);
 
+    public Dictionary<string, object> ToSimplifiedDictionary() =>
+        dict.Values.Select(a => new KeyValuePair<string, object>(
+            a.Tag.Value!, a.GetArgAsObject())).ToDictionary();
+
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public IEnumerator<ITagArg> GetEnumerator() => dict.Values.GetEnumerator();

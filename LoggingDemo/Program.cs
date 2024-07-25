@@ -35,12 +35,9 @@ InitSerilogLogger(LogLevel.Debug, configure =>
 
     configure.Destructure.ByTransforming<Broker>(v => v.ToCode());
 
-    configure.WriteTo.File(logFileName, rollingInterval: RollingInterval.Day);
+    //configure.WriteTo.File(logFileName, rollingInterval: RollingInterval.Day);
 
     var logEventLevel = logLevel.Arg.ToLogEventLevel();
-
-    configure.WriteTo.Seq(seqApiUri.Arg.AbsoluteUri,
-        apiKey: seqApiKey.Arg, restrictedToMinimumLevel: logEventLevel);
 });
 
 // Get a Microsoft.Extensions.Logging.ILogger 
@@ -58,15 +55,21 @@ var host = Host.CreateDefaultBuilder()
 // Log a custom log-item
 logger.LogLogonSucceeded("LogonTest", Broker.DiscountTrading, Gateway.UsWest);
 
-// Ad-hoc log-items can be intermingled with standard log-items
-Log.Logger.Debug("This is an ad-hoc log item");
+// Simple ad-hoc log-items can be intermingled with standard log-items
+logger.LogDebug("Simple ad-hoc log item");
 
-// Log a miscellaneous warning event 
-logger.LogMiscEvent("MiscEventTest1",
-    "Oopsie!!", "Something Went Wrong", MiscEventKind.Warning);
+// Complex ad-hoc log-items can be intermingled with standard log-items
+logger.LogInformation("Ad-Hoc Info={@Info}", new { Code = "ABC123", Message = "It works!" });
 
-// Log a miscellaneous information event
-logger.LogMiscEvent("MiscEventTest2", "Oh goodie!!", "Something Went Right");
+// Log an miscellaneous TagArgSet
+logger.LogMiscTagArgs("TagArgSetTest", "TestTagArgsSet", GetTagArgs(), MiscLogLevel.Warning);
+
+// Log a miscellaneous warning message 
+logger.LogMiscMessage(
+    "MiscEventTest1", "Oopsie", "Something Went Wrong!", MiscLogLevel.Warning);
+
+// Log a miscellaneous information message
+logger.LogMiscMessage("MiscEventTest2", "OhGoodie", "Something Went Right!");
 
 // Create a default Person
 var person = new Person();
@@ -85,7 +88,6 @@ person.LastName = "Dude";
 logger.LogIfValidationFailure("ValidationTest", validator.Validate(person));
 
 // Run the Worker
-await host.RunAsync();
 
 // Always close and flush before terminating your app
 Log.CloseAndFlush();
@@ -135,7 +137,31 @@ InitTagArgs GetInitTagArgs()
     return new InitTagArgs(junketId, userId, seqApiUri, seqApiKey, logLevel);
 }
 
-// Properties loaded by GetInitTagArgs()
-record InitTagArgs(TagArg<int> JunketId, TagArg<string> UserId, 
-    TagArg<Uri> SeqApiUri, TagArg<string> SeqApiKey, TagArg<LogLevel> LogLevel);
+static TagArgSet GetTagArgs()
+{
+    return new TagArgSet()
+    {
+        TagArg<bool>.Create("Bool", true),
+        TagArg<byte>.Create("Byte", byte.MaxValue),
+        TagArg<char>.Create("Char", 'Z'),
+        TagArg<DateOnly>.Create("DateOnly", DateOnly.MaxValue),
+        TagArg<DateTime>.Create("DateTime", DateTime.MaxValue),
+        TagArg<double>.Create("Double", double.MaxValue),
+        TagArg<Email>.Create("Email", Email.Create("somedude@someco.com")),
+        TagArg<float>.Create("Float", float.MaxValue),
+        TagArg<Guid>.Create("Guid", Guid.NewGuid()),
+        TagArg<short>.Create("Short", short.MaxValue),
+        TagArg<int>.Create("Int32", int.MaxValue),
+        TagArg<long>.Create("Int64", long.MaxValue),
+        TagArg<MultiTag>.Create("MultiTag", MultiTag.Create("A:B:C")),
+        TagArg<Phone>.Create("Phone", Phone.Create("+1 212-333-4444")),
+        TagArg<Tag>.Create("Tag", Tag.Create("A")),
+        TagArg<TimeOnly>.Create("TimeOnly", TimeOnly.MaxValue),
+        TagArg<TimeSpan>.Create("TimeSpan", TimeSpan.MaxValue),
+        TagArg<Uri>.Create("Uri", new Uri("https://cnn.com"))
+    };
+}
 
+// Properties loaded by GetInitTagArgs()
+record InitTagArgs(TagArg<int> JunketId, TagArg<string> UserId,
+    TagArg<Uri> SeqApiUri, TagArg<string> SeqApiKey, TagArg<LogLevel> LogLevel);

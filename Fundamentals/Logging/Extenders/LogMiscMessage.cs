@@ -10,30 +10,30 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    public static void LogMiscEvent(
+    public static void LogMiscMessage(
         this ILogger logger,
         Tag activity,
-        string code,
+        Tag code,
         string message,
-        MiscEventKind kind = MiscEventKind.Info,
+        MiscLogLevel level = MiscLogLevel.Info,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        logger.MiscEvent(
-            kind == MiscEventKind.Info ? LogLevel.Information : LogLevel.Warning,
-            nameof(MiscEvent),
+        logger.MiscInfo(
+            level == MiscLogLevel.Info ? LogLevel.Information : LogLevel.Warning,
+            nameof(MiscInfo),
             calledBy,
             activity.Value!,
             (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
-            code,
+            code.Value!,
             message);
     }
 
     [LoggerMessage(
-        EventId = EventIds.MiscEvent,
-        EventName = nameof(MiscEvent),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Code};Message={Message}")]
-    private static partial void MiscEvent(
+        EventId = EventIds.MiscInfo,
+        EventName = nameof(MiscInfo),
+        Message = LoggingConsts.Prefix + "Code={Code};Message={Message}")]
+    private static partial void MiscInfo(
         this ILogger logger,
         LogLevel logLevel,
         string eventKind,

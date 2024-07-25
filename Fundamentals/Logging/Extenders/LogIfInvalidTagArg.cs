@@ -10,7 +10,7 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    public static void LogBadTagArg(
+    public static void LogIfInvalidTagArg(
         this ILogger logger,
         Tag activity,
         ITagArg tagArg,
@@ -20,9 +20,9 @@ public static partial class ILoggerExtenders
         if (tagArg.IsValid)
             return;
 
-        logger.BadTagArg(
+        logger.InvalidTagArg(
             LogLevel.Warning,
-            nameof(BadTagArg),
+            nameof(InvalidTagArg),
             calledBy,
             activity.Value!,
             (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
@@ -32,10 +32,10 @@ public static partial class ILoggerExtenders
     }
 
     [LoggerMessage(
-        EventId = EventIds.BadTagArg,
-        EventName = nameof(BadTagArg),
+        EventId = EventIds.InvalidTagArg,
+        EventName = nameof(InvalidTagArg),
         Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Tag};State={State};Message={Message}")]
-    private static partial void BadTagArg(
+    private static partial void InvalidTagArg(
         this ILogger logger,
         LogLevel logLevel,
         string eventKind,
