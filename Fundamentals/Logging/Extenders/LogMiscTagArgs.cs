@@ -20,7 +20,7 @@ public static partial class ILoggerExtenders
         [CallerMemberName] string calledBy = "")
     {
         logger.Log(level == MiscLogLevel.Info ? LogLevel.Information : LogLevel.Warning,
-            LoggingConsts.Prefix + "Code={Code};TagArgs={@TagArgs}",
+            LogConsts.Prefix + "Code={Code};TagArgs={@TagArgs}",
             "MiscTagArgs"!,
             calledBy,
             activity.Value!,

@@ -32,7 +32,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = EventIds.MiscInfo,
         EventName = nameof(MiscInfo),
-        Message = LoggingConsts.Prefix + "Code={Code};Message={Message}")]
+        Message = LogConsts.Prefix + "Code={Code};Message={Message}")]
     private static partial void MiscInfo(
         this ILogger logger,
         LogLevel logLevel,

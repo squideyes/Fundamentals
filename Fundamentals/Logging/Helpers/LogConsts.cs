@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-internal static class LoggingConsts
+public static class LogConsts
 {
     public const string Prefix =
         "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};";
