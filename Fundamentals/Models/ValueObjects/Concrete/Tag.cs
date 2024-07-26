@@ -9,13 +9,13 @@ namespace SquidEyes.Fundamentals;
 
 public sealed partial class Tag : ValueObjectBase<Tag>
 {
-    public static readonly int MaxLength = 24;
+    public static readonly int MaxLength = 50;
 
     private static readonly Regex validator = GetValidator();
 
     public string? Value { get; private set; }
 
-    protected override void SetProperties(string input)
+    protected override void SetProperties(string? input)
     {
         Value = input;
     }
@@ -31,6 +31,6 @@ public sealed partial class Tag : ValueObjectBase<Tag>
 
     public static implicit operator Tag(string input) => Create(input);
 
-    [GeneratedRegex(@"^[A-Z][A-Za-z0-9]{0,23}$")]
+    [GeneratedRegex(@"^[A-Z][A-Za-z0-9]{0,49}$")]
     private static partial Regex GetValidator();
 }

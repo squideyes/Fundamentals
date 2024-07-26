@@ -7,8 +7,8 @@ using SquidEyes.Fundamentals;
 
 namespace LoggingDemo;
 
-internal class Worker(ILogger<Worker> logger, 
-    IHostApplicationLifetime lifeTime) : BackgroundService
+internal class Worker(
+    ILogger<Worker> logger, IHostApplicationLifetime lifeTime) : BackgroundService
 {
     private readonly ILogger<Worker> logger = logger;
     private readonly IHostApplicationLifetime lifeTime = lifeTime;

@@ -37,7 +37,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = CustomEventIds.LogonFailed,
         EventName = nameof(LogonFailed),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway};StatusCode={StatusCode};Reason={Reason}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway};StatusCode={StatusCode};Reason={Reason}")]
     private static partial void LogonFailed(
         this ILogger logger,
         LogLevel logLevel,

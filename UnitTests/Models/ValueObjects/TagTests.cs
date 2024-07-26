@@ -30,7 +30,7 @@ public class TagTests
     [InlineData("0ag1")]
     [InlineData(" Tag1")]
     [InlineData("Tag2 ")]
-    [InlineData("TagLongerThanMaxLengthTag")]
+    [InlineData("TagLongerThanMaxLengthTag123456789012345678901234567")]
     [InlineData("Bad@Tag")]
     [InlineData("Bad Tag")]
     public void Create_BadInput_ThrowsError(string? input)
@@ -48,8 +48,8 @@ public class TagTests
     [InlineData("0ag1", false)]
     [InlineData(" Tag1", false)]
     [InlineData("Tag2 ", false)]
-    [InlineData("MaxTagLengthTagsAreValid", true)]
-    [InlineData("TagLongerThanMaxLengthTag", false)]
+    [InlineData("MaxTagLengthTagsAreValid12345678901234567890123456", true)]
+    [InlineData("TagLongerThanMaxLengthTag123456789012345678901234567", false)]
     [InlineData("Bad@Tag", false)]
     [InlineData("Bad Tag", false)]
     public void IsValue_MixedInput_ReturnsExpected(string? input, bool expected) =>
@@ -64,8 +64,8 @@ public class TagTests
     [InlineData("0ag1", false)]
     [InlineData(" Tag1", false)]
     [InlineData("Tag2 ", false)]
-    [InlineData("MaxTagLengthTagsAreValid", true)]
-    [InlineData("TagLongerThanMaxLengthTag", false)]
+    [InlineData("MaxTagLengthTagsAreValid12345678901234567890123456", true)]
+    [InlineData("TagLongerThanMaxLengthTag123456789012345678901234567", false)]
     [InlineData("Bad@Tag", false)]
     [InlineData("Bad Tag", false)]
     public void TryCreate_MixedInput_ReturnsExpected(string? input, bool expected) =>

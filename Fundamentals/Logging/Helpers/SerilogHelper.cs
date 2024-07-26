@@ -11,9 +11,9 @@ using System.Diagnostics;
 
 namespace SquidEyes.Fundamentals;
 
-public static class InitLoggerBuilder
+public static class SerilogHelper
 {
-    public static void InitSerilogLogger(LogLevel minLogLevel = LogLevel.Information,
+    public static void InitLogDotLogger(LogLevel minLogLevel = LogLevel.Information,
         Action<LoggerConfiguration> configure = null!)
     {
         Serilog.Debugging.SelfLog.Enable(output => Debug.WriteLine(output));

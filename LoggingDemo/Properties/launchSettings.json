@@ -7,7 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "LoggingDemo__Context__UserId": "ABC123",
-        "LoggingDemo__Serilog__SeqApiUri": "http://localhost:5341",
+        "LoggingDemo__Serilog__SeqApiUri": "http://localhost:5341/ingest/otlp/v1/logs",
         "LoggingDemo__Serilog__SeqApiKey": "",
         "LoggingDemo__Serilog__LogLevel": "Debug"
       },

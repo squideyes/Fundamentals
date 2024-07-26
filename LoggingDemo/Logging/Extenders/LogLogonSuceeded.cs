@@ -32,7 +32,7 @@ public static partial class ILoggerExtenders
     [LoggerMessage(
         EventId = CustomEventIds.LogonSucceeded, 
         EventName = nameof(LogonSucceeded),
-        Message = "EventKind={EventKind},Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway}")]
+        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway}")]
     private static partial void LogonSucceeded(
         this ILogger logger,
         LogLevel logLevel,
