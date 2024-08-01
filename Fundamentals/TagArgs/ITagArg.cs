@@ -17,5 +17,6 @@ namespace SquidEyes.Fundamentals
 
         V GetArgAs<V>();
         object GetArgAsObject();
+        Error ToError(string code);
     }
 }
