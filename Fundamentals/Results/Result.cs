@@ -16,7 +16,8 @@ public class Result
             throw new InvalidOperationException();
 
         IsSuccess = isSuccess;
-        Errors = [error];
+
+        Errors = IsSuccess ? [] : [error];
     }
 
     protected internal Result(bool isSuccess, Error[] errors)
@@ -54,7 +55,7 @@ public class Result
     public static Result<T> Ensure<T>(T value, Func<T, bool> predicate, Error error) =>
         predicate(value) ? Success(value) : Failure<T>(error);
 
-    public static Result<T> Ensure<T>(T value, 
+    public static Result<T> Ensure<T>(T value,
         params (Func<T, bool> predicate, Error error)[] functions)
     {
         var results = new List<Result<T>>();

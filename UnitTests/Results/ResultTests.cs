@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using FluentAssertions;
 using SquidEyes.Fundamentals;
 
 namespace SquidEyes.UnitTests;
@@ -10,10 +11,12 @@ namespace SquidEyes.UnitTests;
 public class ResultTests
 {
     [Fact]
-    public void X()
+    public void GoodTag_ShouldHave_NoErrors()
     {
-        //var email = "xxx".ToEmailArg("Email");
+        var email = "dude@someco.com".ToEmailTagArg("Email");
 
-        //var result = email.ToResult();
+        var result = email.ToResult("XXX");
+
+        result.Errors.Length.Should().Be(0);
     }
 }
