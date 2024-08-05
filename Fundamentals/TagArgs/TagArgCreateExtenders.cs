@@ -83,7 +83,13 @@ public static class TagArgCreateExtenders
         return input.ToParseableTagArg(tag, TAAK.TimeSpan, isValid);
     }
 
-    public static TagArg<string> ToTextLineTagArg(this string input, Tag tag, 
+    public static TagArg<string> ToPasswordTagArg(
+        this string input, Tag tag, Func<string, bool> isValid = null!)
+    {
+        return TagArg<string>.Create(tag, input!, true, true, isValid);
+    }
+
+    public static TagArg<string> ToTextLineTagArg(this string input, Tag tag,
         bool isRequired, AsciiFilter filter = AllChars, Func<string, bool> isValid = null!)
     {
         return TagArg<string>.Create(tag, input!, isRequired, filter, isValid);

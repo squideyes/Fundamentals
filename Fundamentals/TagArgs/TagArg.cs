@@ -164,6 +164,35 @@ public class TagArg<T> : ITagArg
         return new TagArg<JsonElement>(tag, element, TagArgArgKind.Json);
     }
 
+    public static TagArg<string> Create(Tag tag, string input,
+        bool isRequired = true, bool isTrimmed = true, Func<string, bool> isValid = null!)
+    {
+        tag.MayNotBe().Null();
+
+        if (!isRequired && string.IsNullOrEmpty(input))
+            return new TagArg<string>(tag, null!, TagArgArgKind.TextLine);
+
+        if (TagArg<string>.IsNullOrWhiteSpace(input, tag, out var tagArg))
+            return tagArg;
+
+        if (isTrimmed && !input.IsTrimmed())
+            return new TagArg<string>(tag, input, NotTrimmed);
+
+        if (isValid is null)
+        {
+            if (input.Length > MAX_TEXTLINE_LENGTH)
+                return new TagArg<string>(tag, input, TooLong, MAX_TEXTLINE_LENGTH);
+        }
+        else
+        {
+            if (!isValid(input))
+                return new TagArg<string>(tag, input, Invalid);
+        }
+
+        return new TagArg<string>(tag, input, TagArgArgKind.TextLine);
+    }
+
+
     public static TagArg<string> Create(Tag tag, string input, bool isRequired,
         AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)
     {
