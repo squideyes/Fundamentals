@@ -7,6 +7,5 @@ namespace SquidEyes.Fundamentals;
 
 public static class LogConsts
 {
-    public const string Prefix =
-        "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};";
+    public const string StandardMessage = "Details={@Details};Context={@Context}";
 }

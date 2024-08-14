@@ -11,9 +11,14 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record ValidationFailureDetails(
+        string Property,
+        string Code,
+        string Message);
+
     public static void LogIfValidationFailure(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         ValidationResult result,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
@@ -21,35 +26,24 @@ public static partial class ILoggerExtenders
         if (result.IsValid)
             return;
 
-        if (correlationId.IsDefault())
-            correlationId = Guid.NewGuid();
+        var context = new LogContext(multiTag, calledBy, correlationId);
 
         foreach (var failure in result.Errors)
         {
             logger.ValidationFailure(
-                LogLevel.Warning,
-                nameof(ValidationFailure),
-                calledBy,
-                activity.Value!,
-                correlationId.ToString("N"),
-                failure.PropertyName,
-                failure.ErrorCode,
-                failure.ErrorMessage);
+                new ValidationFailureDetails(failure.PropertyName, 
+                    failure.ErrorCode, failure.ErrorMessage),
+                context);
         }
     }
 
     [LoggerMessage(
         EventId = EventIds.ValidationFailure,
         EventName = nameof(ValidationFailure),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Property={PropertyName};ErrorCode={ErrorCode};ErrorMessage={ErrorMessage}")]
+        Level = LogLevel.Warning,
+        Message = LogConsts.StandardMessage)]
     private static partial void ValidationFailure(
         this ILogger logger,
-        LogLevel logLevel,
-        string eventKind,
-        string calledBy,
-        string activity,
-        string correlationId,
-        string propertyName,
-        string errorCode,
-        string errorMessage);
+        ValidationFailureDetails details,
+        LogContext context);
 }

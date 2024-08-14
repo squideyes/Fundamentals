@@ -10,9 +10,11 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record InvalidTagArgDetails(string Tag, TagArgState State, string Message);
+
     public static void LogIfInvalidTagArg(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         ITagArg tagArg,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
@@ -21,28 +23,17 @@ public static partial class ILoggerExtenders
             return;
 
         logger.InvalidTagArg(
-            LogLevel.Warning,
-            nameof(InvalidTagArg),
-            calledBy,
-            activity.Value!,
-            (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
-            tagArg.Tag.Value!,
-            tagArg.State!,
-            tagArg.Message!);
+            new InvalidTagArgDetails(tagArg.Tag.Value!, tagArg.State!, tagArg.Message!),
+            new LogContext(multiTag, calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = EventIds.InvalidTagArg,
         EventName = nameof(InvalidTagArg),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Code={Tag};State={State};Message={Message}")]
+        Level = LogLevel.Warning,
+        Message = LogConsts.StandardMessage)]
     private static partial void InvalidTagArg(
         this ILogger logger,
-        LogLevel logLevel,
-        string eventKind,
-        string calledBy,
-        string activity,
-        string correlationId,
-        string tag,
-        TagArgState state,
-        string message);
+        InvalidTagArgDetails details,
+        LogContext context);
 }

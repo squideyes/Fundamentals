@@ -30,7 +30,7 @@ internal class Worker(
         }
         catch (Exception outer)
         {
-            logger.LogExceptionCaught("RunningExecAsync", outer, true);
+            logger.LogExceptionCaught("RunningExecAsync", outer);
         }
 
         lifeTime.StopApplication();

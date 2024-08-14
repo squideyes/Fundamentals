@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Sinks.OpenTelemetry;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
+using System.Net;
 using MEL = Microsoft.Extensions.Logging;
 
 // Try to load and validate InitValues
@@ -19,8 +20,12 @@ if (!TryGetInitValues(args, out var initValues))
 var logger = GetLogger(initValues);
 
 // Log a custom log-item
-logger.LogLogonSucceeded("LogLogonSucceededDemo", 
-    Broker.DiscountTrading, Gateway.UsWest);
+logger.LogLogonSucceeded("LogLogonSucceededDemo",
+    Broker.DiscountTrading, Gateway.UsWest, "ABC123");
+
+// Log a custom log-item
+logger.LogLogonFailed("LogLogonFailedDemo", Broker.AmpFutures, 
+    Gateway.UsEast, "XYZ987", HttpStatusCode.Forbidden, "Forbidden");
 
 // Simple ad-hoc log-items can be intermingled with standard log-items
 logger.LogDebug("Simple ad-hoc log item");
@@ -33,31 +38,27 @@ logger.LogInformation("Ad-Hoc Info={@Info}",
 logger.LogMiscTagArgs(
     "LogMiscTagArgsDemo", "OhGoodie", DemoHelper.GetTagArgs());
 
-// Log a miscellaneous warning message 
-logger.LogMiscMessage("LogMiscMessageDemo1", 
-    "Oopsie", "Something Went Wrong!", MiscLogLevel.Warning);
-
 // Log a miscellaneous information message
-logger.LogMiscMessage(
-    "LogMiscMessageDemo2", "OhGoodie", "Something Went Right!");
+logger.LogMiscInfo(
+    "LogMiscMInfo", "OhGoodie", "Something Went Right!");
 
 // Initializes a FluentValidation validator for Person
 var personValidator = new Person.Validator();
 
 // Does not emit a log-item since Person is valid
-logger.LogIfValidationFailure("LogIfValidationFailureDemo1",
+logger.LogIfValidationFailure("LogIfValidationFailure:Demo1",
     personValidator.Validate(new Person("Some", null, "Dude")));
 
 // Does not emit a log-item since Person is valid
-logger.LogIfValidationFailure("LogIfValidationFailureDemo2",
+logger.LogIfValidationFailure("LogIfValidationFailure:Demo2",
     personValidator.Validate(new Person("Some", 'T', "Dude")));
 
 // Emits one log-item because Initial is invalid 
-logger.LogIfValidationFailure("LogIfValidationFailureDemo3",
+logger.LogIfValidationFailure("LogIfValidationFailure:Demo3",
     personValidator.Validate(new Person("Some", '1', "Dude")));
 
 // Emits two log-items because FirstName and LastName are null
-logger.LogIfValidationFailure("LogIfValidationFailureDemo4",
+logger.LogIfValidationFailure("LogIfValidationFailure:Demo4",
     personValidator.Validate(new Person(null!, null, null!)));
 
 // "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging
@@ -84,8 +85,6 @@ static bool TryGetInitValues(string[] args, out InitValues initValues)
 
     var mappings = new Dictionary<string, string>()
     {
-        { "--JunketId", "Context:JunketId" },
-        { "--UserId", "Context:UserId" },
         { "--SeqApiUri", "Serilog:SeqApiUri" },
         { "--SeqApiKey", "Serilog:SeqApiKey" },
         { "--LogLevel", "Serilog:LogLevel" }
@@ -100,19 +99,16 @@ static bool TryGetInitValues(string[] args, out InitValues initValues)
         .AddCommandLine(args, mappings)
         .Build();
 
-    var junketId = config["Context:JunketId"]!.ToInt32TagArg("JunketId", v => v > 0);
-    var userId = config["Context:UserId"]!.ToTextLineTagArg("UserId", true);
     var seqApiUri = config["Serilog:SeqApiUri"]!.ToUriTagArg("SeqApiUri");
     var seqApiKey = config["Serilog:SeqApiKey"]!.ToTextLineTagArg("SeqApiKey", false);
     var logLevel = config["Serilog:LogLevel"]!.ToEnumTagArg<LogLevel>("LogLevel");
 
-    if (!initLogger.IsValid([junketId, userId, seqApiUri, seqApiKey, logLevel]))
+    if (!initLogger.IsValid([seqApiUri, seqApiKey, logLevel]))
         return false;
 
     var logFileName = Path.Combine(Path.GetTempPath(), "LoggingDemo.log");
 
-    initValues = new InitValues(junketId.Arg, userId.Arg, 
-        seqApiUri.Arg, seqApiKey.Arg, logLevel.Arg, logFileName);
+    initValues = new InitValues(seqApiUri.Arg, seqApiKey.Arg, logLevel.Arg, logFileName);
 
     return true;
 }
@@ -123,13 +119,6 @@ static MEL.ILogger GetLogger(InitValues initValues)
 
     SerilogHelper.InitLogDotLogger(LogLevel.Debug, configure =>
     {
-        configure.Enrich.WithProperty("JunketId", initValues.JunketId);
-     
-        configure.Enrich.WithProperty("UserId", initValues.UserId);
-        
-        configure.Enrich.WithProperty(
-            "RunDate", DateOnly.FromDateTime(DateTime.Today));
-
         configure.Destructure.ByTransforming<Broker>(v => v.ToCode());
 
         configure.WriteTo.File(
@@ -157,5 +146,4 @@ static MEL.ILogger GetLogger(InitValues initValues)
 }
 
 // Properties loaded by GetInitTagArgs()
-record InitValues(int JunketId, string UserId, Uri SeqApiUri, 
-    string SeqApiKey, LogLevel LogLevel, string LogFileName);
+record InitValues(Uri SeqApiUri, string SeqApiKey, LogLevel LogLevel, string LogFileName);

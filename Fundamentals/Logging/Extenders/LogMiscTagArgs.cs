@@ -10,22 +10,28 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record MiscTagArgsDetails(Tag Code, Dictionary<string, object> TagArgs);
+
     public static void LogMiscTagArgs(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         Tag code,
         TagArgSet tagArgs,
-        MiscLogLevel level = MiscLogLevel.Info,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        logger.Log(level == MiscLogLevel.Info ? LogLevel.Information : LogLevel.Warning,
-            LogConsts.Prefix + "Code={Code};TagArgs={@TagArgs}",
-            "MiscTagArgs"!,
-            calledBy,
-            activity.Value!,
-            (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
-            code.Value,
-            tagArgs.ToSimplifiedDictionary());
+        logger.MiscTagArgs(
+            new MiscTagArgsDetails(code.Value!, tagArgs.ToSimplifiedDictionary()),
+            new LogContext(multiTag, calledBy, correlationId));
     }
+
+    [LoggerMessage(
+        EventId = EventIds.MiscTagArgs,
+        EventName = nameof(MiscTagArgs),
+        Level = LogLevel.Information,
+        Message = LogConsts.StandardMessage)]
+    private static partial void MiscTagArgs(
+        this ILogger logger,
+        MiscTagArgsDetails details,
+        LogContext context);
 }

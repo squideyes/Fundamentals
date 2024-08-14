@@ -8,7 +8,7 @@ namespace SquidEyes.Fundamentals;
 public static class EventIds
 {
     public const int MiscInfo = 100;
-    public const int TagArgs = 101;
+    public const int MiscTagArgs = 101;
 
     public const int ExceptionCaught = 200;
     public const int ErrorResult = 201;

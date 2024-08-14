@@ -11,35 +11,29 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record LogonSucceededDetails(Broker Broker, Gateway Gateway, String AccountId);
+
     public static void LogLogonSucceeded(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         Broker broker,
         Gateway gateway,
+        string accountId,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
         logger.LogonSucceeded(
-            LogLevel.Information,
-            nameof(LogonSucceeded),
-            calledBy,
-            activity.Value!,
-            (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
-            broker,
-            gateway);
+            new LogonSucceededDetails(broker, gateway, accountId),
+            new LogContext(multiTag, calledBy, correlationId));
     }
 
     [LoggerMessage(
-        EventId = CustomEventIds.LogonSucceeded, 
+        EventId = CustomEventIds.LogonSucceeded,
         EventName = nameof(LogonSucceeded),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway}")]
+        Level = LogLevel.Information,
+        Message = LogConsts.StandardMessage)]
     private static partial void LogonSucceeded(
         this ILogger logger,
-        LogLevel logLevel,
-        string eventKind,
-        string calledBy,
-        string activity,
-        string correlationId,
-        Broker broker,
-        Gateway gateway);
+        LogonSucceededDetails details,
+        LogContext context);
 }

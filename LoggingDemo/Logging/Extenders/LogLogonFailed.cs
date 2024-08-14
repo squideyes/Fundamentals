@@ -12,41 +12,36 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record LogonFailedDetails(
+        Broker Broker, 
+        Gateway Gateway, 
+        string AccountId,
+        HttpStatusCode StatusCode,
+        string Reason);
+
     public static void LogLogonFailed(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         Broker broker,
         Gateway gateway,
+        string accountId,
         HttpStatusCode statusCode,
         string reason,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
         logger.LogonFailed(
-            LogLevel.Information,
-            nameof(LogonFailed),
-            calledBy,
-            activity.Value!,
-            (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N"),
-            broker,
-            gateway,
-            statusCode,
-            reason);
+            new LogonFailedDetails(broker, gateway, accountId, statusCode, reason),
+            new LogContext(multiTag, calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = CustomEventIds.LogonFailed,
         EventName = nameof(LogonFailed),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Broker={Broker};Gateway={Gateway};StatusCode={StatusCode};Reason={Reason}")]
+        Level = LogLevel.Information,
+        Message = LogConsts.StandardMessage)]
     private static partial void LogonFailed(
         this ILogger logger,
-        LogLevel logLevel,
-        string eventKind,
-        string calledBy,
-        string activity,
-        string correlationId,
-        Broker broker,
-        Gateway gateway,
-        HttpStatusCode statusCode,
-        string reason);
+        LogonFailedDetails details,
+        LogContext context);
 }

@@ -10,63 +10,52 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
+    private record ExceptionCaughtDetails(
+        string ErrorType,
+        string Target,
+        string Message,
+        string StackTrace);
+
     public static void LogExceptionCaught(
         this ILogger logger,
-        Tag activity,
+        MultiTag multiTag,
         Exception exception,
-        bool withFileInfo = false,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        if (correlationId.IsDefault())
-            correlationId = Guid.NewGuid();
+        var context = new LogContext(multiTag, calledBy, correlationId);
 
-        logger.ExceptionCaughtWithLevel(activity, exception,
-            withFileInfo, 0, correlationId.ToString("N"), calledBy);
+        logger.ExceptionCaughtWithLevel(context, 0, exception);
     }
 
     private static void ExceptionCaughtWithLevel(
         this ILogger logger,
-        Tag activity,
-        Exception exception,
-        bool withFileInfo,
+        LogContext context,
         int level,
-        string correlationId,
-        string calledBy)
+        Exception exception)
     {
-        logger.ExceptionCaught(
-            LogLevel.Error,
-            nameof(LogExceptionCaught),
-            calledBy,
-            activity.Value!,
-            correlationId,
-            level,
+        var details = new ExceptionCaughtDetails(
             exception.GetType().FullName!,
             exception.TargetSite!.ToString()!,
             exception.Message,
-            string.Join(";", exception.GetStackTraceLines(withFileInfo)));
+            string.Join(";", exception.GetStackTraceLines(false)));
+
+        logger.ExceptionCaught(details, context);
 
         if (exception.InnerException is not null)
         {
-            logger.ExceptionCaughtWithLevel(activity, exception.InnerException,
-                withFileInfo, ++level, correlationId, calledBy);
+            logger.ExceptionCaughtWithLevel(
+                context, ++level, exception.InnerException);
         }
     }
 
     [LoggerMessage(
         EventId = EventIds.ExceptionCaught,
         EventName = nameof(ExceptionCaught),
-        Message = "EventKind={EventKind};Caller={CalledBy};Activity={Activity};CorrelationId={CorrelationId};Level={Level};ErrorType={ErrorType};TargetSite={TargetSite};Message={ErrorMessage};StackTrace={StackTrace}")]
+        Level = LogLevel.Error,
+        Message = LogConsts.StandardMessage)]
     private static partial void ExceptionCaught(
         this ILogger logger,
-        LogLevel logLevel,
-        string eventKind,
-        string calledBy,
-        string activity,
-        string correlationId,
-        int level,
-        string errorType,
-        string targetSite,
-        string errorMessage,
-        string stackTrace);
+        ExceptionCaughtDetails details,
+        LogContext context);
 }
