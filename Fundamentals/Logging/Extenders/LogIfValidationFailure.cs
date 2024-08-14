@@ -18,7 +18,6 @@ public static partial class ILoggerExtenders
 
     public static void LogIfValidationFailure(
         this ILogger logger,
-        MultiTag multiTag,
         ValidationResult result,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
@@ -26,7 +25,7 @@ public static partial class ILoggerExtenders
         if (result.IsValid)
             return;
 
-        var context = new LogContext(multiTag, calledBy, correlationId);
+        var context = new LogContext(calledBy, correlationId);
 
         foreach (var failure in result.Errors)
         {
@@ -41,6 +40,7 @@ public static partial class ILoggerExtenders
         EventId = EventIds.ValidationFailure,
         EventName = nameof(ValidationFailure),
         Level = LogLevel.Warning,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void ValidationFailure(
         this ILogger logger,

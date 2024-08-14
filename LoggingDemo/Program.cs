@@ -20,12 +20,11 @@ if (!TryGetInitValues(args, out var initValues))
 var logger = GetLogger(initValues);
 
 // Log a custom log-item
-logger.LogLogonSucceeded("LogLogonSucceededDemo",
-    Broker.DiscountTrading, Gateway.UsWest, "ABC123");
+logger.LogLogonSucceeded(Broker.DiscountTrading, Gateway.UsWest, "ABC123");
 
 // Log a custom log-item
-logger.LogLogonFailed("LogLogonFailedDemo", Broker.AmpFutures, 
-    Gateway.UsEast, "XYZ987", HttpStatusCode.Forbidden, "Forbidden");
+logger.LogLogonFailed(Broker.AmpFutures, Gateway.UsEast, "XYZ987", 
+    HttpStatusCode.Forbidden, "Forbidden");
 
 // Simple ad-hoc log-items can be intermingled with standard log-items
 logger.LogDebug("Simple ad-hoc log item");
@@ -35,30 +34,28 @@ logger.LogInformation("Ad-Hoc Info={@Info}",
     new { Code = "ABC123", Message = "It works!" });
 
 // Log a miscellaneous TagArgSet
-logger.LogMiscTagArgs(
-    "LogMiscTagArgsDemo", "OhGoodie", DemoHelper.GetTagArgs());
+logger.LogMiscTagArgs("OhGoodie", DemoHelper.GetTagArgs());
 
 // Log a miscellaneous information message
-logger.LogMiscInfo(
-    "LogMiscMInfo", "OhGoodie", "Something Went Right!");
+logger.LogMiscInfo("OhGoodie", "Something Went Right!");
 
 // Initializes a FluentValidation validator for Person
 var personValidator = new Person.Validator();
 
 // Does not emit a log-item since Person is valid
-logger.LogIfValidationFailure("LogIfValidationFailure:Demo1",
+logger.LogIfValidationFailure(
     personValidator.Validate(new Person("Some", null, "Dude")));
 
 // Does not emit a log-item since Person is valid
-logger.LogIfValidationFailure("LogIfValidationFailure:Demo2",
+logger.LogIfValidationFailure(
     personValidator.Validate(new Person("Some", 'T', "Dude")));
 
 // Emits one log-item because Initial is invalid 
-logger.LogIfValidationFailure("LogIfValidationFailure:Demo3",
+logger.LogIfValidationFailure(
     personValidator.Validate(new Person("Some", '1', "Dude")));
 
 // Emits two log-items because FirstName and LastName are null
-logger.LogIfValidationFailure("LogIfValidationFailure:Demo4",
+logger.LogIfValidationFailure(
     personValidator.Validate(new Person(null!, null, null!)));
 
 // "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging

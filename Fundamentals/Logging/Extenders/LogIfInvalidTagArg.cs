@@ -14,7 +14,6 @@ public static partial class ILoggerExtenders
 
     public static void LogIfInvalidTagArg(
         this ILogger logger,
-        MultiTag multiTag,
         ITagArg tagArg,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
@@ -24,13 +23,14 @@ public static partial class ILoggerExtenders
 
         logger.InvalidTagArg(
             new InvalidTagArgDetails(tagArg.Tag.Value!, tagArg.State!, tagArg.Message!),
-            new LogContext(multiTag, calledBy, correlationId));
+            new LogContext(calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = EventIds.InvalidTagArg,
         EventName = nameof(InvalidTagArg),
         Level = LogLevel.Warning,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void InvalidTagArg(
         this ILogger logger,

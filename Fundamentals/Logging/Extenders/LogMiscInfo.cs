@@ -14,7 +14,6 @@ public static partial class ILoggerExtenders
 
     public static void LogMiscInfo(
         this ILogger logger,
-        MultiTag multiTag,
         Tag code,
         string message,
         Guid correlationId = default,
@@ -22,13 +21,14 @@ public static partial class ILoggerExtenders
     {
         logger.MiscInfo(
             new MiscInfoDetails(code.Value!, message),
-            new LogContext(multiTag, calledBy, correlationId));
+            new LogContext(calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = EventIds.MiscInfo,
         EventName = nameof(MiscInfo),
         Level = LogLevel.Information,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void MiscInfo(
         this ILogger logger,

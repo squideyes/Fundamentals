@@ -1,8 +1,12 @@
-﻿namespace SquidEyes.Fundamentals;
+// ********************************************************
+// The use of this source code is licensed under the terms
+// of the MIT License (https://opensource.org/licenses/MIT)
+// ********************************************************
 
-public class LogContext(MultiTag multiTag, string calledBy, Guid correlationId)
+namespace SquidEyes.Fundamentals;
+
+public class LogContext(string calledBy, Guid correlationId)
 {
-    public string MultiTag { get; } = multiTag.ToString();
     public string CalledBy { get; } = calledBy;
     public string CorrelationId { get; } = 
         (correlationId.IsDefault() ? Guid.NewGuid() : correlationId).ToString("N");

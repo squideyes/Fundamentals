@@ -21,7 +21,6 @@ public static partial class ILoggerExtenders
 
     public static void LogLogonFailed(
         this ILogger logger,
-        MultiTag multiTag,
         Broker broker,
         Gateway gateway,
         string accountId,
@@ -32,13 +31,14 @@ public static partial class ILoggerExtenders
     {
         logger.LogonFailed(
             new LogonFailedDetails(broker, gateway, accountId, statusCode, reason),
-            new LogContext(multiTag, calledBy, correlationId));
+            new LogContext(calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = CustomEventIds.LogonFailed,
         EventName = nameof(LogonFailed),
         Level = LogLevel.Information,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void LogonFailed(
         this ILogger logger,

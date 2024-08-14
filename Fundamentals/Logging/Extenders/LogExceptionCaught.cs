@@ -18,12 +18,11 @@ public static partial class ILoggerExtenders
 
     public static void LogExceptionCaught(
         this ILogger logger,
-        MultiTag multiTag,
         Exception exception,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        var context = new LogContext(multiTag, calledBy, correlationId);
+        var context = new LogContext(calledBy, correlationId);
 
         logger.ExceptionCaughtWithLevel(context, 0, exception);
     }
@@ -53,6 +52,7 @@ public static partial class ILoggerExtenders
         EventId = EventIds.ExceptionCaught,
         EventName = nameof(ExceptionCaught),
         Level = LogLevel.Error,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void ExceptionCaught(
         this ILogger logger,

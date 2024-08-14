@@ -15,7 +15,6 @@ public static partial class ILoggerExtenders
 
     public static void LogLogonSucceeded(
         this ILogger logger,
-        MultiTag multiTag,
         Broker broker,
         Gateway gateway,
         string accountId,
@@ -24,13 +23,14 @@ public static partial class ILoggerExtenders
     {
         logger.LogonSucceeded(
             new LogonSucceededDetails(broker, gateway, accountId),
-            new LogContext(multiTag, calledBy, correlationId));
+            new LogContext(calledBy, correlationId));
     }
 
     [LoggerMessage(
         EventId = CustomEventIds.LogonSucceeded,
         EventName = nameof(LogonSucceeded),
         Level = LogLevel.Information,
+        SkipEnabledCheck = true,
         Message = LogConsts.StandardMessage)]
     private static partial void LogonSucceeded(
         this ILogger logger,
