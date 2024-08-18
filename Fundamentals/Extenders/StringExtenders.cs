@@ -3,6 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using static SquidEyes.Fundamentals.AsciiFilter;
@@ -14,30 +15,37 @@ public static partial class StringExtenders
     private static readonly HashSet<char> keyboardSymbols = new(
         "`~!@#$%^&*()_-+=[]{}\\|:;'?/.<>,'".ToCharArray());
 
-    public static bool IsNonEmptyAndAscii(this string value, AsciiFilter filter)
+    public static bool WithinLengthRange(this string value, int minLength, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value))
+            return false;
+
+        return value.Length.Convert(length => length >= minLength && length <= maxLength);
+    }
+
+    public static bool IsNonEmptyAndAscii(this string value,
+        AsciiFilter filter = AllChars, int minLength = 1, int maxLength = int.MaxValue)
     {
         if (string.IsNullOrEmpty(value))
             return false;
 
         bool IsValid(char c)
         {
-            bool isValid = false;
+            if (char.IsAsciiLetterLower(c))
+                return (filter & Lowers) == Lowers;
+            else if (char.IsAsciiLetterUpper(c))
+                return (filter & Uppers) == Uppers;
+            else if (char.IsDigit(c))
+                return (filter & Digits) == Digits;
+            else if (c == ' ')
+                return (filter & Spaces) == Spaces;
+            else if (keyboardSymbols.Contains(c))
+                return (filter & Symbols) == Symbols;
 
-            if (char.IsAsciiLetterLower(c) && (filter & Lowers) == Lowers)
-                isValid = true;
-            else if (char.IsAsciiLetterUpper(c) && (filter & Uppers) == Uppers)
-                isValid = true;
-            else if (char.IsDigit(c) && (filter & Digits) == Digits)
-                isValid = true;
-            else if(c == ' ' && (filter & Digits) == Spaces)
-                isValid = true;
-            else if (keyboardSymbols.Contains(c) && (filter & Symbols) == Symbols)
-                isValid = true;
-
-            return isValid;
+            return false;
         }
 
-        return value.All(IsValid);
+        return value.Length.Convert(l => l >= minLength && l <= maxLength) && value.All(IsValid);
     }
 
     public static bool IsBase64String(this string value) =>

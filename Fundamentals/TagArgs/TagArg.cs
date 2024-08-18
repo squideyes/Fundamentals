@@ -10,11 +10,9 @@ namespace SquidEyes.Fundamentals;
 
 public class TagArg<T> : ITagArg
 {
-    private const int MAX_TEXTLINE_LENGTH = 100;
-
     private readonly string formatted;
 
-    internal TagArg(Tag tag, T arg, TagArgArgKind kind, AsciiFilter filter = default!)
+    internal TagArg(Tag tag, T arg, TagArgArgKind kind)
     {
         string GetFormatedString()
         {
@@ -29,7 +27,6 @@ public class TagArg<T> : ITagArg
         }
 
         Arg = arg;
-        Filter = filter;
         Kind = kind;
         Message = null!;
         State = Valid;
@@ -42,7 +39,6 @@ public class TagArg<T> : ITagArg
     internal TagArg(Tag tag, TagArgState state)
     {
         Arg = default!;
-        Filter = default;
         Kind = default;
         Message = $"The \"{tag}\" arg failed validation.";
         State = state;
@@ -69,7 +65,6 @@ public class TagArg<T> : ITagArg
         };
 
         Arg = default!;
-        Filter = default;
         Kind = default;
         Message = GetMessage();
         State = state;
@@ -85,7 +80,6 @@ public class TagArg<T> : ITagArg
     public string TypeName { get; }
     public string Message { get; }
     public TagArgState State { get; }
-    public AsciiFilter Filter { get; }
 
     public bool IsValid => State == Valid;
 
@@ -114,7 +108,7 @@ public class TagArg<T> : ITagArg
 
     public Error ToError(string code) => ToResult(code).Errors.First();
 
-    public static bool TryGetNonTexLineKind(out TagArgArgKind kind)
+    public static bool TryGetNonTextLineKind(out TagArgArgKind kind)
     {
         var type = typeof(T);
 
@@ -164,8 +158,8 @@ public class TagArg<T> : ITagArg
         return new TagArg<JsonElement>(tag, element, TagArgArgKind.Json);
     }
 
-    public static TagArg<string> Create(Tag tag, string input,
-        bool isRequired = true, bool isTrimmed = true, Func<string, bool> isValid = null!)
+    public static TagArg<string> Create(
+        Tag tag, string input, bool isRequired, Func<string, bool> isValid = null!)
     {
         tag.MayNotBe().Null();
 
@@ -175,13 +169,13 @@ public class TagArg<T> : ITagArg
         if (TagArg<string>.IsNullOrWhiteSpace(input, tag, out var tagArg))
             return tagArg;
 
-        if (isTrimmed && !input.IsTrimmed())
-            return new TagArg<string>(tag, input, NotTrimmed);
+        if (!input.All(c => c >= 32 && c <= 126))
+            return new TagArg<string>(tag, input, BadChars);
 
         if (isValid is null)
         {
-            if (input.Length > MAX_TEXTLINE_LENGTH)
-                return new TagArg<string>(tag, input, TooLong, MAX_TEXTLINE_LENGTH);
+            if (!input.IsTrimmed())
+                return new TagArg<string>(tag, input, NotTrimmed);
         }
         else
         {
@@ -192,44 +186,11 @@ public class TagArg<T> : ITagArg
         return new TagArg<string>(tag, input, TagArgArgKind.TextLine);
     }
 
-
-    public static TagArg<string> Create(Tag tag, string input, bool isRequired,
-        AsciiFilter filter = AsciiFilter.AllChars, Func<string, bool> isValid = null!)
-    {
-        tag.MayNotBe().Null();
-        filter.MayNotBe().Default();
-
-        if (!isRequired && string.IsNullOrEmpty(input))
-            return new TagArg<string>(tag, null!, TagArgArgKind.TextLine);
-
-        if (TagArg<string>.IsNullOrWhiteSpace(input, tag, out var tagArg))
-            return tagArg;
-
-        if (!input.IsNonEmptyAndAscii(filter))
-            return new TagArg<string>(tag, input, BadChars);
-
-        if (isValid is null)
-        {
-            if (input.Length > MAX_TEXTLINE_LENGTH)
-                return new TagArg<string>(tag, input, TooLong, MAX_TEXTLINE_LENGTH);
-
-            if (!input.IsTrimmed())
-                return new TagArg<string>(tag, input, NotTrimmed);
-        }
-        else
-        {
-            if (!isValid(input))
-                return new TagArg<string>(tag, input, Invalid);
-        }
-
-        return new TagArg<string>(tag, input, TagArgArgKind.TextLine, filter);
-    }
-
     public static TagArg<T> Create(Tag tag, T arg, Func<T, bool> isValid = null!)
     {
         tag.MayNotBe().Null();
 
-        if (!TryGetNonTexLineKind(out TagArgArgKind kind))
+        if (!TryGetNonTextLineKind(out TagArgArgKind kind))
             throw new ArgumentOutOfRangeException(nameof(arg));
 
         if (isValid is not null && !isValid(arg))

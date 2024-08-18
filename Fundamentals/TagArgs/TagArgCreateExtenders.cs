@@ -4,7 +4,6 @@
 // ********************************************************
 
 using static SquidEyes.Fundamentals.TagArgState;
-using static SquidEyes.Fundamentals.AsciiFilter;
 using TAAK = SquidEyes.Fundamentals.TagArgArgKind;
 
 namespace SquidEyes.Fundamentals;
@@ -84,15 +83,16 @@ public static class TagArgCreateExtenders
     }
 
     public static TagArg<string> ToPasswordTagArg(
-        this string input, Tag tag, Func<string, bool> isValid = null!)
+        this string input, Tag tag, int minLength, int maxLength)
     {
-        return TagArg<string>.Create(tag, input!, true, true, isValid);
+        return TagArg<string>.Create(tag, input!, true,
+            v => v.WithinLengthRange(minLength, maxLength));
     }
 
-    public static TagArg<string> ToTextLineTagArg(this string input, Tag tag,
-        bool isRequired, AsciiFilter filter = AllChars, Func<string, bool> isValid = null!)
+    public static TagArg<string> ToTextLineTagArg(this string input, 
+        Tag tag, bool isRequired = true, Func<string, bool> isValid = null!)
     {
-        return TagArg<string>.Create(tag, input!, isRequired, filter, isValid);
+        return TagArg<string>.Create(tag, input!, isRequired, isValid);
     }
 
     public static TagArg<Email> ToEmailTagArg(

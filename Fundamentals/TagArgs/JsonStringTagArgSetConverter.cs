@@ -31,8 +31,6 @@ public class JsonStringTagArgSetConverter : JsonConverter<TagArgSet>
 
             if (tagArg.Kind == TagArgArgKind.Enum)
                 writer.WriteString("Type", tagArg.TypeName);
-            else if (tagArg.Kind == TagArgArgKind.TextLine)
-                writer.WriteString("Filter", tagArg.Filter.ToString());
 
             switch (tagArg.Kind)
             {
