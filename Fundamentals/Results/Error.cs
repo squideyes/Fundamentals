@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class Error
+public class Error : IEquatable<Error>
 {
     private Error()
     {
@@ -34,8 +34,16 @@ public class Error
 
     public override string ToString() => Code!.ToString();
 
+    public bool Equals(Error? other) =>
+        other is not null && Code == other.Code && Message == other.Message;
+
     internal static readonly Error Empty = new();
 
     internal static readonly Error NullValue =
         new("Error:NullValue", "The specified Result.Value is NULL.");
+
+    public override bool Equals(object? other) =>
+        other is Error error && Equals(error);
+
+    public override int GetHashCode() => HashCode.Combine(Code, Message);
 }

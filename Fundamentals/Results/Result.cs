@@ -7,47 +7,53 @@ namespace SquidEyes.Fundamentals;
 
 public class Result
 {
-    protected internal Result(bool isSuccess, Error error)
+    private readonly ResultKind kind;
+
+    protected internal Result(ResultKind kind, Error error)
     {
-        if (isSuccess && error != Error.Empty)
+        if (kind == ResultKind.Success && error != Error.Empty)
             throw new InvalidOperationException();
 
-        if (!isSuccess && error == Error.Empty)
+        if (kind == ResultKind.Cancel && error != Error.Empty)
             throw new InvalidOperationException();
 
-        IsSuccess = isSuccess;
+        if (kind == ResultKind.Failure && error == Error.Empty)
+            throw new InvalidOperationException();
 
-        Errors = IsSuccess ? [] : [error];
+        this.kind = kind;
+        Errors = IsFailure ? [error] : [];
     }
 
-    protected internal Result(bool isSuccess, Error[] errors)
+    protected internal Result(ResultKind kind, Error[] errors)
     {
-        IsSuccess = isSuccess;
+        this.kind = kind;
         Errors = errors;
     }
 
-    public bool IsSuccess { get; }
-
-    public bool IsFailure => !IsSuccess;
+    public bool IsSuccess => kind == ResultKind.Success;
+    public bool IsCancel => kind == ResultKind.Cancel;
+    public bool IsFailure => kind == ResultKind.Failure;
 
     public Error[] Errors { get; }
 
-    public static Result Success() => new(true, Error.Empty);
+    public static Result Success() => new(ResultKind.Success, Error.Empty);
+
+    public static Result Cancel() => new(ResultKind.Cancel, Error.Empty);
 
     public static Result<T> Success<T>(T value) =>
-        new(value, true, Error.Empty);
+        new(value, ResultKind.Success, Error.Empty);
 
     public static Result Failure(Error error) =>
-        new(false, error);
+        new(ResultKind.Failure, error);
 
     public static Result Failure(Error[] errors) =>
-        new(false, errors);
+        new(ResultKind.Failure, errors);
 
     public static Result<T> Failure<T>(Error error) =>
-        new(default, false, error);
+        new(default, ResultKind.Failure, error);
 
     public static Result<T> Failure<T>(Error[] errors) =>
-        new(default, false, errors);
+        new(default, ResultKind.Failure, errors);
 
     public static Result<T> Create<T>(T? value) =>
         value is not null ? Success(value) : Failure<T>(Error.NullValue);

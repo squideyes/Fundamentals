@@ -9,11 +9,11 @@ public class Result<T> : Result
 {
     private readonly T? value;
 
-    protected internal Result(T? value, bool isSuccess, Error error)
-        : base(isSuccess, error) => this.value = value;
+    protected internal Result(T? value, ResultKind kind, Error error)
+        : base(kind, error) => this.value = value;
 
-    protected internal Result(T? value, bool isSuccess, Error[] errors)
-        : base(isSuccess, errors) => this.value = value;
+    protected internal Result(T? value, ResultKind kind, Error[] errors)
+        : base(kind, errors) => this.value = value;
 
     public T Value => IsSuccess ? value! : throw new InvalidOperationException(
         "The Value of a \"Failure\" Result may not be accessed.");
