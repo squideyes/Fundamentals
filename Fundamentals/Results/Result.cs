@@ -39,6 +39,8 @@ public class Result
     public static Result Success() => new(ResultKind.Success, Error.Empty);
 
     public static Result Cancel() => new(ResultKind.Cancel, Error.Empty);
+    
+    public static Result Cancel<T>() => new(ResultKind.Cancel, Error.Empty);
 
     public static Result<T> Success<T>(T value) =>
         new(value, ResultKind.Success, Error.Empty);
