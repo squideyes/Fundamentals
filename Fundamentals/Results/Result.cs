@@ -17,9 +17,6 @@ public class Result
 
     protected internal Result(ResultKind kind, Error error)
     {
-        if (kind == ResultKind.Cancel)
-            throw new InvalidOperationException();
-
         if (kind == ResultKind.Success && error != Error.Empty)
             throw new InvalidOperationException();
 
