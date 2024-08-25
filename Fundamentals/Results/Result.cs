@@ -9,12 +9,18 @@ public class Result
 {
     private readonly ResultKind kind;
 
+    protected internal Result()
+    {
+        kind = ResultKind.Cancel;
+        Errors = [];
+    }
+
     protected internal Result(ResultKind kind, Error error)
     {
-        if (kind == ResultKind.Success && error != Error.Empty)
+        if (kind == ResultKind.Cancel)
             throw new InvalidOperationException();
 
-        if (kind == ResultKind.Cancel && error != Error.Empty)
+        if (kind == ResultKind.Success && error != Error.Empty)
             throw new InvalidOperationException();
 
         if (kind == ResultKind.Failure && error == Error.Empty)
@@ -38,12 +44,13 @@ public class Result
 
     public static Result Success() => new(ResultKind.Success, Error.Empty);
 
-    public static Result Cancel() => new(ResultKind.Cancel, Error.Empty);
-    
-    public static Result Cancel<T>() => new(ResultKind.Cancel, Error.Empty);
-
     public static Result<T> Success<T>(T value) =>
         new(value, ResultKind.Success, Error.Empty);
+
+    public static Result Cancel() =>
+        new(ResultKind.Cancel, Error.Empty);
+
+    public static Result<T> Cancel<T>() => new();
 
     public static Result Failure(Error error) =>
         new(ResultKind.Failure, error);

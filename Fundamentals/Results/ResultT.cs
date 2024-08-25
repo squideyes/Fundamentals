@@ -12,6 +12,9 @@ public class Result<T> : Result
     protected internal Result(T? value, ResultKind kind, Error error)
         : base(kind, error) => this.value = value;
 
+    protected internal Result()
+        : base() => value = default;
+
     protected internal Result(T? value, ResultKind kind, Error[] errors)
         : base(kind, errors) => this.value = value;
 
