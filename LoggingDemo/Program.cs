@@ -10,6 +10,7 @@ using Serilog.Sinks.OpenTelemetry;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
 using System.Net;
+using System.Runtime.CompilerServices;
 using MEL = Microsoft.Extensions.Logging;
 
 // Try to load and validate InitValues
@@ -38,6 +39,9 @@ logger.LogMiscTagArgs("OhGoodie", DemoHelper.GetTagArgs());
 
 // Log a miscellaneous information message
 logger.LogMiscInfo("OhGoodie", "Something Went Right!");
+
+// Log a Result Failure
+logger.LogResultFailure("LogFailureTest", GetFailure());
 
 // Initializes a FluentValidation validator for Person
 var personValidator = new Person.Validator();
@@ -140,6 +144,19 @@ static MEL.ILogger GetLogger(InitValues initValues)
          builder => { builder.AddSerilog(); });
 
     return loggerFactory.CreateLogger<Program>();
+}
+
+Result<string> GetFailure()
+{
+    var error1 = new Error("FailureTest:BadCode", "The Code is bad!");
+
+    var error2 = new Error("FailureTest:BadName", "The Name is invalid",
+    [
+        "true".ToBoolTagArg("AllowSpaces"),
+        "SomeDude".ToTextLineTagArg("RequiredPrefix", true)
+    ]);
+
+    return Result.Failure<string>([error1, error2]);
 }
 
 // Properties loaded by GetInitTagArgs()

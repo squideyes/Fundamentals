@@ -14,6 +14,7 @@ public static class EventIds
     public const int ErrorResult = 201;
     public const int InvalidTagArg = 202;
     public const int ValidationFailure = 203;
+    public const int ResultFailure = 204;
 
     public const int CustomEvent = 1000;
 }
