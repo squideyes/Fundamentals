@@ -31,7 +31,7 @@ public static partial class ILoggerExtenders
     {
         logger.LogonFailed(
             new LogonFailedDetails(broker, gateway, accountId, statusCode, reason),
-            new LogContext(calledBy, correlationId));
+            new LogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -43,5 +43,5 @@ public static partial class ILoggerExtenders
     private static partial void LogonFailed(
         this ILogger logger,
         LogonFailedDetails details,
-        LogContext context);
+        LogScope scope);
 }

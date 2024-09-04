@@ -7,5 +7,5 @@ namespace SquidEyes.Fundamentals;
 
 public static class LogConsts
 {
-    public const string StandardMessage = "Details={@Details};Context={@Context}";
+    public const string StandardMessage = "Details={@Details};Scope={@Scope}";
 }

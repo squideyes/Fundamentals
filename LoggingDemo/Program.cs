@@ -10,7 +10,6 @@ using Serilog.Sinks.OpenTelemetry;
 using SquidEyes.Fundamentals;
 using SquidEyes.Fundamentals.LoggingDemo;
 using System.Net;
-using System.Runtime.CompilerServices;
 using MEL = Microsoft.Extensions.Logging;
 
 // Try to load and validate InitValues

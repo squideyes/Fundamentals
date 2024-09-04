@@ -22,14 +22,14 @@ public static partial class ILoggerExtenders
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        var context = new LogContext(calledBy, correlationId);
+        var context = new LogScope(calledBy, correlationId);
 
         logger.ExceptionCaughtWithLevel(context, 0, exception);
     }
 
     private static void ExceptionCaughtWithLevel(
         this ILogger logger,
-        LogContext context,
+        LogScope context,
         int level,
         Exception exception)
     {
@@ -57,5 +57,5 @@ public static partial class ILoggerExtenders
     private static partial void ExceptionCaught(
         this ILogger logger,
         ExceptionCaughtDetails details,
-        LogContext context);
+        LogScope scope);
 }

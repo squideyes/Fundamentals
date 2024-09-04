@@ -25,7 +25,7 @@ public static partial class ILoggerExtenders
         if (result.IsValid)
             return;
 
-        var context = new LogContext(calledBy, correlationId);
+        var context = new LogScope(calledBy, correlationId);
 
         foreach (var failure in result.Errors)
         {
@@ -45,5 +45,5 @@ public static partial class ILoggerExtenders
     private static partial void ValidationFailure(
         this ILogger logger,
         ValidationFailureDetails details,
-        LogContext context);
+        LogScope scope);
 }

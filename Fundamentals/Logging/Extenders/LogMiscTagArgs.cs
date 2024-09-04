@@ -21,7 +21,7 @@ public static partial class ILoggerExtenders
     {
         logger.MiscTagArgs(
             new MiscTagArgsDetails(multiTag.ToString(), tagArgs.ToSimplifiedDictionary()),
-            new LogContext(calledBy, correlationId));
+            new LogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -33,5 +33,5 @@ public static partial class ILoggerExtenders
     private static partial void MiscTagArgs(
         this ILogger logger,
         MiscTagArgsDetails details,
-        LogContext context);
+        LogScope scope);
 }

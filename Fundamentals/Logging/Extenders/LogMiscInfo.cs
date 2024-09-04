@@ -21,7 +21,7 @@ public static partial class ILoggerExtenders
     {
         logger.MiscInfo(
             new MiscInfoDetails(code.Value!, message),
-            new LogContext(calledBy, correlationId));
+            new LogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -33,5 +33,5 @@ public static partial class ILoggerExtenders
     private static partial void MiscInfo(
         this ILogger logger,
         MiscInfoDetails details,
-        LogContext context);
+        LogScope scope);
 }

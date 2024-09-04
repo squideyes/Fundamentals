@@ -11,7 +11,7 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record LogonSucceededDetails(Broker Broker, Gateway Gateway, String AccountId);
+    private record LogonSucceededDetails(Broker Broker, Gateway Gateway, string AccountId);
 
     public static void LogLogonSucceeded(
         this ILogger logger,
@@ -23,7 +23,7 @@ public static partial class ILoggerExtenders
     {
         logger.LogonSucceeded(
             new LogonSucceededDetails(broker, gateway, accountId),
-            new LogContext(calledBy, correlationId));
+            new LogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -35,5 +35,5 @@ public static partial class ILoggerExtenders
     private static partial void LogonSucceeded(
         this ILogger logger,
         LogonSucceededDetails details,
-        LogContext context);
+        LogScope scope);
 }

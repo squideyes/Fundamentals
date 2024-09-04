@@ -26,7 +26,7 @@ public static partial class ILoggerExtenders
         if (!result.IsFailure)
             throw new InvalidOperationException();
 
-        var context = new LogContext(calledBy, correlationId);
+        var context = new LogScope(calledBy, correlationId);
 
         foreach (var failure in result.Errors)
         {
@@ -46,5 +46,5 @@ public static partial class ILoggerExtenders
     private static partial void ResultFailure(
         this ILogger logger,
         ResultFailureDetails details,
-        LogContext context);
+        LogScope scope);
 }

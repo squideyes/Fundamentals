@@ -23,7 +23,7 @@ public static partial class ILoggerExtenders
 
         logger.InvalidTagArg(
             new InvalidTagArgDetails(tagArg.Tag.Value!, tagArg.State!, tagArg.Message!),
-            new LogContext(calledBy, correlationId));
+            new LogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -35,5 +35,5 @@ public static partial class ILoggerExtenders
     private static partial void InvalidTagArg(
         this ILogger logger,
         InvalidTagArgDetails details,
-        LogContext context);
+        LogScope scope);
 }

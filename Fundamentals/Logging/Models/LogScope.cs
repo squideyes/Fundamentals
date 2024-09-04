@@ -5,7 +5,7 @@
 
 namespace SquidEyes.Fundamentals;
 
-public class LogContext(string calledBy, Guid correlationId)
+public class LogScope(string calledBy, Guid correlationId)
 {
     public string CalledBy { get; } = calledBy;
     public string CorrelationId { get; } = 
