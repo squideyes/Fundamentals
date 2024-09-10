@@ -7,7 +7,7 @@ namespace SquidEyes.Fundamentals;
 
 public static class ResultExtenders
 {
-    public static Result<T> AddResultErrors<T>(this List<Error> errors, Result<T> result)
+    public static Result<T> AddErrors<T>(this List<Error> errors, Result<T> result)
     {
         if (result.IsFailure)
             errors.AddRange(result.Errors);
