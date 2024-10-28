@@ -23,7 +23,7 @@ public static partial class ILoggerExtenders
     {
         logger.LogonSucceeded(
             new LogonSucceededDetails(broker, gateway, accountId),
-            new LogScope(calledBy, correlationId));
+            new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -31,9 +31,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(LogonSucceeded),
         Level = LogLevel.Information,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(LogonSucceeded)}={{@Details}};Scope={{@Scope}}")]
     private static partial void LogonSucceeded(
         this ILogger logger,
         LogonSucceededDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

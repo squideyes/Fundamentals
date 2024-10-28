@@ -26,14 +26,12 @@ public static partial class ILoggerExtenders
         if (!result.IsFailure)
             throw new InvalidOperationException();
 
-        var context = new LogScope(calledBy, correlationId);
-
         foreach (var failure in result.Errors)
         {
             logger.ResultFailure(
                 new ResultFailureDetails(activity.ToString(),
                     failure.Code!, failure.Message!, failure.Metadata),
-                context);
+                new BasicLogScope(calledBy, correlationId));
         }
     }
 
@@ -42,9 +40,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(ResultFailure),
         Level = LogLevel.Warning,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(ResultFailure)}={{@Details}};Scope={{@Scope}}")]
     private static partial void ResultFailure(
         this ILogger logger,
         ResultFailureDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

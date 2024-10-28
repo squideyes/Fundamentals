@@ -21,7 +21,7 @@ public static partial class ILoggerExtenders
     {
         logger.MiscInfo(
             new MiscInfoDetails(code.Value!, message),
-            new LogScope(calledBy, correlationId));
+            new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -29,9 +29,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(MiscInfo),
         Level = LogLevel.Information,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(MiscInfo)}={{@Details}};Scope={{@Scope}}")]
     private static partial void MiscInfo(
         this ILogger logger,
         MiscInfoDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

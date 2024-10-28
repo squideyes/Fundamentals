@@ -25,14 +25,14 @@ public static partial class ILoggerExtenders
         if (result.IsValid)
             return;
 
-        var context = new LogScope(calledBy, correlationId);
+        var scope = new BasicLogScope(calledBy, correlationId);
 
         foreach (var failure in result.Errors)
         {
             logger.ValidationFailure(
                 new ValidationFailureDetails(failure.PropertyName, 
                     failure.ErrorCode, failure.ErrorMessage),
-                context);
+                scope);
         }
     }
 
@@ -41,9 +41,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(ValidationFailure),
         Level = LogLevel.Warning,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(ValidationFailure)}={{@Details}};Scope={{@Scope}}")]
     private static partial void ValidationFailure(
         this ILogger logger,
         ValidationFailureDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

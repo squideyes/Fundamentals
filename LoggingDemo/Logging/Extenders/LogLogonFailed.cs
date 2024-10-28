@@ -31,7 +31,7 @@ public static partial class ILoggerExtenders
     {
         logger.LogonFailed(
             new LogonFailedDetails(broker, gateway, accountId, statusCode, reason),
-            new LogScope(calledBy, correlationId));
+            new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -39,9 +39,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(LogonFailed),
         Level = LogLevel.Information,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(LogonFailed)}={{@Details}};Scope={{@Scope}}")]
     private static partial void LogonFailed(
         this ILogger logger,
         LogonFailedDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

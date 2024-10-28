@@ -22,14 +22,14 @@ public static partial class ILoggerExtenders
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        var context = new LogScope(calledBy, correlationId);
+        var scope = new BasicLogScope(calledBy, correlationId);
 
-        logger.ExceptionCaughtWithLevel(context, 0, exception);
+        logger.ExceptionCaughtWithLevel(scope, 0, exception);
     }
 
     private static void ExceptionCaughtWithLevel(
         this ILogger logger,
-        LogScope context,
+        BasicLogScope context,
         int level,
         Exception exception)
     {
@@ -53,9 +53,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(ExceptionCaught),
         Level = LogLevel.Error,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(ExceptionCaught)}={{@Details}};Scope={{@Scope}}")]
     private static partial void ExceptionCaught(
         this ILogger logger,
         ExceptionCaughtDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

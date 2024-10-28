@@ -20,8 +20,9 @@ public static partial class ILoggerExtenders
         [CallerMemberName] string calledBy = "")
     {
         logger.MiscTagArgs(
-            new MiscTagArgsDetails(multiTag.ToString(), tagArgs.ToSimplifiedDictionary()),
-            new LogScope(calledBy, correlationId));
+            new MiscTagArgsDetails(
+                multiTag.ToString(), tagArgs.ToSimplifiedDictionary()),
+            new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -29,9 +30,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(MiscTagArgs),
         Level = LogLevel.Information,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(MiscTagArgs)}={{@Details}};Scope={{@Scope}}")]
     private static partial void MiscTagArgs(
         this ILogger logger,
         MiscTagArgsDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }

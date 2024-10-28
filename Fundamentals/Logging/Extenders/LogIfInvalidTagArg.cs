@@ -22,8 +22,9 @@ public static partial class ILoggerExtenders
             return;
 
         logger.InvalidTagArg(
-            new InvalidTagArgDetails(tagArg.Tag.Value!, tagArg.State!, tagArg.Message!),
-            new LogScope(calledBy, correlationId));
+            new InvalidTagArgDetails(
+                tagArg.Tag.Value!, tagArg.State!, tagArg.Message!),
+            new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
@@ -31,9 +32,9 @@ public static partial class ILoggerExtenders
         EventName = nameof(InvalidTagArg),
         Level = LogLevel.Warning,
         SkipEnabledCheck = true,
-        Message = LogConsts.StandardMessage)]
+        Message = $"{nameof(InvalidTagArg)}={{@Details}};Scope={{@Scope}}")]
     private static partial void InvalidTagArg(
         this ILogger logger,
         InvalidTagArgDetails details,
-        LogScope scope);
+        BasicLogScope scope);
 }
