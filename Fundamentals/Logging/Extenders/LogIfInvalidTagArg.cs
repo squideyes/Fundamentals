@@ -10,7 +10,10 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record InvalidTagArgDetails(string Tag, TagArgState State, string Message);
+    internal record InvalidTagArgDetails(
+        string Tag, 
+        TagArgState State, 
+        string Message);
 
     public static void LogIfInvalidTagArg(
         this ILogger logger,

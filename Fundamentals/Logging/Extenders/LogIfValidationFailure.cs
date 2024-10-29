@@ -11,7 +11,7 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record ValidationFailureDetails(
+    internal record ValidationFailureDetails(
         string Property,
         string Code,
         string Message);

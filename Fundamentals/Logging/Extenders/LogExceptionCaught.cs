@@ -10,7 +10,7 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record ExceptionCaughtDetails(
+    internal record ExceptionCaughtDetails(
         string ErrorType,
         string Target,
         string Message,

@@ -10,7 +10,7 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record ResultFailureDetails(
+    internal record ResultFailureDetails(
         string Activity,
         string Code,
         string Message,

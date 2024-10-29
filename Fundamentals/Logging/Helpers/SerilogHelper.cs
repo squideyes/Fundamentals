@@ -9,6 +9,7 @@ using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Diagnostics;
 using System.Text.Json;
+using static SquidEyes.Fundamentals.ILoggerExtenders;
 
 namespace SquidEyes.Fundamentals;
 
@@ -23,6 +24,14 @@ public static class SerilogHelper
 
         var config = new LoggerConfiguration()
             .MinimumLevel.Is(minLogLevel.ToLogEventLevel())
+            .OmitTypeField<BasicLogScope>()
+            .OmitTypeField<ExceptionCaughtDetails>()
+            .OmitTypeField<InvalidTagArgDetails>()
+            .OmitTypeField<ValidationFailureDetails>()
+            .OmitTypeField<MiscInfoDetails>()
+            .OmitTypeField<MiscTagArgsDetails>()
+            .OmitTypeField<ResultFailureDetails>()
+            .OmitTypeField<BasicLogScope>()
             .Destructure.ByTransforming<DateOnly>(v => v.ToString("yyyy-MM-dd"))
             .Destructure.ByTransforming<DateTime>(v => v.ToString("MM/dd/yyyy HH:mm:ss.fff"))
             .Destructure.ByTransforming<Email>(v => v.ToString())

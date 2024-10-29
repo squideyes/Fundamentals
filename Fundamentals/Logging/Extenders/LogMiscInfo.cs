@@ -10,7 +10,9 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record MiscInfoDetails(Tag Tag, string Message);
+    internal record MiscInfoDetails(
+        Tag Tag, 
+        string Message);
 
     public static void LogMiscInfo(
         this ILogger logger,

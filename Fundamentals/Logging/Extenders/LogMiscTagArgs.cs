@@ -10,7 +10,9 @@ namespace SquidEyes.Fundamentals;
 
 public static partial class ILoggerExtenders
 {
-    private record MiscTagArgsDetails(MultiTag MultiTag, Dictionary<string, object> TagArgs);
+    internal record MiscTagArgsDetails(
+        MultiTag MultiTag, 
+        Dictionary<string, object> TagArgs);
 
     public static void LogMiscTagArgs(
         this ILogger logger,
