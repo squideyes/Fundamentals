@@ -3,12 +3,11 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using LoggingDemo;
-using SquidEyes.Fundamentals.LoggingDemo;
+using SquidEyes.Fundamentals;
 using System.Net;
 using System.Runtime.CompilerServices;
 
-namespace SquidEyes.Fundamentals;
+namespace LoggingDemo;
 
 public static partial class ILoggerExtenders
 {

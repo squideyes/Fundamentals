@@ -3,8 +3,6 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-using SquidEyes.Fundamentals.LoggingDemo;
-
 namespace LoggingDemo;
 
 internal static class MiscExtenders

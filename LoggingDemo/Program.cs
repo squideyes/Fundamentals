@@ -8,8 +8,8 @@ using LoggingDemo;
 using Serilog;
 using Serilog.Sinks.OpenTelemetry;
 using SquidEyes.Fundamentals;
-using SquidEyes.Fundamentals.LoggingDemo;
 using System.Net;
+using System.Text.Json;
 using MEL = Microsoft.Extensions.Logging;
 
 // Try to load and validate InitValues
@@ -60,6 +60,9 @@ logger.LogIfValidationFailure(
 // Emits two log-items because FirstName and LastName are null
 logger.LogIfValidationFailure(
     personValidator.Validate(new Person(null!, null, null!)));
+
+// Emits a RawTx with a JSON payload
+logger.LogRawTxReceived(GetRawTxPayload());
 
 // "UseSerilog" hooks Serilog into Microsoft.Extensions.Logging
 var host = Host.CreateDefaultBuilder()
@@ -113,6 +116,7 @@ static bool TryGetInitValues(string[] args, out InitValues initValues)
     return true;
 }
 
+// Gets an initialized MEL.ILogger
 static MEL.ILogger GetLogger(InitValues initValues)
 {
     ValidatorOptions.Global.DisplayNameResolver = (_, m, _) => m?.Name;
@@ -145,7 +149,8 @@ static MEL.ILogger GetLogger(InitValues initValues)
     return loggerFactory.CreateLogger<Program>();
 }
 
-Result<string> GetFailure()
+// Get a Failure with multipl errors
+static Result<string> GetFailure()
 {
     var error1 = new Error("FailureTest:BadCode", "The Code is bad!");
 
@@ -158,5 +163,64 @@ Result<string> GetFailure()
     return Result.Failure<string>([error1, error2]);
 }
 
+// Gets a comprehensive RawTx
+static JsonElement GetRawTxPayload()
+{
+    const string JSON = """
+        {
+            "StringValue": "Hello, World!",
+            "NumberInteger": 42,
+            "NumberFloat": 3.14159,
+            "NumberLarge": 9223372036854775807,
+            "BooleanTrue": true,
+            "BooleanFalse": false,
+            "NullValue": null,
+            "DateValue": "2024-03-15T14:30:00Z",
+            "ArrayEmpty": [],
+            "ArraySimple": [1, 2, 3, 4, 5],
+            "ArrayMixed": [
+                "string",
+                42,
+                true,
+                null,
+                3.14
+            ],
+            "NestedObject": {
+                "Name": "John Doe",
+                "Age": 30,
+                "Address": {
+                    "Street": "123 Main St",
+                    "City": "Springfield",
+                    "ZipCode": "12345"
+                },
+                "Contacts": [
+                    {
+                        "Type": "Email",
+                        "Value": "john@example.com"
+                    },
+                    {
+                        "Type": "Phone",
+                        "Value": "+1-555-123-4567"
+                    }
+                ]
+            },
+            "Metadata": {
+                "Tags": ["test", "sample", "json"],
+                "Version": 1.0,
+                "Active": true,
+                "LastUpdated": "2024-03-15T14:30:00Z"
+            }
+        }
+        """;
+
+    var doc = JsonDocument.Parse(JSON);
+
+    return doc.RootElement;
+}
+
 // Properties loaded by GetInitTagArgs()
-record InitValues(Uri SeqApiUri, string SeqApiKey, LogLevel LogLevel, string LogFileName);
+record InitValues(
+    Uri SeqApiUri, 
+    string SeqApiKey, 
+    LogLevel LogLevel, 
+    string LogFileName);

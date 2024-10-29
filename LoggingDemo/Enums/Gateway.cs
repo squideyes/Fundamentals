@@ -3,7 +3,7 @@
 // of the MIT License (https://opensource.org/licenses/MIT)
 // ********************************************************
 
-namespace SquidEyes.Fundamentals.LoggingDemo;
+namespace LoggingDemo;
 
 public enum Gateway
 {

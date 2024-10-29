@@ -11,4 +11,5 @@ internal static class CustomEventIds
 {
     public const int LogonSucceeded = EventIds.CustomEvent;
     public const int LogonFailed = EventIds.CustomEvent + 1;
+    public const int RawTxReceived = EventIds.CustomEvent + 2;
 }

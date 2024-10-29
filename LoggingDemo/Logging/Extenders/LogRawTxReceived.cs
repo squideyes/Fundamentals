@@ -5,34 +5,34 @@
 
 using SquidEyes.Fundamentals;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace LoggingDemo;
 
 public static partial class ILoggerExtenders
 {
-    private record LogonSucceededDetails(Broker Broker, Gateway Gateway, string AccountId);
+    private record RawTxReceivedDetails(
+        object Payload);
 
-    public static void LogLogonSucceeded(
+    public static void LogRawTxReceived(
         this ILogger logger,
-        Broker broker,
-        Gateway gateway,
-        string accountId,
+        JsonElement payload,
         Guid correlationId = default,
         [CallerMemberName] string calledBy = "")
     {
-        logger.LogonSucceeded(
-            new LogonSucceededDetails(broker, gateway, accountId),
+        logger.RawTxReceived(
+            new RawTxReceivedDetails(payload.Expand()),
             new BasicLogScope(calledBy, correlationId));
     }
 
     [LoggerMessage(
-        EventId = CustomEventIds.LogonSucceeded,
-        EventName = nameof(LogonSucceeded),
+        EventId = CustomEventIds.RawTxReceived,
+        EventName = nameof(RawTxReceived),
         Level = LogLevel.Information,
         SkipEnabledCheck = true,
-        Message = $"{nameof(LogonSucceeded)}={{@Details}};Scope={{@Scope}}")]
-    private static partial void LogonSucceeded(
+        Message = $"{nameof(RawTxReceived)}={{@Details}};Scope={{@Scope}}")]
+    private static partial void RawTxReceived(
         this ILogger logger,
-        LogonSucceededDetails details,
+        RawTxReceivedDetails details,
         BasicLogScope scope);
 }

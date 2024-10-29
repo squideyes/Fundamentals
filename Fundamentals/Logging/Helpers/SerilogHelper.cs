@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace SquidEyes.Fundamentals;
 
@@ -80,5 +81,35 @@ public static class SerilogHelper
         }
 
         return isValid;
+    }
+
+    public static object Expand(this JsonElement element)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                var dict = new Dictionary<string, object>();                
+                foreach (var property in element.EnumerateObject())
+                    dict[property.Name] = Expand(property.Value);
+                return dict;
+            case JsonValueKind.Array:
+                return element.EnumerateArray()
+                    .Select(Expand)
+                    .ToList();
+            case JsonValueKind.String:
+                return element.GetString()!;
+            case JsonValueKind.Number:
+                if (element.TryGetInt64(out long int64))
+                    return int64;
+                return element.GetDouble();
+            case JsonValueKind.True:
+                return true;
+            case JsonValueKind.False:
+                return false;
+            case JsonValueKind.Null:
+                return null!;
+            default:
+                return element.ToString();
+        }
     }
 }
