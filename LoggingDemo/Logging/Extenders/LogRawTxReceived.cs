@@ -21,7 +21,7 @@ public static partial class ILoggerExtenders
         [CallerMemberName] string calledBy = "")
     {
         logger.RawTxReceived(
-            new RawTxReceivedDetails(payload.Expand()),
+            new RawTxReceivedDetails(payload.Expand(true)),
             new BasicLogScope(calledBy, correlationId));
     }
 

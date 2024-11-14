@@ -103,7 +103,7 @@ public static class SerilogHelper
                 foreach (var property in element.EnumerateObject())
                 {
                     var key = forcePascalCase ? ToPascalCase(property.Name) : property.Name;
-                    dict[key] = Expand(property.Value);
+                    dict[key] = Expand(property.Value, forcePascalCase);
                 }
                 return dict;
             case JsonValueKind.Array:
