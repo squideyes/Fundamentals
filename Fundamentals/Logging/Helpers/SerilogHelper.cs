@@ -92,18 +92,23 @@ public static class SerilogHelper
         return isValid;
     }
 
-    public static object Expand(this JsonElement element)
+    public static object Expand(this JsonElement element, bool forcePascalCase = false)
     {
+        static string ToPascalCase(string value) => char.ToUpper(value[0]) + value[1..];
+
         switch (element.ValueKind)
         {
             case JsonValueKind.Object:
-                var dict = new Dictionary<string, object>();                
+                var dict = new Dictionary<string, object>();
                 foreach (var property in element.EnumerateObject())
-                    dict[property.Name] = Expand(property.Value);
+                {
+                    var key = forcePascalCase ? ToPascalCase(property.Name) : property.Name;
+                    dict[key] = Expand(property.Value);
+                }
                 return dict;
             case JsonValueKind.Array:
                 return element.EnumerateArray()
-                    .Select(Expand)
+                    .Select(v => Expand(v, forcePascalCase))
                     .ToList();
             case JsonValueKind.String:
                 return element.GetString()!;
