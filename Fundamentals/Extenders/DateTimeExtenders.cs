@@ -22,6 +22,12 @@ public static class DateTimeExtenders
     private static readonly TimeZoneInfo pacific =
         GetTimeZoneInfo("Pacific Standard Time", "America/Los_Angeles");
 
+    private static readonly TimeZoneInfo athens =
+        GetTimeZoneInfo("E. Europe Standard Time", "Europe/Athens");
+
+    public static DateTime ToAthensFromUtc(this DateTime value) =>
+        value.ToZoneFromUtc(athens);
+
     public static DateTime ToEasternFromUtc(this DateTime value) =>
         value.ToZoneFromUtc(eastern);
 
@@ -33,6 +39,9 @@ public static class DateTimeExtenders
 
     public static DateTime ToPacificFromUtc(this DateTime value) =>
         value.ToZoneFromUtc(pacific);
+
+    public static DateTime ToUtcFromAthens(this DateTime value) =>
+        value.ToUtcFromZone(athens);
 
     public static DateTime ToUtcFromEastern(this DateTime value) =>
         value.ToUtcFromZone(eastern);
