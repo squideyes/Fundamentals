@@ -30,7 +30,6 @@
 		<PackageReference Include="FluentValidation" Version="11.10.0" />
 		<PackageReference Include="ISO3166" Version="1.0.4" />
 		<PackageReference Include="libphonenumber-csharp" Version="8.13.49" />
-		<PackageReference Include="Loyc.Math" Version="30.1.3" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
