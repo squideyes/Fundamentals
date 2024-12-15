@@ -71,7 +71,7 @@ public sealed partial class SemVer : ValueObjectBase<SemVer>
     public static bool TryCreate(string input, out SemVer result) =>
         DoTryCreate(input, IsInput, out result);
 
-    public static explicit operator SemVer(string? input) => Create(input);
+    public static implicit operator SemVer(string? input) => Create(input);
 
     [GeneratedRegex(@"^v([1-9]|[1-9]\d|1\d\d|2\d[0-5])(\.([1-9]|[1-9]\d|1\d\d|2\d[0-5])){2}(-[a-z][a-z0-9]{0,9})?$")]
     private static partial Regex GetValidator();
