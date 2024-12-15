@@ -11,8 +11,8 @@ public sealed partial class MultiTag : ValueObjectBase<MultiTag>
 
     public Tag[]? Tags { get; private set; }
 
-    protected override void SetProperties(string input) =>
-        Tags = input.Split(':').Select(Tag.Create).ToArray();
+    protected override void SetProperties(string? input) =>
+        Tags = input!.Split(':').Select(Tag.Create).ToArray();
 
     public static bool IsInput(string input)
     {
@@ -30,8 +30,7 @@ public sealed partial class MultiTag : ValueObjectBase<MultiTag>
         return fields.All(v => Tag.TryCreate(v, out Tag _));
     }
 
-    public static MultiTag Create(string input) =>
-        DoCreate(input, IsInput);
+    public static MultiTag Create(string input) => DoCreate(input, IsInput);
 
     public static bool TryCreate(string input, out MultiTag result) =>
         DoTryCreate(input, IsInput, out result);

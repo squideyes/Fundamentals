@@ -41,8 +41,9 @@ public sealed class Phone : ValueObjectBase<Phone>
         }
     }
 
-    public static Phone Create(string? input) =>
-        DoCreate(input, IsInput);
+    public static Phone Create(string? input) => DoCreate(input, IsInput);
+
+    public static implicit operator Phone(string? input) => Create(input);
 
     public static bool TryCreate(string? input, out Phone result) =>
         DoTryCreate(input, IsInput, out result);

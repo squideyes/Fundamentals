@@ -21,9 +21,10 @@ public sealed class Email : ValueObjectBase<Email>
     public static bool IsInput(string? input) =>
         validator.IsValid(input, MaxLength);
 
-    public static Email Create(string input) => 
-        DoCreate(input, IsInput);
+    public static Email Create(string? input) => DoCreate(input, IsInput);
 
     public static bool TryCreate(string input, out Email result) =>
         DoTryCreate(input, IsInput, out result);
+
+    public static implicit operator Email(string? input) => Create(input);
 }
