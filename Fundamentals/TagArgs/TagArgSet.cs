@@ -19,6 +19,8 @@ public class TagArgSet : IEnumerable<ITagArg>
         set => dict[tag] = value;
     }
 
+    public bool ContainsKey(Tag tag) => dict.ContainsKey(tag);
+
     public void Add(ITagArg tagArg) => dict.Add(tagArg.Tag, tagArg);
 
     public void AddRange(IEnumerable<ITagArg> tagArgs) => tagArgs.ForEach(Add);
