@@ -19,7 +19,13 @@ public class TagArgSet : IEnumerable<ITagArg>
         set => dict[tag] = value;
     }
 
-    public bool ContainsKey(Tag tag) => dict.ContainsKey(tag);
+    public bool HasTagArg(Tag tag, TagArgArgKind? kind = null)
+    {
+        if (!dict.TryGetValue(tag, out var value))
+            return false;
+
+        return kind is null || value.Kind == kind;
+    }
 
     public void Add(ITagArg tagArg) => dict.Add(tagArg.Tag, tagArg);
 
