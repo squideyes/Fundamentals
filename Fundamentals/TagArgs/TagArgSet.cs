@@ -20,7 +20,7 @@ public class TagArgSet : IEnumerable<ITagArg>
         set => dict[tag] = value;
     }
 
-    public bool TryGetTagArg(Tag tag, out ITagArg? arg) =>
+    public bool TryGetValue(Tag tag, out ITagArg? arg) =>
         dict.TryGetValue(tag, out arg);
 
     public void Add(ITagArg tagArg) => dict.Add(tagArg.Tag, tagArg);
