@@ -4,6 +4,7 @@
 // ********************************************************
 
 using System.Collections;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SquidEyes.Fundamentals;
 
@@ -19,13 +20,8 @@ public class TagArgSet : IEnumerable<ITagArg>
         set => dict[tag] = value;
     }
 
-    public bool HasTagArg(Tag tag, TagArgArgKind? kind = null)
-    {
-        if (!dict.TryGetValue(tag, out var value))
-            return false;
-
-        return kind is null || value.Kind == kind;
-    }
+    public bool TryGetTagArg(Tag tag, out ITagArg? arg) =>
+        dict.TryGetValue(tag, out arg);
 
     public void Add(ITagArg tagArg) => dict.Add(tagArg.Tag, tagArg);
 
