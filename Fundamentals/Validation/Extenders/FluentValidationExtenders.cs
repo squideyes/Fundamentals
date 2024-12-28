@@ -61,7 +61,20 @@ public static class FluentValidationExtenders
     public static IRuleBuilderOptions<T, P> WithMessage<T, P>(
         this IRuleBuilderOptions<T, P> builder, MessageVerb verb, string suffix)
     {
-        var prefix = verb switch
+        return builder.WithMessage($"{GetPrefix(verb)} {suffix}");
+    }
+
+    public static IRuleBuilderOptions<T, P> WithMessage<T, P>(
+        this IRuleBuilderOptions<T, P> builder, MessageVerb verb,
+        Func<T, P, string> getSuffix)
+    {
+        return builder.WithMessage(
+            (o, v) => $"{GetPrefix(verb)} {getSuffix(o, v)}");
+    }
+
+    private static string GetPrefix(MessageVerb verb)
+    {
+        var suffix =  verb switch
         {
             MayNot => "may not",
             MayNotBe => "may not be",
@@ -70,7 +83,7 @@ public static class FluentValidationExtenders
             _ => throw new ArgumentOutOfRangeException(nameof(verb))
         };
 
-        return builder.WithMessage($"'{{PropertyName}}' {prefix} {suffix}");
+        return $"'{{PropertyName}}' {suffix} ";
     }
 
     private static string GetIsTextLineMessage(int maxLength, bool hasIsValid)
