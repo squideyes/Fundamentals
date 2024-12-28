@@ -4,6 +4,7 @@
 // ********************************************************
 
 using FluentValidation;
+using static SquidEyes.Fundamentals.MessageVerb;
 
 namespace SquidEyes.Fundamentals;
 
@@ -11,21 +12,19 @@ public class Card
 {
     public class Validator : AbstractValidator<Card>
     {
-        private const string MUST_BE = "'{PropertyName}' must be ";
-
         public Validator()
         {
             RuleFor(x => x.Number)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(CardValidator.IsNumber)
-                .WithMessage(MUST_BE + "a valid card number.");
+                .WithMessage(MustBe, "a valid card number.");
             
             RuleFor(x => x.Name)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .Must(v => v.IsNonNullAndTrimmed()) // Improve this!!!!!!!!!!!
-                .WithMessage(MUST_BE + "a valid credit-card name.");
+                .WithMessage(MustBe, "a valid credit-card name.");
 
             RuleFor(x => x.ExpirationMonth)
                 .InclusiveBetween(1, 12);
@@ -38,7 +37,7 @@ public class Card
 
             RuleFor(x => x)
                 .Must(v => CardValidator.IsCVC(v.Cvc, v.GetBrand()))
-                .WithMessage(MUST_BE + "a valid card CVC.")
+                .WithMessage(MustBe, "a valid card CVC.")
                 .When(v => CardValidator.IsNumber(v.Number));
         }
     }

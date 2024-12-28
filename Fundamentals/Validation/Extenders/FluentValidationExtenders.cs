@@ -5,25 +5,23 @@
 
 using FluentValidation;
 using System.Text;
-using static SquidEyes.Fundamentals.Address.Validator;
+using static SquidEyes.Fundamentals.MessageVerb;
 
 namespace SquidEyes.Fundamentals;
 
 public static class FluentValidationExtenders
 {
-    private const string MUST_BE = "'{PropertyName}' must be ";
-
     private static readonly HashSet<char> punctuation =
         new(@"^[!#$%&()*+,\-./:;<=>?@[\\\]^_{|}~]$".ToCharArray());
 
     public static IRuleBuilderOptions<T, string?> IsCountryCode<T>(this IRuleBuilder<T, string?> rule) =>
-        rule.Must(CountryValidator.IsCountryCode).WithMessage(MUST_BE + "a valid ISO country code.");
+        rule.Must(CountryValidator.IsCountryCode).WithMessage(MustBe, "a valid ISO country code.");
 
     public static IRuleBuilderOptions<T, string?> IsEmail<T>(this IRuleBuilder<T, string?> rule) =>
-        rule.Must(Email.IsInput).WithMessage(MUST_BE + "a valid email address.");
+        rule.Must(Email.IsInput).WithMessage(MustBe, "a valid email address.");
 
     public static IRuleBuilderOptions<T, string?> IsPhone<T>(this IRuleBuilder<T, string?> rule) =>
-        rule.Must(Phone.IsInput).WithMessage(MUST_BE + "a valid E164 phone number.");
+        rule.Must(Phone.IsInput).WithMessage(MustBe, "a valid E164 phone number.");
 
     public static IRuleBuilderOptions<T, string?> IsNullOrTextLine<T>(
         this IRuleBuilder<T, string?> rule, int maxLength = int.MaxValue, Func<string, bool> isValid = null!)
@@ -43,31 +41,43 @@ public static class FluentValidationExtenders
         this IRuleBuilder<T, char?> rule)
     {
         return rule.Must(v => v is null || char.IsAsciiLetterUpper(v.Value))
-            .WithMessage(MUST_BE + "null or an uppercase initial.");
+            .WithMessage(MustBe, "null or an uppercase initial.");
     }
 
     public static IRuleBuilderOptions<T, string?> IsPersonName<T>(
         this IRuleBuilder<T, string?> rule, int maxLength = int.MaxValue)
     {
         return rule.Must(v => v!.IsPersonName(maxLength))
-            .WithMessage(MUST_BE + $"a valid person name ({maxLength} letters, spaces and/or dashes, max).");
+            .WithMessage(MustBe, $"a valid person name ({maxLength} letters, spaces and/or dashes, max).");
     }
 
     public static IRuleBuilderOptions<T, IEnumerable<TElement>> IsNonNullAndHasItems<T, TElement>(
         this IRuleBuilder<T, IEnumerable<TElement>> ruleBuilder)
     {
         return ruleBuilder.Must(v => v is not null && v.HasItems())
-            .WithMessage(MUST_BE + "non-null a contain one or more non-default items.");
+            .WithMessage(MustBe, "non-null a contain one or more non-default items.");
     }
 
+    public static IRuleBuilderOptions<T, P> WithMessage<T, P>(
+        this IRuleBuilderOptions<T, P> builder, MessageVerb verb, string suffix)
+    {
+        var prefix = verb switch
+        {
+            MayNot => "may not",
+            MayNotBe => "may not be",
+            Must => "must",
+            MustBe => "must be",
+            _ => throw new ArgumentOutOfRangeException(nameof(verb))
+        };
+
+        return builder.WithMessage($"'{{PropertyName}}' {prefix} {suffix}");
+    }
 
     private static string GetIsTextLineMessage(int maxLength, bool hasIsValid)
     {
         var sb = new StringBuilder();
 
-        sb.Append(MUST_BE);
-
-        sb.Append("a");
+        sb.Append("'{PropertyName}' must be a ");
 
         if (hasIsValid)
             sb.Append(" valid");
